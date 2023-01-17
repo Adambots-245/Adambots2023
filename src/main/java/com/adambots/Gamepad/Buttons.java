@@ -11,7 +11,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.adambots.Constants.GamepadConstants;
-import com.adambots.Constants.OIConstants;
+import com.adambots.RobotMap;
 
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,7 +27,7 @@ public class Buttons {
             GamepadConstants.kPrimaryDriver);
     public static final CommandXboxController secondaryJoystick = new CommandXboxController(
             GamepadConstants.kSecondaryDriver);
-    public static final CommandJoystick ex3dPro = new CommandJoystick(OIConstants.kDriverControllerPort);
+    public static final CommandJoystick ex3dPro = new CommandJoystick(RobotMap.kJoystickControllerPort);
     public static final BooleanSupplier isJoystickConnected = () -> ex3dPro.getHID().isConnected();
 
     // primary buttons

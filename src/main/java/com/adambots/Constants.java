@@ -10,7 +10,6 @@ package com.adambots;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /**
@@ -26,8 +25,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 public final class Constants {
 
-    public static final int kRingLightPort = 4;
-
     public static ShuffleboardTab debugTab;
 
     public static final class DriveConstants {
@@ -38,22 +35,6 @@ public final class Constants {
         public static final double kNeutralToFull = 0.4;
         public static final int kDrivePIDSlot = 0;
         public static final double kEncoderTickerPerInch = 3500;
-
-        // Swerve Drive Constants
-        public static final int kFrontLeftDriveMotorPort = 18;
-        public static final int kRearLeftDriveMotorPort = 16;
-        public static final int kFrontRightDriveMotorPort = 12;
-        public static final int kRearRightDriveMotorPort = 14;
-
-        public static final int kFrontLeftTurningMotorPort = 17;
-        public static final int kRearLeftTurningMotorPort = 15;
-        public static final int kFrontRightTurningMotorPort = 11;
-        public static final int kRearRightTurningMotorPort = 13;
-
-        public static final int kRearLeftEncoderPort = 2;
-        public static final int kRearRightEncoderPort = 3;
-        public static final int kFrontRightEncoderPort = 5;
-        public static final int kFrontLeftEncoderPort = 4;
 
         // public static final int[] kFrontLeftTurningEncoderPorts = new int[] {0, 1};
         // public static final int[] kRearLeftTurningEncoderPorts = new int[] {2, 3};
@@ -125,12 +106,6 @@ public final class Constants {
         public static final double kPModuleDriveController = 1;
     }
 
-    public static final class OIConstants {
-        public static final int kDriverControllerPort = 0;
-        public final static I2C.Port I2C_PORT = I2C.Port.kOnboard;
-        public static final int kLidarDio = 5; //Not used
-    }
-
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 1;
         public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
@@ -171,11 +146,11 @@ public final class Constants {
         /**
          * Primary Driver Controller Port Number.
          */
-        public static final int kPrimaryDriver = 1;
+        public static final int kPrimaryDriver = RobotMap.kPrimaryControllerPort;
         /**
          * Secondary Driver Controller Port Number.
          */
-        public static final int kSecondaryDriver = 2;
+        public static final int kSecondaryDriver = RobotMap.kSecondaryControllerPort;
         /**
          * XBOX 360 South Face Button
          */

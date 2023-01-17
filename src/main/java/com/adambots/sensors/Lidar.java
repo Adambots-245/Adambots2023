@@ -7,7 +7,7 @@
 
 package com.adambots.sensors;
 
-import com.adambots.Constants.OIConstants;
+import com.adambots.RobotMap;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -28,7 +28,7 @@ public class Lidar extends BaseSensor {
         if (_source == null){
             
             System.out.println("Initializing Lidar");
-            _source = new DigitalInput(OIConstants.kLidarDio); // although this brings in depency, using setDevice this can be overwritten before calling getInstance
+            _source = new DigitalInput(RobotMap.kLidarDio); // although this brings in depency, using setDevice this can be overwritten before calling getInstance
         }
 
 		System.out.println("Source: " + _source);

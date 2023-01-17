@@ -11,7 +11,7 @@ import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.util.Color;
 
-import com.adambots.Constants.OIConstants;
+import com.adambots.RobotMap;
 import com.revrobotics.ColorMatch;
 
 /**
@@ -19,7 +19,7 @@ import com.revrobotics.ColorMatch;
  */
 public class ColorSensor extends BaseSensor {
 
-    private final static ColorSensorV3 colorSensor = new ColorSensorV3(OIConstants.I2C_PORT);
+    private final static ColorSensorV3 colorSensor = new ColorSensorV3(RobotMap.I2C_PORT);
 
     private final static ColorMatch colorMatcher = new ColorMatch();
 

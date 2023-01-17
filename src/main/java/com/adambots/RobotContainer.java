@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -67,6 +68,7 @@ public class RobotContainer {
 
     // Don't enable this for the competition
     // Log.saveToFile("/home/lvuser/robot.txt");
+    Log.info("Starting Robot Container ...");
 
     // Configure the button bindings
     configureButtonBindings();
@@ -149,9 +151,8 @@ public class RobotContainer {
   }
 
   /**
-   * Use this to pass the autonomo
-   * us command to the main {@link Robot} class.
-   *
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   * 
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
@@ -211,6 +212,13 @@ public class RobotContainer {
     // Reset odometry to the starting pose of the trajectory.
     drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
 
+    var field = new Field2d();
+    SmartDashboard.putData("Field", field);
+
+    // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
+    // The field image for 2023 is in utils folder
+    field.getObject("traj").setTrajectory(exampleTrajectory);
+    
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> drivetrainSubsystem.drive(0, 0, 0, false));
   }

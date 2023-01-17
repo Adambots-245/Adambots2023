@@ -12,19 +12,16 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.adambots.RobotMap;
 import com.adambots.Constants.DriveConstants;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   // Robot swerve modules
   private final SwerveModule m_frontLeft;
-
   private final SwerveModule m_rearLeft;
-
   private final SwerveModule m_frontRight;
-
   private final SwerveModule m_rearRight;
 
   // The gyro sensor
@@ -32,6 +29,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   private SwerveDriveOdometry m_odometry;
+
+  // Field details that can be viewed in Glass
+  private final Field2d m_field = new Field2d();
 
   public DrivetrainSubsystem(SwerveModule frontLeft, SwerveModule rearLeft, SwerveModule frontRight,
       SwerveModule rearRight) {
@@ -47,6 +47,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+    
+    SmartDashboard.putData("Field", m_field);
   }
 
   @Override
@@ -80,6 +82,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Odom Rot", m_gyro.getRotation2d().getDegrees());
     SmartDashboard.putNumber("Odom X", m_odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("Odom Y", m_odometry.getPoseMeters().getY());
+
+    m_field.setRobotPose(getPose());
 
     // System.out.println(m_gyro.getRotation2d());
     // SmartDashboard.putNumber("speedmms",)

@@ -57,8 +57,9 @@ public final class Constants {
         public static final boolean kRearRightDriveEncoderReversed = true;
 
         // In Meters
-        public static final double kTrackWidth = 0.61; // 0.5
         // Distance between centers of right and left wheels on robot
+        public static final double kTrackWidth = 0.61; // 0.5
+        // Distance between front and back wheels on robot
         public static final double kWheelBase = 0.61; // 0.7
 
         // Distance between front and back wheels on robot

@@ -4,6 +4,7 @@
 
 package com.adambots.commands.autonCommands;
 
+import com.adambots.RobotMap;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.subsystems.TankDriveTrainSubsystem;
 
@@ -48,7 +49,7 @@ public class PIDTuner extends PIDCommand {
 
     this.driveTrain = drive;
 
-    com.adambots.sensors.Gyro.getInstance().reset();
+    RobotMap.GyroSensor.reset();
 
     // Set the controller to be continuous (because it is an angle controller)
     getController().enableContinuousInput(-180, 180);
@@ -75,6 +76,6 @@ public class PIDTuner extends PIDCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
 
-    com.adambots.sensors.Gyro.getInstance().reset();
+    RobotMap.GyroSensor.reset();
   }
 }

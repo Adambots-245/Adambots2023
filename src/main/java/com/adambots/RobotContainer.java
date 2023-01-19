@@ -115,9 +115,9 @@ public class RobotContainer {
    * Call from Robot.java robotPeriodic
    */
   public void updateDashboard() {
-    SmartDashboard.putNumber("getY", Buttons.forward);
-    SmartDashboard.putNumber("getX", Buttons.sideways);
-    SmartDashboard.putNumber("getZ", Buttons.rotate);
+    SmartDashboard.putNumber("getY", Buttons.forwardSupplier.getAsDouble());
+    SmartDashboard.putNumber("getX", Buttons.sidewaysSupplier.getAsDouble());
+    SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
   }
 
   private void setupDefaultCommands() {
@@ -127,27 +127,11 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> drivetrainSubsystem.drive(
-                Buttons.forward,
-                Buttons.sideways,
-                Buttons.rotate,
+                -Buttons.forwardSupplier.getAsDouble(),
+                -Buttons.sidewaysSupplier.getAsDouble(),
+                -Buttons.rotateSupplier.getAsDouble(),
                 false),
             drivetrainSubsystem));
-
-    // Use the Lambda version with Supplier prefix when passed to a custom command
-
-    // driveTrainSubsystem.setDefaultCommand(
-    // // The left stick controls translation of the robot.
-    // // Turning is controlled by the X axis of the right stick.
-    // new DriveCommand(
-
-    // drivetrainSubsystem.drive(
-    // Buttons.forwardSupplier,
-    // Buttons.sidewaysSupplier,
-    // Buttons.rotateSupplier,
-    // false),
-    // DrivetrainSubsystem
-    // ));
-
   }
 
   /**

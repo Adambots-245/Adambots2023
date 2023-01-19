@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
     // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
+    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);F
   }
 
   @Override
@@ -115,9 +115,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("auton selected", m_autonomousCommand.toString());
 
     System.out.println("Init Auton.........");
-    Gyro.getInstance().reset();
-    Gyro.getInstance().calibrationCheck(); // may take up to two seconds to complete
-    System.out.println("Gyro Yaw at Startup: " + Gyro.getInstance().getYaw());
+    RobotMap.GyroSensor.reset();
+    RobotMap.GyroSensor.calibrationCheck(); // may take up to two seconds to complete
+    System.out.println("Gyro Yaw at Startup: " + RobotMap.GyroSensor.getYaw());
     CommandScheduler.getInstance().cancelAll(); // cancel all teleop commands
 
     // schedule the autonomous command
@@ -170,7 +170,7 @@ public class Robot extends TimedRobot {
     // CommandScheduler.getInstance().cancelAll();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    Gyro.getInstance().reset();
+    RobotMap.GyroSensor.reset();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

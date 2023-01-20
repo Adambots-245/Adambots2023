@@ -84,6 +84,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Odom Y", m_odometry.getPoseMeters().getY());
 
     m_field.setRobotPose(getPose());
+    System.out.printf("Pose: X %f\n", getPose().getX());
+    System.out.printf("Pose: Y %f\n", getPose().getY());
 
     // System.out.println(m_gyro.getRotation2d());
     // SmartDashboard.putNumber("speedmms",)

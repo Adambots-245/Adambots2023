@@ -89,6 +89,13 @@ public class RobotContainer {
     // Buttons.secondaryDPadE.onTrue(command);
 
     // Buttons.primaryBackButton.whileTrue(command);
+
+    // Buttons.primaryAButton.onTrue(new RunCommand(() -> System.out.println("1A Pressed..."), drivetrainSubsystem));
+    // Buttons.secondaryAButton.onTrue(new RunCommand(() -> System.out.println("2A Pressed..."), drivetrainSubsystem));
+
+    // Buttons.JoystickButton1.onTrue(new RunCommand(() -> System.out.println("1 Pressed..."), drivetrainSubsystem));
+    // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
+    // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
   }
 
   private void setupDashboard() {

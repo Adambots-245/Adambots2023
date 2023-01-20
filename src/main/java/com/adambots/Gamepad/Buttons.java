@@ -13,6 +13,7 @@ import java.util.function.DoubleSupplier;
 import com.adambots.Constants.GamepadConstants;
 import com.adambots.RobotMap;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -89,6 +90,29 @@ public class Buttons {
         // LEFT STICK Y AXIS secondaryJoystick.getLeftY()
         // RIGHT STICK X AXIS secondaryJoystick.getRightX()
         // RIGHT STICK Y AXIS secondaryJoystick.getRightY()
+
+        public static final Trigger JoystickButton1 = ex3dPro.button(1);
+        public static final Trigger JoystickButton2 = ex3dPro.button(2);
+        public static final Trigger JoystickButton3 = ex3dPro.button(3);
+        public static final Trigger JoystickButton4 = ex3dPro.button(4);
+        public static final Trigger JoystickButton5 = ex3dPro.button(5);
+        public static final Trigger JoystickButton6 = ex3dPro.button(6);
+        public static final Trigger JoystickButton7 = ex3dPro.button(7);
+        public static final Trigger JoystickButton8 = ex3dPro.button(8);
+        public static final Trigger JoystickButton9 = ex3dPro.button(9);
+        public static final Trigger JoystickButton10 = ex3dPro.button(10);
+        public static final Trigger JoystickButton11 = ex3dPro.button(11);
+        public static final Trigger JoystickButton12 = ex3dPro.button(12);
+
+        public static final Trigger JoystickThumbUp = ex3dPro.povUp();
+        public static final Trigger JoystickThumbDown = ex3dPro.povDown();
+        public static final Trigger JoystickThumbUpLeft = ex3dPro.povUpLeft();
+        public static final Trigger JoystickThumbUpRight = ex3dPro.povUpRight();
+        public static final Trigger JoystickThumbDownLeft = ex3dPro.povDownLeft();
+        public static final Trigger JoystickThumbDownRight = ex3dPro.povDownRight();
+        public static final Trigger JoystickThumbLeft = ex3dPro.povLeft();
+        public static final Trigger JoystickThumbRight = ex3dPro.povRight();
+        public static final Trigger JoystickThumbCenter = ex3dPro.povCenter();
 
         // deadzoning
         public static double deaden(double rawInput) {

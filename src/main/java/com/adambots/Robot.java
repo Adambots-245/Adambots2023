@@ -57,8 +57,8 @@ public class Robot extends TimedRobot {
       // visionThread.start();
      
       // Camera Feed Only - No Image Processing
-      // visionThread = new CameraSubsystem(RobotMap.RingLight).getVisionThread();
-      // visionThread.start();
+       visionThread = new CameraSubsystem(RobotMap.RingLight).getVisionThread();
+       visionThread.start();
     }
 
     // RobotMap.YellowLight.set(true);

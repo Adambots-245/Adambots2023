@@ -18,6 +18,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -81,7 +82,31 @@ public class RobotMap {
         public static final int kRearLeftDriveMotorPort = 16;
         public static final int kFrontLeftTurningMotorPort = 17;
         public static final int kFrontLeftDriveMotorPort = 18;
+
+        // Arm and Grabby ports
+        public static final int armLiftPort = 245;
+        public static final int leftArmExtenderPort = 400;
+        public static final int rightArmExtenderPort = 500;
+        public static final int leftGrabbyPort = 600;
+        public static final int rightGrabbyPort = 800;
+        public static final int armLiftEncoderPort = 152;
+        public static final int leftArmExtenderEncoderPort = 420;
+        public static final int rightArmExtenderEncoderPort = 666;
+
+        // Arm and Grabby Devices
+        public static final Solenoid leftGrabby = new Solenoid(PneumaticsModuleType.CTREPCM, leftGrabbyPort);
+        public static final Solenoid rightGrabby = new Solenoid (PneumaticsModuleType.CTREPCM, rightGrabbyPort);
         
+        public static final WPI_TalonFX leftArmExtender = new WPI_TalonFX(leftArmExtenderPort);
+        public static final WPI_TalonFX rightArmExtender = new WPI_TalonFX(rightArmExtenderPort);
+        public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
+        
+        public static final WPI_CANCoder leftArmExtenderEncoder = new WPI_CANCoder(leftArmExtenderEncoderPort);
+        public static final WPI_CANCoder rightArmExtenderEncoder = new WPI_CANCoder(rightArmExtenderEncoderPort);
+        public static final WPI_CANCoder armLiftEncoder = new WPI_CANCoder(armLiftEncoderPort);
+
+
+
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;
         public static final int kPrimaryControllerPort = 1; // XBOX Controller

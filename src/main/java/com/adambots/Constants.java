@@ -93,6 +93,8 @@ public final class Constants {
         public static final double kDriveEncoderDistancePerPulse =
                 // Assumes the encoders are directly mounted on the wheel shafts
                 (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+        public static final double kDriveEncoderScale = 0.04957;
+ 
 
         public static final double kTurningEncoderDistancePerPulse =
                 // Assumes the encoders are on a 1:1 reduction with the module shaft.
@@ -113,9 +115,9 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPXController = 0.05;
-        public static final double kPYController = 0.05;
-        public static final double kPThetaController = -0.2;
+        public static final double kPXController = 1;
+        public static final double kPYController = 1;
+        public static final double kPThetaController = 0.3;
     	public static final double kGyroTolerance = 0.5; //degrees tolerance for measurement
 
         // Constraint for the motion profiled robot angle controller

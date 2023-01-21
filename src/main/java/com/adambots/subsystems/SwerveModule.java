@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.ModuleConstants;
@@ -101,10 +102,12 @@ public class SwerveModule {
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
-    double distance = m_driveEncoder.getPosition() * ModuleConstants.kDriveEncoderDistancePerPulse;
-    double turningDistance = m_absoluteEncoder.getAbsolutePosition() * ModuleConstants.kTurningEncoderDistancePerPulse;
+    double distance = m_driveEncoder.getPosition() * ModuleConstants.kDriveEncoderScale;
+    // double turningDistance = m_turningEncoder.getPosition() * ModuleConstants.kDriveEncoderScale; //ModuleConstants.kTurningEncoderDistancePerPulse;
+    double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;
     
-    System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
+    // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
+    SmartDashboard.putNumber("Turningdistance" + hashCode(), m_turningEncoder.getPosition());
 
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));

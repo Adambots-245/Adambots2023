@@ -155,6 +155,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
+    SmartDashboard.putNumber("m_frontLeftTarget", swerveModuleStates[0].angle.getDegrees());
+    SmartDashboard.putNumber("m_frontRightTarget", swerveModuleStates[1].angle.getDegrees());
+    SmartDashboard.putNumber("m_rearLeftTarget", swerveModuleStates[2].angle.getDegrees());
+    SmartDashboard.putNumber("m_rearRightTarget", swerveModuleStates[3].angle.getDegrees());
+
+
   }
 
   /**

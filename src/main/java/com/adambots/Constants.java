@@ -28,28 +28,10 @@ public final class Constants {
     public static ShuffleboardTab debugTab;
 
     public static final class DriveConstants {
-        // Tank Drive Constants
-        // public static final double kNormalSpeedModifier = 1;
-        // public static final double kLowSpeedModifier = 0.5;
-        // Acceleration ramping constant for drive train
-        // public static final double kNeutralToFull = 0.4;
-        // public static final int kDrivePIDSlot = 0;
-        // public static final double kEncoderTickerPerInch = 3500;
-
-        // public static final int[] kFrontLeftTurningEncoderPorts = new int[] {0, 1};
-        // public static final int[] kRearLeftTurningEncoderPorts = new int[] {2, 3};
-        // public static final int[] kFrontRightTurningEncoderPorts = new int[] {4, 5};
-        // public static final int[] kRearRightTurningEncoderPorts = new int[] {6, 7};
-
         public static final boolean kFrontLeftTurningEncoderReversed = true; // false
         public static final boolean kRearLeftTurningEncoderReversed = false;
         public static final boolean kFrontRightTurningEncoderReversed = true; // false
         public static final boolean kRearRightTurningEncoderReversed = false;
-
-        // public static final int[] kFrontLeftDriveEncoderPorts = new int[] { 8, 9 };
-        // public static final int[] kRearLeftDriveEncoderPorts = new int[] { 10, 11 };
-        // public static final int[] kFrontRightDriveEncoderPorts = new int[] { 12, 13 };
-        // public static final int[] kRearRightDriveEncoderPorts = new int[] { 14, 15 };
 
         public static final boolean kFrontLeftDriveEncoderReversed = false;
         public static final boolean kRearLeftDriveEncoderReversed = true;

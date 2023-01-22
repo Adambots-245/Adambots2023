@@ -163,20 +163,13 @@ public class RobotContainer {
     // else
     // Log.info("Chosen Auton Command: None");
 
-    // return new Auton2Ball(driveTrainSubsystem, intakeSubsystem,
-    // catapultSubsystem);
-    // System.out.println(autoChooser.getSelected().toString());
     // return autoChooser.getSelected();
 
     // return new LowerIntakeArmCommand(intakeSubsystem)
     // .andThen(new WaitCommand(4))
     // .andThen(new TurnToAngleFromCameraCommand(driveTrainSubsystem))
-    // .andThen(new DriveToBallCommand(driveTrainSubsystem, intakeSubsystem,
-    // conveyorSubsystem, RobotMap.IntakePhotoEye));
-    // .andThen(new StartIntakeCommand(intakeSubsystem, () -> -1.0))
-    // .andThen(new DriveForwardDistanceCommand(driveTrainSubsystem, 20000,
-    // -Constants.AUTON_DRIVE_FORWARD_SPEED))
 
+    /*
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -185,7 +178,7 @@ public class RobotContainer {
         .setKinematics(DriveConstants.kDriveKinematics);
 
     // An example trajectory to follow. All units in meters.
-    /*Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
@@ -202,18 +195,16 @@ public class RobotContainer {
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       exampleTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-   } catch (IOException ex) {
+    } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-   }
+    }
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    //CustomSwerveControllerCommand swerveControllerCommand = new CustomSwerveControllerCommand(
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         exampleTrajectory,
-        // new Pose2d(1, 0, new Rotation2d(3)),
         drivetrainSubsystem::getPose, // Functional interface to feed supplier
         DriveConstants.kDriveKinematics,
 

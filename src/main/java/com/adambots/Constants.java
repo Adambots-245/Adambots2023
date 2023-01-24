@@ -7,6 +7,8 @@
 
 package com.adambots;
 
+import org.opencv.core.Scalar;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -134,6 +136,13 @@ public final class Constants {
         public static final int kImageHorizontalMidPoint = kFrameWidth / 2;
         public static final int kDriverStationFramesPerSec = 6;
         public static final int kProcessingFramesPerSec = 30; // DON'T CHANGE
+        public static final Scalar RED = new Scalar(0, 0, 255);
+        public static final Scalar GREEN = new Scalar(0, 255, 0);
+        public static final Scalar BLUE = new Scalar(255, 0, 0);
+        public static final int IMG_WIDTH = 320;
+        public static final int HOR_FOV_DEGREES = 60;
+        public static final int IMG_HOR_MID = IMG_WIDTH / 2;
+        public static final double HOR_DEGREES_PER_PIXEL = (double) HOR_FOV_DEGREES / IMG_WIDTH;
 
         public static final double kCameraFieldOfView = 68.5;
 

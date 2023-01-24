@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.IntegerArrayPublisher;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.*;
+
 
 
 import com.adambots.Constants.VisionConstants;
@@ -42,10 +44,15 @@ public class CameraSubsystem extends SubsystemBase {
     private static CvSink downCamCvSink;
     private static CvSource reflectiveOutputStream;
     private static CvSource downOutputStream;
-    private static Mat frontCamFrame;
     private static Mat reflectiveCamFrame;
     private Thread visionThread;
     private Solenoid ringLight;
+    private static Point crosshair;
+    private Object lock = new Object();
+    private static Point[] pts = new Point[4];
+    private static int pixelDistance;
+    private static double angle;
+    private NetworkTableEntry angleEntry;
 
 
     public CameraSubsystem(Solenoid ringLight) {
@@ -94,7 +101,9 @@ public class CameraSubsystem extends SubsystemBase {
         // We'll output to NT
         NetworkTable tagsTable = NetworkTableInstance.getDefault().getTable("apriltags");
         IntegerArrayPublisher pubTags = tagsTable.getIntegerArrayTopic("tags").publish();
-   
+        visionThread = new Thread(() -> {
+          run();
+      });
         // This cannot be 'true'. The program will never exit if it is. This
         // lets the robot stop this thread when restarting robot code or
         // deploying.
@@ -173,7 +182,42 @@ public class CameraSubsystem extends SubsystemBase {
 
 
 
+    public void run() {
+      // Main vision loop
+      int frameCount = 0;
+      while (!Thread.interrupted()) {
+          crosshair = null;
+          if (reflectiveCamCvSink.grabFrame(reflectiveCamFrame) == 0) {
+            reflectiveOutputStream.notifyError(reflectiveCamCvSink.getError());
+              continue;
 
+          }
+
+          grip.process(reflectiveCamFrame);
+
+          RotatedRect[] rects = findBoundingBoxes();
+          if (rects.length != 0) {
+              RotatedRect rect = findLargestRect(rects);
+              draw(rect);
+          }
+
+          if (crosshair != null) {
+              synchronized (lock) {
+                  calculateAngle();
+
+              }
+              
+          }
+          
+          if (frameCount == 1) {
+            reflectiveOutputStream.putFrame(reflectiveCamFrame);
+              frameCount = 0;
+          }
+
+          frameCount++;
+      }
+
+  }
     //     frontCamCvSink = CameraServer.getVideo(frontDetectionCamera);
     //     backCamCvSink = CameraServer.getVideo(backDetectionCamera);
     //     frontDetectionCamera.setVideoMode(VideoMode.PixelFormat.kYUYV, VisionConstants.kFrameWidth, VisionConstants.kFrameHeight, VisionConstants.kProcessingFramesPerSec);
@@ -198,10 +242,77 @@ public class CameraSubsystem extends SubsystemBase {
     //         }
     //     }
     // }
+    public RotatedRect[] findBoundingBoxes() {
+      ArrayList<MatOfPoint> contours = grip.filterContoursOutput();
+      // System.out.println(contours.size());
+      RotatedRect[] rects = new RotatedRect[contours.size()];
+      for (int i = 0; i < contours.size(); i++)
+          rects[i] = Imgproc.minAreaRect(new MatOfPoint2f(contours.get(i).toArray()));
+
+      return rects;
+
+  }
+
+  public RotatedRect findLargestRect(RotatedRect[] rects) {
+      RotatedRect rect = rects[0];
+      for (int i = 0; i < rects.length; i++) {
+          if (rects[i].size.area() > rect.size.area())
+              rect = rects[i];
+
+      }
+
+      return rect;
+  }
+
+  public void draw(RotatedRect rect) {
+
+      rect.points(pts);
+      drawRect(pts);
+      findCrosshair(pts);
+
+      if (crosshair != null)
+          drawCrosshair();
+
+  }
+
+  // Draw bounding box around the reflective tape
+  public void drawRect(Point[] pts) {
+      for (int i = 0; i < 4; i++)
+          Imgproc.line(reflectiveCamFrame, pts[i], pts[(i + 1) % 4], VisionConstants.GREEN, 1);
+
+  }
+
+  // Calculate the crosshair position
+  public void findCrosshair(Point[] pts) {
+      // i is starting point for line, j is next point
+      int j;
+      for (int i = 0; i < 4; i++) {
+          j = (i + 1) % 4;
+          if (crosshair == null || (pts[i].y + pts[j].y) / 2 < crosshair.y)
+              crosshair = new Point((pts[i].x + pts[j].x) / 2, (pts[i].y + pts[j].y) / 2);
+
+      }
+
+  }
+
+  // Draw the crosshair on the frame
+  public void drawCrosshair() {
+      Imgproc.line(reflectiveCamFrame, new Point(crosshair.x - 5, crosshair.y - 5), new Point(crosshair.x + 5, crosshair.y + 5), VisionConstants.RED, 3);
+      Imgproc.line(reflectiveCamFrame, new Point(crosshair.x - 5, crosshair.y + 5), new Point(crosshair.x + 5, crosshair.y - 5), VisionConstants.RED, 3);
+
+  }
+
+  // Calculate horizontal turret angle
+  public void calculateAngle() {
+      pixelDistance = (int) crosshair.x - VisionConstants.IMG_HOR_MID;
+      angle = pixelDistance * VisionConstants.HOR_DEGREES_PER_PIXEL;
+      angleEntry.setDouble(angle);
+
+  }
 
 
     public Thread getVisionThread() {
         return visionThread;
     }
+    
 }
-

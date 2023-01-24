@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.adambots.Constants.DriveConstants;
@@ -111,7 +112,6 @@ public class SwerveModule {
 
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));
-    
   }
 
   /**
@@ -120,6 +120,11 @@ public class SwerveModule {
    * @param desiredState Desired state with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
+
+    if (Math.abs(desiredState.speedMetersPerSecond) < DriveConstants.kSpeedThreshold){
+      stop();
+      return;
+    }
 
     double speedMetersPerSecond = ModuleConstants.kDriveEncoderDistancePerPulse * m_driveEncoder.getVelocity();
     double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); //assuming that setting the cancoder config to rad will return radians. if not, convert.
@@ -149,9 +154,14 @@ public class SwerveModule {
     // System.out.printf("Turn Output: %f\n", turnOutput);
   }
 
+  public void stop(){
+    m_driveMotor.set(0);
+    m_turningMotor.set(0);
+  }
+
   /** Zeroes all the SwerveModule encoders. */
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
-    m_absoluteEncoder.setPosition(m_absoluteEncoder.getAbsolutePosition());
+    // m_absoluteEncoder.setPosition(m_absoluteEncoder.getAbsolutePosition());
   }
 }

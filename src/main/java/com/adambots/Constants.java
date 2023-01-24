@@ -64,6 +64,10 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.15;
 
         public static final double kMaxSpeedMetersPerSecond = 3;
+
+        public static final double kSpeedThreshold = 0.001;
+        public static int kOffBalanceAngleThresholdDegrees = 10;
+        public static int kOonBalanceAngleThresholdDegrees = 5;
     }
 
     public static final class ModuleConstants {

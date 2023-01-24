@@ -134,6 +134,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    *                      field.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             // ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot,
@@ -213,5 +214,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontRight.setPIDValues(kP, kI, kD);
     m_rearLeft.setPIDValues(kP, kI, kD);
     m_rearRight.setPIDValues(kP, kI, kD);
+  }
+
+  public void stop() {
+    drive(0, 0, 0, false);
   }
 }

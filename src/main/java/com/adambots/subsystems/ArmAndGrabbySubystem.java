@@ -49,12 +49,14 @@ TalonFX rightArmExtender;
     armLifter.set(ControlMode.PercentOutput, -speed);
   }
 
-  public void extendArm () {
-
+  public void extendArm (int speed) {
+    rightArmExtender.set(ControlMode.PercentOutput, speed);
+    leftArmExtender.set(ControlMode.PercentOutput, -speed);
   }
 
-  public void retractArm() {
-
+  public void retractArm(int speed) {
+    rightArmExtender.set(ControlMode.PercentOutput, -speed);
+    leftArmExtender.set(ControlMode.PercentOutput, speed);
   }
 
   @Override

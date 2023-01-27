@@ -4,18 +4,19 @@
 
 package com.adambots.commands;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.adambots.subsystems.ArmAndGrabbySubystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class LowerArmCommand extends CommandBase {
-  int speed;
+public class ExtendArmCommand extends CommandBase {
+  /** Creates a new ExtendArmCommand. */
   ArmAndGrabbySubystem armAndGrabbySubystem;
-  public LowerArmCommand(ArmAndGrabbySubystem armAndGrabbySubystem, int speed) {
-    this.speed = speed;
-    addRequirements(armAndGrabbySubystem);
-    this.armAndGrabbySubystem = armAndGrabbySubystem;
+  int speed;
+  public ExtendArmCommand(ArmAndGrabbySubystem armAndGrabbySubystem, int speed) {
+      this.speed = speed;
+      this.armAndGrabbySubystem = armAndGrabbySubystem;
+      addRequirements(armAndGrabbySubystem);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -25,13 +26,13 @@ public class LowerArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAndGrabbySubystem.lowerArm(speed);
+    armAndGrabbySubystem.extendArm(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armAndGrabbySubystem.lowerArm(0);
+    armAndGrabbySubystem.extendArm(0);
   }
 
   // Returns true when the command should end.

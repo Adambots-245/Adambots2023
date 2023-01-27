@@ -20,7 +20,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import java.util.ArrayList;
-import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
@@ -29,6 +28,7 @@ import org.opencv.core.*;
 
 
 import com.adambots.Constants.VisionConstants;
+import com.adambots.Vision.ReflectivePipeline;
 
 
 /**
@@ -39,12 +39,13 @@ public class CameraSubsystem extends SubsystemBase {
 
 
     private static UsbCamera reflectivetDetectionCamera;
+    private static ReflectivePipeline reflectiveGrip;
     private static UsbCamera downDetectionCamera;
     private static CvSink reflectiveCamCvSink;
     private static CvSink downCamCvSink;
     private static CvSource reflectiveOutputStream;
     private static CvSource downOutputStream;
-    private static Mat reflectiveCamFrame;
+    private static Mat reflectiveMat;
     private Thread visionThread;
     private Solenoid ringLight;
     private static Point crosshair;
@@ -55,13 +56,12 @@ public class CameraSubsystem extends SubsystemBase {
     private NetworkTableEntry angleEntry;
 
 
-    public CameraSubsystem(Solenoid ringLight) {
+    public CameraSubsystem(Solenoid ringLight, ReflectivePipeline reflectivePipeline) {
         this.ringLight = ringLight;
 
-
+        this.reflectiveGrip = reflectivePipeline;
         init();
     }
-
 
     public void init() {
         var detector = new AprilTagDetector();
@@ -92,6 +92,7 @@ public class CameraSubsystem extends SubsystemBase {
         // Mats are very memory expensive. Lets reuse these.
         var mat = new Mat();
         var grayMat = new Mat();
+        var reflectiveMat = new Mat();
    
         // Instantiate once
         ArrayList<Long> tags = new ArrayList<>();
@@ -187,13 +188,13 @@ public class CameraSubsystem extends SubsystemBase {
       int frameCount = 0;
       while (!Thread.interrupted()) {
           crosshair = null;
-          if (reflectiveCamCvSink.grabFrame(reflectiveCamFrame) == 0) {
+          if (reflectiveCamCvSink.grabFrame(reflectiveMat) == 0) {
             reflectiveOutputStream.notifyError(reflectiveCamCvSink.getError());
               continue;
 
           }
 
-          grip.process(reflectiveCamFrame);
+          //reflectiveGrip.process(reflectiveCamFrame);
 
           RotatedRect[] rects = findBoundingBoxes();
           if (rects.length != 0) {
@@ -208,9 +209,9 @@ public class CameraSubsystem extends SubsystemBase {
               }
               
           }
-          
+
           if (frameCount == 1) {
-            reflectiveOutputStream.putFrame(reflectiveCamFrame);
+            reflectiveOutputStream.putFrame(reflectiveMat);
               frameCount = 0;
           }
 
@@ -243,7 +244,7 @@ public class CameraSubsystem extends SubsystemBase {
     //     }
     // }
     public RotatedRect[] findBoundingBoxes() {
-      ArrayList<MatOfPoint> contours = grip.filterContoursOutput();
+      ArrayList<MatOfPoint> contours = reflectiveGrip.filterContoursOutput();
       // System.out.println(contours.size());
       RotatedRect[] rects = new RotatedRect[contours.size()];
       for (int i = 0; i < contours.size(); i++)
@@ -278,7 +279,7 @@ public class CameraSubsystem extends SubsystemBase {
   // Draw bounding box around the reflective tape
   public void drawRect(Point[] pts) {
       for (int i = 0; i < 4; i++)
-          Imgproc.line(reflectiveCamFrame, pts[i], pts[(i + 1) % 4], VisionConstants.GREEN, 1);
+          Imgproc.line(reflectiveMat, pts[i], pts[(i + 1) % 4], VisionConstants.GREEN, 1);
 
   }
 
@@ -297,8 +298,8 @@ public class CameraSubsystem extends SubsystemBase {
 
   // Draw the crosshair on the frame
   public void drawCrosshair() {
-      Imgproc.line(reflectiveCamFrame, new Point(crosshair.x - 5, crosshair.y - 5), new Point(crosshair.x + 5, crosshair.y + 5), VisionConstants.RED, 3);
-      Imgproc.line(reflectiveCamFrame, new Point(crosshair.x - 5, crosshair.y + 5), new Point(crosshair.x + 5, crosshair.y - 5), VisionConstants.RED, 3);
+      Imgproc.line(reflectiveMat, new Point(crosshair.x - 5, crosshair.y - 5), new Point(crosshair.x + 5, crosshair.y + 5), VisionConstants.RED, 3);
+      Imgproc.line(reflectiveMat, new Point(crosshair.x - 5, crosshair.y + 5), new Point(crosshair.x + 5, crosshair.y - 5), VisionConstants.RED, 3);
 
   }
 

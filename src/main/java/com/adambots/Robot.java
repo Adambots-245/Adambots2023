@@ -15,6 +15,7 @@ import com.adambots.utils.Log;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -44,7 +45,7 @@ public class Robot extends TimedRobot {
 
     Log.instance();
     Log.setFilter(Level.OFF);
-    
+
     if (Robot.isReal()) {
 
       // Starts vision thread only if not running in simulation mode

@@ -9,7 +9,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -18,27 +20,27 @@ public class ArmAndGrabbySubystem extends SubsystemBase {
   //private final 
   /** Creates a new ArmAndGrabbySubystem. */
 
-Solenoid leftGrabby;
-Solenoid rightGrabby;
+DoubleSolenoid grabby;
+// Solenoid rightGrabby;
 TalonFX armLifter;
 TalonFX leftArmExtender;
 TalonFX rightArmExtender;
 
-  public ArmAndGrabbySubystem(Solenoid leftGrabby, Solenoid rightGrabby, TalonFX armLifter, TalonFX leftArmExtender, TalonFX rightArmExtender) {
-    this.leftGrabby = leftGrabby;
-    this.rightGrabby = rightGrabby;
+  public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX leftArmExtender, TalonFX rightArmExtender) {
+    this.grabby = grabby;
+   // this.rightGrabby = rightGrabby;
     this.armLifter = armLifter;
     this.leftArmExtender = leftArmExtender;
     this.rightArmExtender = rightArmExtender;
   }
 
   public void openGrabby () {
-    leftGrabby.set(true);
-    rightGrabby.set(true);
+    grabby.set(Value.kForward);
+    // rightGrabby.set(true);
   }
   public void closeGrabby () {
-    leftGrabby.set(false);
-    rightGrabby.set(false);
+    grabby.set(Value.kReverse);
+    // rightGrabby.set(false);
   }
 
   public void raiseArm (int speed) {

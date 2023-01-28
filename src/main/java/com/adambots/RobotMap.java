@@ -84,18 +84,19 @@ public class RobotMap {
         public static final int kFrontLeftDriveMotorPort = 18;
 
         // Arm and Grabby ports
-        public static final int armLiftPort = 245;
-        public static final int leftArmExtenderPort = 400;
-        public static final int rightArmExtenderPort = 500;
-        public static final int leftGrabbyPort = 600;
-        public static final int rightGrabbyPort = 800;
-        public static final int armLiftEncoderPort = 152;
-        public static final int leftArmExtenderEncoderPort = 420;
-        public static final int rightArmExtenderEncoderPort = 666;
+        public static final int armLiftPort = 5;
+        public static final int leftArmExtenderPort = 6;
+        public static final int rightArmExtenderPort = 7;
+        public static final int grabbyPort = 1;
+        public static final int ungrabbyPort = 0;
+        // public static final int rightGrabbyPort = 0;
+        public static final int armLiftEncoderPort = 2;
+        public static final int leftArmExtenderEncoderPort = 3;
+        public static final int rightArmExtenderEncoderPort = 4;
 
         // Arm and Grabby Devices
-        public static final Solenoid leftGrabby = new Solenoid(PneumaticsModuleType.CTREPCM, leftGrabbyPort);
-        public static final Solenoid rightGrabby = new Solenoid (PneumaticsModuleType.CTREPCM, rightGrabbyPort);
+        public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
+        // public static final Solenoid rightGrabby = new Solenoida (PneumaticsModuleType.CTREPCM, rightGrabbyPort);
         
         public static final WPI_TalonFX leftArmExtender = new WPI_TalonFX(leftArmExtenderPort);
         public static final WPI_TalonFX rightArmExtender = new WPI_TalonFX(rightArmExtenderPort);

@@ -54,7 +54,7 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
   RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
-  private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.leftGrabby, RobotMap.rightGrabby, RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender);
+  private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 

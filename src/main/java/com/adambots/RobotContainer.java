@@ -100,6 +100,7 @@ public class RobotContainer {
     Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
     Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
     Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
+    Buttons.secondaryXButton.onTrue(new ScoreInLowZoneCommand(armAndGrabbySubystem, 15, 0.25));
     // Buttons.primaryAButton.onTrue(command);
     // Buttons.secondaryDPadE.onTrue(command);
 

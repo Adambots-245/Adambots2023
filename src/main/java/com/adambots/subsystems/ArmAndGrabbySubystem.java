@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.adambots.commands.*;
+import com.adambots.Constants;
+
 
 
 public class ArmAndGrabbySubystem extends SubsystemBase {
@@ -61,8 +64,37 @@ TalonFX rightArmExtender;
     leftArmExtender.set(ControlMode.PercentOutput, speed);
   }
 
+  public void ScoreInLowZone (int speed, double position) {
+    armLifter.setSelectedSensorPosition(0);
+    // if (armLifter.getSelectedSensorPosition()
+    if (getArmLifterEncoder() < position * Constants.ModuleConstants.kEncoderCPR) {
+      armLifter.set(ControlMode.PercentOutput, speed);
+    }
+    else {
+      armLifter.set(ControlMode.PercentOutput, 0);
+    }
+  }
+
+  public double getArmLifterEncoder () {
+    return armLifter.getSelectedSensorPosition();
+  }
+
+  public double getLeftExtenderEncoder () {
+    return leftArmExtender.getSelectedSensorPosition();
+  }
+
+  public double getRightExtenderEncoder () {
+    return rightArmExtender.getSelectedSensorPosition();
+  }
+
   @Override
   public void periodic() {
+
+    SmartDashboard.putNumber("armEncoder", getArmLifterEncoder());
+    SmartDashboard.putNumber("leftExtenderEncoder", getArmLifterEncoder());
+    SmartDashboard.putNumber("rightExtenderEncoder", getArmLifterEncoder());
+
+
     // This method will be called once per scheduler run
   }
 }

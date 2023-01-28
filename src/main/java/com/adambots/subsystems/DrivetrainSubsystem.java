@@ -10,8 +10,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+
+import com.adambots.Constants;
 import com.adambots.RobotMap;
 import com.adambots.Constants.DriveConstants;
+
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -85,7 +89,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     m_field.setRobotPose(getPose());
 
-    // SmartDashboard.putNumber("getTroddle", ex3dPro.getThrottle());
+    double kP = Preferences.getDouble(Constants.PreferencesConstants.kPModuleTurningKey, 0);
+    double kD = Preferences.getDouble(Constants.PreferencesConstants.kDModuleTurningKey, 0);
+    m_frontLeft.setPIDValues(kP, 0 , kD);
+    m_frontRight.setPIDValues(kP, 0 , kD);
+    m_rearLeft.setPIDValues(kP, 0 , kD);
+    m_rearRight.setPIDValues(kP, 0 , kD);
+    // SmartDashboard.putNumber("getThrottle", ex3dPro.getThrottle());
     // SmartDashboard.putNumber("getTwist", ex3dPro.getTwist());
   }
 

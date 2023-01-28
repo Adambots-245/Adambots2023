@@ -29,9 +29,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -58,7 +60,7 @@ public class RobotContainer {
   // RobotMap.FrontLeftMotor,
   // RobotMap.BackLeftMotor,
   // RobotMap.BackRightMotor);
-
+  
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
       RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
   // commands
@@ -169,11 +171,10 @@ public class RobotContainer {
     // .andThen(new WaitCommand(4))
     // .andThen(new TurnToAngleFromCameraCommand(driveTrainSubsystem))
 
-    /*
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+        Preferences.getDouble(Constants.PreferencesConstants.kMaxSpeedMetersPerSecondKey, 0),
+        Preferences.getDouble(Constants.PreferencesConstants.kMaxAccelerationMetersPerSecondSquaredKey, 0))
         // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(DriveConstants.kDriveKinematics);
 
@@ -186,21 +187,22 @@ public class RobotContainer {
         // End 3 meters straight ahead of where we started, facing forward
         new Pose2d(3, 0.5, new Rotation2d(0)),
         config); 
-    */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    String trajectoryJSON = "Unnamed.wpilib.json";
-    Trajectory exampleTrajectory = new Trajectory();
+    // String trajectoryJSON = "Unnamed.wpilib.json";
+    // Trajectory exampleTrajectory = new Trajectory();
 
-    try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      exampleTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-    }
+    // try {
+    //   Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+    //   exampleTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    // } catch (IOException ex) {
+    //   DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    // }
 
     var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+      Preferences.getDouble(Constants.PreferencesConstants.kPThetaController, 0), 0, 0, new TrapezoidProfile.Constraints(
+          Preferences.getDouble(Constants.PreferencesConstants.kMaxAngularSpeedRadiansPerSecondKey, 0), 
+          Preferences.getDouble(Constants.PreferencesConstants.kMaxAngularSpeedRadiansPerSecondSquaredKey, 0)));
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
@@ -209,8 +211,8 @@ public class RobotContainer {
         DriveConstants.kDriveKinematics,
 
         // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
+        new PIDController(Preferences.getDouble(Constants.PreferencesConstants.kPXControllerKey, 0), 0, 0),
+        new PIDController(Preferences.getDouble(Constants.PreferencesConstants.kPYControllerKey, 0), 0, 0),
         thetaController,
         drivetrainSubsystem::setModuleStates,
         drivetrainSubsystem);

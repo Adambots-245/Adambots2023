@@ -64,6 +64,35 @@ public class Robot extends TimedRobot {
     }
 
     // RobotMap.YellowLight.set(true);
+    
+    //Create all the preferences 
+    if (!Preferences.containsKey(PreferencesConstants.kPModuleTurningKey)) {
+      Preferences.setDouble(PreferencesConstants.kPModuleTurningKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kDModuleTurningKey)) {
+      Preferences.setDouble(PreferencesConstants.kDModuleTurningKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kMaxSpeedMetersPerSecondKey)) {
+      Preferences.setDouble(PreferencesConstants.kMaxSpeedMetersPerSecondKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kMaxAccelerationMetersPerSecondSquaredKey)) {
+      Preferences.setDouble(PreferencesConstants.kMaxAccelerationMetersPerSecondSquaredKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kMaxAngularSpeedRadiansPerSecondKey)) {
+      Preferences.setDouble(PreferencesConstants.kMaxAngularSpeedRadiansPerSecondKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kMaxAngularSpeedRadiansPerSecondSquaredKey)) {
+      Preferences.setDouble(PreferencesConstants.kMaxAngularSpeedRadiansPerSecondSquaredKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kPModuleTurningKey)) {
+      Preferences.setDouble(PreferencesConstants.kPXControllerKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kPYControllerKey)) {
+      Preferences.setDouble(PreferencesConstants.kPYControllerKey, 0.0);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kPThetaController)) {
+      Preferences.setDouble(PreferencesConstants.kPThetaController, 0.0);
+    }
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.

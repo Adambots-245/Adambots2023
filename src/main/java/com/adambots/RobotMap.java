@@ -31,13 +31,10 @@ import edu.wpi.first.wpilibj.Solenoid;
  * Define all the devices here
  */
 public class RobotMap {
-        // public static final Solenoid CatapultStop = new
-        // Solenoid(PneumaticsModuleType.CTREPCM,
-        // Constants.RAISE_CATAPULT_STOP_SOL_PORT);
-
         // public static final Solenoid BlasterHood = new
         // Solenoid(PneumaticsModuleType.CTREPCM,
         // Constants.RAISE_BLASTER_HOOD_SOL_PORT);
+
         // public static final DoubleSolenoid RungClamp = new
         // DoubleSolenoid(PneumaticsModuleType.CTREPCM,
         // Constants.RAISE_HANG_CLAMP_SOL_PORT, Constants.LOWER_HANG_CLAMP_SOL_PORT);
@@ -51,17 +48,11 @@ public class RobotMap {
         // public static final PhotoEye rungArmAdvancedSwitch = new
         // PhotoEye(Constants.RUNG_ARM_ADVANCED_PHOTO_EYE_PORT);
         // public static final Solenoid YellowLight = new
-        // Solenoid(PneumaticsModuleType.CTREPCM,
-        // Constants.YELLOW_LEDS_SOL_PORT);
+        // Solenoid(PneumaticsModuleType.CTREPCM, Constants.YELLOW_LEDS_SOL_PORT);
 
         // public static final PhotoEye IntakePhotoEye = new PhotoEye(7);
-        // public static final PhotoEye SpacingPhotoEye = new PhotoEye(8);
-        // public static final PhotoEye ExitPhotoEye = new PhotoEye(9);
 
-        // public static final Counter IntakeCounter = new
-        // Counter(IntakePhotoEye.getDigitalInput());
-        // public static final Counter ExitCounter = new
-        // Counter(ExitPhotoEye.getDigitalInput());
+        // public static final Counter IntakeCounter = new Counter(IntakePhotoEye.getDigitalInput());
 
         // PORTS Definition - This should be the only place to define all ports
         public final static I2C.Port I2C_PORT = I2C.Port.kOnboard;
@@ -119,5 +110,4 @@ public class RobotMap {
                         RobotMap.kRearRightEncoderPort,
                         DriveConstants.kRearRightDriveEncoderReversed,
                         DriveConstants.kRearRightTurningEncoderReversed);
-        // Swerve Drive Constants
 }

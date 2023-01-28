@@ -31,8 +31,8 @@ public class UpdateSwervePIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double kP = Preferences.getDouble(Constants.ModuleConstants.kPTurningKey, Constants.ModuleConstants.kPModuleTurningController);
-    double kD = Preferences.getDouble(Constants.ModuleConstants.kDTurningKey, Constants.ModuleConstants.kDModuleTurningController);
+    double kP = Preferences.getDouble(Constants.PreferencesConstants.kPModuleTurningKey, 0);
+    double kD = Preferences.getDouble(Constants.PreferencesConstants.kPModuleTurningKey, 0);
     driveTrainSubsystem.setPIDValues(kP, 0d, kD);
   }
 

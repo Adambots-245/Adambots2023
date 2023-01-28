@@ -63,15 +63,15 @@ public final class Constants {
         public static final double kvVoltSecondsPerMeter = 0.8;
         public static final double kaVoltSecondsSquaredPerMeter = 0.15;
 
-        public static final double kMaxSpeedMetersPerSecond = 3;
+        public static final double kMaxSpeedMetersPerSecond = 3; //Only used in Drive and SetModuleStates
 
-        public static final double kSpeedThreshold = 0.001;
+        public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
         public static int kOffBalanceAngleThresholdDegrees = 10;
         public static int kOonBalanceAngleThresholdDegrees = 5;
     }
 
     public static final class ModuleConstants {
-        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 16 * Math.PI;
+        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 16 * Math.PI; //Limits for wheel turning profiled PID
         public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 16 * Math.PI;
 
         public static final int kEncoderCPR = 4096;
@@ -86,25 +86,22 @@ public final class Constants {
                 // Assumes the encoders are on a 1:1 reduction with the module shaft.
                 (2 * Math.PI) / (double) kEncoderCPR;
 
-        public static double kPModuleTurningController = -1.1; //0.9
+        public static double kPModuleTurningController = -1.1; //PID Values for angular wheel rotation
         public static double kIModuleTurningController = 0;
         public static double kDModuleTurningController = -0.01; //0.02
-        public static final String kPTurningKey = "kPTurningKey";
-        public static final String kDTurningKey = "kDTurningKey";
 
-        public static final double kPModuleDriveController = 1;
+        public static final double kPModuleDriveController = 1; //P 0 0 for drive controller of swerve module
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 2.3;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1.5;
-        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+        public static final double kMaxSpeedMetersPerSecond = 2.3; //Max speed of auton
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.5; //Max acceleration of auton
+        public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //Max rotational speed of auton
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //Max rotational acceleration of auton
 
-        public static final double kPXController = 2.7;
+        public static final double kPXController = 2.7; // P 0 0 values for auton X, Y, and Theta controllers
         public static final double kPYController = 2.7;
         public static final double kPThetaController = 0.4;
-    	public static final double kGyroTolerance = 0.5; //degrees tolerance for measurement
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
@@ -125,6 +122,18 @@ public final class Constants {
 
         public static final double kCameraFieldOfView = 68.5;
 
+    }
+
+    public static final class PreferencesConstants {
+        public static final String kPModuleTurningKey = "kPModuleTurningKey";
+        public static final String kDModuleTurningKey = "kDModuleTurningKey";
+        public static final String kMaxSpeedMetersPerSecondKey = "kMaxSpeedMetersPerSecondKey";
+        public static final String kMaxAccelerationMetersPerSecondSquaredKey = "kMaxAccelerationMetersPerSecondSquaredKey";
+        public static final String kMaxAngularSpeedRadiansPerSecondKey = "kMaxAngularSpeedRadiansPerSecondKey";
+        public static final String kMaxAngularSpeedRadiansPerSecondSquaredKey = "kMaxAngularSpeedRadiansPerSecondSquaredKey";
+        public static final String kPXControllerKey = "kPXControllerKey";
+        public static final String kPYControllerKey = "kPYControllerKey";
+        public static final String kPThetaController = "kPThetaController"; 
     }
 
     public static final class GamepadConstants {

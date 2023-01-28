@@ -25,6 +25,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.core.*;
 import com.adambots.Constants.VisionConstants;
+import com.adambots.Vision.ConePipeline;
+import com.adambots.Vision.CubePipeline;
 import com.adambots.Vision.ReflectivePipeline;
 import com.adambots.utils.AprilTagReader;
 import com.adambots.utils.Log;

@@ -29,6 +29,8 @@ import org.opencv.core.*;
 
 
 import com.adambots.Constants.VisionConstants;
+import com.adambots.Vision.ConePipeline;
+import com.adambots.Vision.CubePipeline;
 
 
 /**
@@ -53,6 +55,8 @@ public class CameraSubsystem extends SubsystemBase {
     private static int pixelDistance;
     private static double angle;
     private NetworkTableEntry angleEntry;
+    private static ConePipeline coneGrip;
+    private static CubePipeline cubeGrip;
 
 
     public CameraSubsystem(Solenoid ringLight) {

@@ -84,6 +84,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Odom Y", m_odometry.getPoseMeters().getY());
 
     m_field.setRobotPose(getPose());
+    // System.out.printf("Pose: X %f\n", getPose().getX());
+    // System.out.printf("Pose: Y %f\n", getPose().getY());
 
     // System.out.println(m_gyro.getRotation2d());
     // SmartDashboard.putNumber("speedmms",)
@@ -152,6 +154,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+    SmartDashboard.putNumber("m_frontLeftTarget", swerveModuleStates[0].angle.getDegrees());
+    SmartDashboard.putNumber("m_frontRightTarget", swerveModuleStates[1].angle.getDegrees());
+    SmartDashboard.putNumber("m_rearLeftTarget", swerveModuleStates[2].angle.getDegrees());
+    SmartDashboard.putNumber("m_rearRightTarget", swerveModuleStates[3].angle.getDegrees());
+
 
   }
 

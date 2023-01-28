@@ -11,6 +11,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.ModuleConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -22,8 +25,9 @@ public class SwerveModule {
   private final CANSparkMax m_driveMotor;
   private final CANSparkMax m_turningMotor;
 
-  private final WPI_CANCoder m_turnEncoder;
+  private final WPI_CANCoder m_absoluteEncoder;
   private final RelativeEncoder m_driveEncoder;
+  private final RelativeEncoder m_turningEncoder;
   // private final CANCoderConfiguration m_canCoderConfig = new CANCoderConfiguration();s
 
   private final PIDController m_drivePIDController =
@@ -67,13 +71,16 @@ public class SwerveModule {
     // m_driveMotor.setIdleMode(IdleMode.kBrake);
     // m_turningMotor.setIdleMode(IdleMode.kBrake);
 
-    m_turnEncoder = new WPI_CANCoder(turningEncoderChannel);
+    m_absoluteEncoder = new WPI_CANCoder(turningEncoderChannel);
     m_driveEncoder = m_driveMotor.getEncoder();
+    m_turningEncoder = m_turningMotor.getEncoder();
+    
     // m_canCoderConfig.unitString = "rad";
     // m_encoder.configAllSettings(m_canCoderConfig);
-    m_turnEncoder.clearStickyFaults();
+    m_absoluteEncoder.clearStickyFaults();
 
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+    resetEncoders();
   }
 
   /**
@@ -85,7 +92,7 @@ public class SwerveModule {
     // return new SwerveModuleState(m_driveEncoder.getRate(), new Rotation2d(m_turningEncoder.get()));
     // double speedMetersPerSecond = ModuleConstants.kDriveEncoderDistancePerPulse * m_encoder.getVelocity();
     double speedMetersPerSecond = m_driveEncoder.getVelocity() / 60.0;
-    double turningRadians = Units.degreesToRadians(m_turnEncoder.getAbsolutePosition()); //assuming that setting the cancoder config to rad will return radians. if not, convert.
+    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); //assuming that setting the cancoder config to rad will return radians. if not, convert.
     return new SwerveModuleState(speedMetersPerSecond, new Rotation2d(turningRadians));
   }
 
@@ -95,10 +102,16 @@ public class SwerveModule {
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
-    double distance = m_driveEncoder.getPosition() * ModuleConstants.kDriveEncoderDistancePerPulse;
-    double turningDistance = m_turnEncoder.getAbsolutePosition() * ModuleConstants.kTurningEncoderDistancePerPulse;
+    double distance = m_driveEncoder.getPosition() * ModuleConstants.kDriveEncoderScale;
+    // double turningDistance = m_turningEncoder.getPosition() * ModuleConstants.kDriveEncoderScale; //ModuleConstants.kTurningEncoderDistancePerPulse;
+    double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;
+    
+    // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
+    SmartDashboard.putNumber("Turningdistance" + hashCode(), m_turningEncoder.getPosition());
+
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));
+    
   }
 
   /**
@@ -108,17 +121,19 @@ public class SwerveModule {
    */
   public void setDesiredState(SwerveModuleState desiredState) {
 
-    double speedMetersPerSecond = ModuleConstants.kDriveEncoderDistancePerPulse * m_turnEncoder.getVelocity();
-    double turningRadians = Units.degreesToRadians(m_turnEncoder.getAbsolutePosition()); //assuming that setting the cancoder config to rad will return radians. if not, convert.
+    double speedMetersPerSecond = ModuleConstants.kDriveEncoderDistancePerPulse * m_driveEncoder.getVelocity();
+    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); //assuming that setting the cancoder config to rad will return radians. if not, convert.
+    // double turningRadians = m_turningEncoder.getPosition(); 
 
     // System.out.printf("Speed: %f, Turn: %f\n", speedMetersPerSecond, turningRadians);
+    // System.out.printf("Absolute Encoder: %f\n", m_absoluteEncoder.getAbsolutePosition());
     
     // Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state =
         SwerveModuleState.optimize(desiredState, new Rotation2d(turningRadians));
 
     // Calculate the drive output from the drive PID controller.
-    final double driveOutput =
+    final double driveOutput = //state.speedMetersPerSecond / DriveConstants.kMaxSpeedMetersPerSecond;
         m_drivePIDController.calculate(speedMetersPerSecond, state.speedMetersPerSecond);
 
     // Calculate the turning motor output from the turning PID controller.
@@ -137,6 +152,6 @@ public class SwerveModule {
   /** Zeroes all the SwerveModule encoders. */
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
-    m_turnEncoder.setPosition(0);
+    m_absoluteEncoder.setPosition(m_absoluteEncoder.getAbsolutePosition());
   }
 }

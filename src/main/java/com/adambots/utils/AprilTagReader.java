@@ -7,6 +7,7 @@ import org.opencv.imgproc.Imgproc;
 import edu.wpi.first.apriltag.AprilTagDetection;
 import edu.wpi.first.apriltag.AprilTagDetector;
 import edu.wpi.first.apriltag.AprilTagPoseEstimator;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 /**
@@ -128,6 +129,32 @@ public class AprilTagReader implements AutoCloseable {
             return null;
 
         return detections[tagNum];
+    }
+
+    /**
+     * Indicates if the robot is centered based on the April Tag based on its Y axis. 
+     * If the robot is centered, it returns 0.
+     * If not it returns -1 or +1. Depending on this turn left or right until it is centered (returns 0)
+     * @param tagNum
+     * @return
+     * 
+     */
+    public int AlignmentCheck(int tagNum){
+        if (hasNotExtracted(tagNum))
+            return 0;
+        
+        var detection = getDetection(tagNum);
+        Transform3d pose = estimator.estimate(detection);
+
+        Rotation3d rot = pose.getRotation();
+
+        if (rot.getY() > 0.4)
+            return -1;
+        
+        if (rot.getY() < -0.4)
+            return +1;
+        
+        return 0;
     }
 
     @Override

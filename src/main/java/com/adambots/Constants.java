@@ -28,28 +28,10 @@ public final class Constants {
     public static ShuffleboardTab debugTab;
 
     public static final class DriveConstants {
-        // Tank Drive Constants
-        public static final double kNormalSpeedModifier = 1;
-        public static final double kLowSpeedModifier = 0.5;
-        // Acceleration ramping constant for drive train
-        public static final double kNeutralToFull = 0.4;
-        public static final int kDrivePIDSlot = 0;
-        public static final double kEncoderTickerPerInch = 3500;
-
-        // public static final int[] kFrontLeftTurningEncoderPorts = new int[] {0, 1};
-        // public static final int[] kRearLeftTurningEncoderPorts = new int[] {2, 3};
-        // public static final int[] kFrontRightTurningEncoderPorts = new int[] {4, 5};
-        // public static final int[] kRearRightTurningEncoderPorts = new int[] {6, 7};
-
         public static final boolean kFrontLeftTurningEncoderReversed = true; // false
         public static final boolean kRearLeftTurningEncoderReversed = false;
         public static final boolean kFrontRightTurningEncoderReversed = true; // false
         public static final boolean kRearRightTurningEncoderReversed = false;
-
-        public static final int[] kFrontLeftDriveEncoderPorts = new int[] { 8, 9 };
-        public static final int[] kRearLeftDriveEncoderPorts = new int[] { 10, 11 };
-        public static final int[] kFrontRightDriveEncoderPorts = new int[] { 12, 13 };
-        public static final int[] kRearRightDriveEncoderPorts = new int[] { 14, 15 };
 
         public static final boolean kFrontLeftDriveEncoderReversed = false;
         public static final boolean kRearLeftDriveEncoderReversed = true;
@@ -85,22 +67,24 @@ public final class Constants {
     }
 
     public static final class ModuleConstants {
-        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 2 * Math.PI;
-        public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 2 * Math.PI;
+        public static final double kMaxModuleAngularSpeedRadiansPerSecond = 16 * Math.PI;
+        public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 16 * Math.PI;
 
         public static final int kEncoderCPR = 4096;
         public static final double kWheelDiameterMeters = 0.15;
         public static final double kDriveEncoderDistancePerPulse =
                 // Assumes the encoders are directly mounted on the wheel shafts
                 (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
+        public static final double kDriveEncoderScale = 0.04957;
+ 
 
         public static final double kTurningEncoderDistancePerPulse =
                 // Assumes the encoders are on a 1:1 reduction with the module shaft.
                 (2 * Math.PI) / (double) kEncoderCPR;
 
-        public static double kPModuleTurningController = -0.9;
-        public static final double kIModuleTurningController = 0;
-        public static double kDModuleTurningController = -0.02;
+        public static double kPModuleTurningController = -1.1; //0.9
+        public static double kIModuleTurningController = 0;
+        public static double kDModuleTurningController = -0.01; //0.02
         public static final String kPTurningKey = "kPTurningKey";
         public static final String kDTurningKey = "kDTurningKey";
 
@@ -108,14 +92,14 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 1;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
+        public static final double kMaxSpeedMetersPerSecond = 2.3;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.5;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-        public static final double kPXController = 0.05;
-        public static final double kPYController = 0.05;
-        public static final double kPThetaController = -0.2;
+        public static final double kPXController = 2.7;
+        public static final double kPYController = 2.7;
+        public static final double kPThetaController = 0.4;
     	public static final double kGyroTolerance = 0.5; //degrees tolerance for measurement
 
         // Constraint for the motion profiled robot angle controller

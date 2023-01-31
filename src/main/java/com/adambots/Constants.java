@@ -7,6 +7,10 @@
 
 package com.adambots;
 
+import java.util.Map;
+
+import com.adambots.utils.ModuleMap;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -44,12 +48,29 @@ public final class Constants {
         // Distance between front and back wheels on robot
         public static final double kWheelBase = 0.61; // 0.7
 
-        // Distance between front and back wheels on robot
-        public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+        public enum ModulePosition {
+            FRONT_LEFT,
+            FRONT_RIGHT,
+            REAR_LEFT,
+            REAR_RIGHT
+          }
+      
+          public static final Map<ModulePosition, Translation2d> kModuleTranslations = Map.of(
+              ModulePosition.FRONT_LEFT, new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+              ModulePosition.FRONT_RIGHT, new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+              ModulePosition.REAR_LEFT, new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+              ModulePosition.REAR_RIGHT, new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+      
+          public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+              ModuleMap.orderedValues(kModuleTranslations, new Translation2d[0]));
+      
+
+        // // Distance between front and back wheels on robot
+        // public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+        //         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+        //         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+        //         new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+        //         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final boolean kGyroReversed = true;
 

@@ -59,8 +59,7 @@ public class RobotContainer {
   // RobotMap.BackLeftMotor,
   // RobotMap.BackRightMotor);
 
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
-      RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
+  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -226,6 +225,6 @@ public class RobotContainer {
     field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.drive(0, 0, 0, false));
+    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
   }
 }

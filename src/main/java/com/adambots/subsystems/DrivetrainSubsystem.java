@@ -4,14 +4,19 @@
 
 package com.adambots.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import com.adambots.RobotMap;
+
+import java.util.HashMap;
+
 import com.adambots.Constants.DriveConstants;
+import com.adambots.Constants.DriveConstants.ModulePosition;
+
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +30,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_rearRight;
 
   // The gyro sensor
-  private final Gyro m_gyro = RobotMap.GyroSensor;
+  private final Gyro m_gyro;
 
   // Odometry class for tracking robot pose
   private SwerveDriveOdometry m_odometry;
@@ -33,12 +38,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Field details that can be viewed in Glass
   private final Field2d m_field = new Field2d();
 
-  public DrivetrainSubsystem(SwerveModule frontLeft, SwerveModule rearLeft, SwerveModule frontRight,
-      SwerveModule rearRight) {
+  public DrivetrainSubsystem(HashMap<ModulePosition, SwerveModule> modules, Gyro gyro){
+
+    this(
+      modules.get(DriveConstants.ModulePosition.FRONT_LEFT),
+      modules.get(DriveConstants.ModulePosition.FRONT_RIGHT),
+      modules.get(DriveConstants.ModulePosition.REAR_LEFT),
+      modules.get(DriveConstants.ModulePosition.REAR_RIGHT),
+      gyro
+    );
+  }
+
+  private DrivetrainSubsystem(SwerveModule frontLeft, SwerveModule rearLeft, SwerveModule frontRight,
+      SwerveModule rearRight, Gyro gyro) {
     m_frontLeft = frontLeft;
     m_frontRight = frontRight;
     m_rearLeft = rearLeft;
     m_rearRight = rearRight;
+    m_gyro = gyro;
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
         new SwerveModulePosition[] {
@@ -47,8 +64,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-    
+
     SmartDashboard.putData("Field", m_field);
+
+    // When the robot starts, the Gyro may not be ready to reset - wait 1 second and then reset
+    new Thread(() -> {
+      try {
+        Thread.sleep(1000);
+        zeroHeading();
+      } catch (Exception e) {
+      }
+    }).start();
   }
 
   @Override
@@ -147,11 +173,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
-    // SmartDashboard.putNumber("m_frontLeftTarget", swerveModuleStates[0].angle.getDegrees());
-    // SmartDashboard.putNumber("m_frontRightTarget", swerveModuleStates[1].angle.getDegrees());
-    // SmartDashboard.putNumber("m_rearLeftTarget", swerveModuleStates[2].angle.getDegrees());
-    // SmartDashboard.putNumber("m_rearRightTarget", swerveModuleStates[3].angle.getDegrees());
-
+    // SmartDashboard.putNumber("m_frontLeftTarget",
+    // swerveModuleStates[0].angle.getDegrees());
+    // SmartDashboard.putNumber("m_frontRightTarget",
+    // swerveModuleStates[1].angle.getDegrees());
+    // SmartDashboard.putNumber("m_rearLeftTarget",
+    // swerveModuleStates[2].angle.getDegrees());
+    // SmartDashboard.putNumber("m_rearRightTarget",
+    // swerveModuleStates[3].angle.getDegrees());
 
   }
 
@@ -185,10 +214,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   /**
    * Returns the heading of the robot.
    *
-   * @return the robot's heading in degrees, from -180 to 180
+   * @return the robot's heading in degrees, from 0 to 360
    */
   public double getHeading() {
-    return m_gyro.getRotation2d().getDegrees();
+    // return m_gyro.getRotation2d().getDegrees();
+    return Math.IEEEremainder(m_gyro.getAngle(), 360); // Constrain to 360
+    // return MathUtil.inputModulus(m_gyro.getAngle(), -180, 180); // use this if you want to constrain by -180 to 180
   }
 
   /**

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.ModuleConstants;
+import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -43,6 +44,7 @@ public class SwerveModule {
           new TrapezoidProfile.Constraints(
               ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond,
               ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared));
+  private ModulePosition position;
 
   public void setPIDValues(double kP, double kI, double kD) {
     m_turningPIDController.setP(kP);
@@ -53,6 +55,7 @@ public class SwerveModule {
   /**
    * Constructs a SwerveModule.
    *
+   * @param position The position of this module (front or back, right or left)
    * @param driveMotorChannel The channel of the drive motor.
    * @param turningMotorChannel The channel of the turning motor.
    * @param driveEncoderChannels The channels of the drive encoder.
@@ -61,12 +64,14 @@ public class SwerveModule {
    * @param turningEncoderReversed Whether the turning encoder is reversed.
    */
   public SwerveModule(
+      ModulePosition position,
       int driveMotorChannel,
       int turningMotorChannel,
       int turningEncoderChannel,
       boolean driveEncoderReversed,
       boolean turningEncoderReversed) {
     
+    this.position = position; // Use position.name() to get the name of the position as a String
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
     // m_driveMotor.setIdleMode(IdleMode.kBrake);
@@ -75,6 +80,8 @@ public class SwerveModule {
     m_absoluteEncoder = new WPI_CANCoder(turningEncoderChannel);
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = m_turningMotor.getEncoder();
+
+    //TODO: Utilize driveEncoder and turningEncoder Reversed flags - instead of negating Joystick values in RobotContainer
     
     // m_canCoderConfig.unitString = "rad";
     // m_encoder.configAllSettings(m_canCoderConfig);
@@ -108,7 +115,7 @@ public class SwerveModule {
     double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;
     
     // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
-    SmartDashboard.putNumber("Turningdistance" + hashCode(), m_turningEncoder.getPosition());
+    SmartDashboard.putNumber("Turningdistance " + position.name(), m_turningEncoder.getPosition());
 
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));
@@ -152,6 +159,25 @@ public class SwerveModule {
 
     // System.out.printf("Drive Output: %f\n", driveOutput);
     // System.out.printf("Turn Output: %f\n", turnOutput);
+  }
+
+  /**
+   * Turn by this angle
+   * @param angle in radians
+   */
+  public void turn(double angle) {
+
+    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); 
+    double turnAngleError = Math.abs(angle - turningRadians);
+
+    double pidOut = m_turningPIDController.calculate(turningRadians, angle);
+    // if robot is not moving, stop the turn motor oscillating
+    if (turnAngleError < 0.5
+        && Math.abs(getState().speedMetersPerSecond) <= (DriveConstants.kMaxSpeedMetersPerSecond * 0.01))
+      pidOut = 0;
+
+    m_turningMotor.set(pidOut);
+
   }
 
   public void stop(){

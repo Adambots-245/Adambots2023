@@ -64,14 +64,14 @@ public class RobotMap {
         public static final int kRearRightEncoderPort = 3;
         public static final int kFrontLeftEncoderPort = 4;
         public static final int kFrontRightEncoderPort = 5;
-        public static final int kFrontRightTurningMotorPort = 11;
-        public static final int kFrontRightDriveMotorPort = 12;
-        public static final int kRearRightTurningMotorPort = 13;
-        public static final int kRearRightDriveMotorPort = 14;
-        public static final int kRearLeftTurningMotorPort = 15;
-        public static final int kRearLeftDriveMotorPort = 16;
-        public static final int kFrontLeftTurningMotorPort = 17;
-        public static final int kFrontLeftDriveMotorPort = 18;
+        public static final int kFrontRightTurningMotorPort = 13; // 11;
+        public static final int kFrontRightDriveMotorPort = 11; // 12;
+        public static final int kRearRightTurningMotorPort = 18; // 13;
+        public static final int kRearRightDriveMotorPort = 16; // 14;
+        public static final int kRearLeftTurningMotorPort = 14; //15;
+        public static final int kRearLeftDriveMotorPort = 12; //16;
+        public static final int kFrontLeftTurningMotorPort = 15; //17;
+        public static final int kFrontLeftDriveMotorPort = 17; // 18;
         
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;

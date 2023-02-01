@@ -14,6 +14,7 @@ import com.adambots.Constants.GamepadConstants;
 import com.adambots.RobotMap;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,7 +30,7 @@ public class Buttons {
         public static final CommandXboxController secondaryJoystick = new CommandXboxController(
                         GamepadConstants.kSecondaryDriver);
         public static final CommandJoystick ex3dPro = new CommandJoystick(RobotMap.kJoystickControllerPort);
-        public static final BooleanSupplier isJoystickConnected = () -> ex3dPro.getHID().isConnected();
+        public static final BooleanSupplier isJoystickConnected = () -> ex3dPro.getHID().isConnected() || RobotBase.isSimulation();
 
         // primary buttons
         public static final Trigger primaryBackButton = primaryJoystick.back();

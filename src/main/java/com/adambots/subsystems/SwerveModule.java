@@ -9,8 +9,10 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,6 +20,7 @@ import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.ModuleConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -49,7 +52,10 @@ public class SwerveModule {
           new TrapezoidProfile.Constraints(
               ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond,
               ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared));
-  private ModulePosition position;
+  private ModulePosition m_position;
+  private double m_actualAngleDegrees;
+  private double m_angleIncrementPer20ms;
+  private double m_angleDifference;
 
   public void setPIDValues(double kP, double kI, double kD) {
     m_turningPIDController.setP(kP);
@@ -76,7 +82,7 @@ public class SwerveModule {
       boolean driveEncoderReversed,
       boolean turningEncoderReversed) {
     
-    this.position = position; // Use position.name() to get the name of the position as a String
+    this.m_position = position; // Use position.name() to get the name of the position as a String
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
     // m_driveMotor.setIdleMode(IdleMode.kBrake);
@@ -102,6 +108,12 @@ public class SwerveModule {
 
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
     resetEncoders();
+
+    if (RobotBase.isSimulation()) {
+
+      REVPhysicsSim.getInstance().addSparkMax(m_driveMotor, DCMotor.getNEO(1));
+
+    }
   }
 
   /**
@@ -122,13 +134,13 @@ public class SwerveModule {
    *
    * @return The current position of the module.
    */
-  public SwerveModulePosition getPosition() {
+  public SwerveModulePosition getM_position() {
     double distance = m_driveEncoder.getPosition() * ModuleConstants.kDriveEncoderScale;
     // double turningDistance = m_turningEncoder.getPosition() * ModuleConstants.kDriveEncoderScale; //ModuleConstants.kTurningEncoderDistancePerPulse;
     double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;
     
     // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
-    SmartDashboard.putNumber("Turningdistance " + position.name(), m_turningEncoder.getPosition());
+    SmartDashboard.putNumber("Turningdistance " + m_position.name(), m_turningEncoder.getPosition());
 
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));
@@ -175,6 +187,10 @@ public class SwerveModule {
 
     // System.out.printf("Drive Output: %f\n", driveOutput);
     // System.out.printf("Turn Output: %f\n", turnOutput);
+
+    if (RobotBase.isSimulation()){
+      simTurnPosition(state.angle.getDegrees());
+    }
   }
 
   /**
@@ -204,5 +220,33 @@ public class SwerveModule {
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
     // m_absoluteEncoder.setPosition(m_absoluteEncoder.getAbsolutePosition());
+  }
+
+  public void simulationPeriodic(){
+    if (RobotBase.isSimulation()){
+      REVPhysicsSim.getInstance().run();
+    }
+  }
+
+  private void simTurnPosition(double angle) {
+    
+    if (angle != m_actualAngleDegrees && m_angleIncrementPer20ms == 0) {
+
+      m_angleDifference = angle - m_actualAngleDegrees;
+
+      m_angleIncrementPer20ms = m_angleDifference / 20;// 10*20ms = .2 sec move time
+    }
+
+    if (m_angleIncrementPer20ms != 0) {
+
+      m_actualAngleDegrees += m_angleIncrementPer20ms;
+
+      if ((Math.abs(angle - m_actualAngleDegrees)) < .1) {
+
+        m_actualAngleDegrees = angle;
+
+        m_angleIncrementPer20ms = 0;
+      }
+    }
   }
 }

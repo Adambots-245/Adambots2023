@@ -4,8 +4,11 @@
 
 package com.adambots.subsystems;
 
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -13,10 +16,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
+import com.adambots.utils.ModuleMap;
+import com.ctre.phoenix.unmanaged.Unmanaged;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,6 +44,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Field details that can be viewed in Glass
   private final Field2d m_field = new Field2d();
+  private SimDouble m_simAngle;
+  HashMap<ModulePosition, SwerveModule> swerveModules;
 
   public DrivetrainSubsystem(HashMap<ModulePosition, SwerveModule> modules, Gyro gyro){
 
@@ -46,7 +55,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
       modules.get(DriveConstants.ModulePosition.REAR_LEFT),
       modules.get(DriveConstants.ModulePosition.REAR_RIGHT),
       gyro
-    );
+      );
+
+      this.swerveModules = modules;
   }
 
   private DrivetrainSubsystem(SwerveModule frontLeft, SwerveModule rearLeft, SwerveModule frontRight,
@@ -59,10 +70,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
         new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
+            m_frontLeft.getM_position(),
+            m_frontRight.getM_position(),
+            m_rearLeft.getM_position(),
+            m_rearRight.getM_position()
         });
 
     SmartDashboard.putData("Field", m_field);
@@ -75,6 +86,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
       } catch (Exception e) {
       }
     }).start();
+
+    if (RobotBase.isSimulation()) {
+
+      var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+
+      m_simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
+    }
   }
 
   @Override
@@ -87,10 +105,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
         // m_rearLeft.getState(),
         // m_rearRight.getState(),
         new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
+            m_frontLeft.getM_position(),
+            m_frontRight.getM_position(),
+            m_rearLeft.getM_position(),
+            m_rearRight.getM_position()
         });
 
     SmartDashboard.putNumber("m_frontLeft", m_frontLeft.getState().angle.getDegrees());
@@ -115,6 +133,55 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("getTwist", ex3dPro.getTwist());
   }
 
+  @Override
+  public void simulationPeriodic() {
+    ChassisSpeeds chassisSpeedSim = DriveConstants.kDriveKinematics.toChassisSpeeds(
+      ModuleMap.orderedValues(getModuleStates(), new SwerveModuleState[0]));
+    // want to simulate navX gyro changing as robot turns
+    // information available is radians per second and this happens every 20ms
+    // radians/2pi = 360 degrees so 1 degree per second is radians / 2pi
+    // increment is made every 20 ms so radian adder would be (rads/sec) *(20/1000)
+    // degree adder would be radian adder * 360/2pi
+    // so degree increment multiplier is 360/100pi = 1.1459
+
+    double temp = chassisSpeedSim.omegaRadiansPerSecond * 1.1459155;
+
+    temp += m_simAngle.get();
+
+    m_simAngle.set(temp);
+
+    for (SwerveModule module : ModuleMap.orderedValuesList(swerveModules)) {
+      module.simulationPeriodic();
+    }
+
+    m_odometry.update(
+        new Rotation2d(m_simAngle.get()),
+        // m_frontLeft.getState(),
+        // m_frontRight.getState(),
+        // m_rearLeft.getState(),
+        // m_rearRight.getState(),
+        new SwerveModulePosition[] {
+            m_frontLeft.getM_position(),
+            m_frontRight.getM_position(),
+            m_rearLeft.getM_position(),
+            m_rearRight.getM_position()
+        });
+
+    System.out.println("Pose: " + getPose().toString());
+
+    m_field.setRobotPose(getPose());
+
+    Unmanaged.feedEnable(20);
+  }
+
+  public Map<ModulePosition, SwerveModuleState> getModuleStates() {
+    Map<ModulePosition, SwerveModuleState> map = new HashMap<>();
+    for (ModulePosition i : swerveModules.keySet()) {
+      map.put(i, swerveModules.get(i).getState());
+    }
+    return map;
+  }
+
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -133,10 +200,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry.resetPosition(
         m_gyro.getRotation2d(),
         new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
+            m_frontLeft.getM_position(),
+            m_frontRight.getM_position(),
+            m_rearLeft.getM_position(),
+            m_rearRight.getM_position()
         },
         pose);
   }

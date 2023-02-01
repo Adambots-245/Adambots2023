@@ -62,10 +62,10 @@ public final class Constants {
               ModulePosition.REAR_RIGHT, new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
       
           public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-              ModuleMap.orderedValues(kModuleTranslations, new Translation2d[0]));
+              ModuleMap.orderedValues(DriveConstants.kModuleTranslations, new Translation2d[0]));
       
 
-        // // Distance between front and back wheels on robot
+        // Distance between front and back wheels on robot
         // public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         //         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
         //         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),

@@ -15,19 +15,23 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 /**
- * Contains functions to convert {@link Map}s with {@link ModulePosition} keys to and from arrays so
+ * Contains functions to convert {@link Map}s with {@link ModulePosition} keys
+ * to and from arrays so
  * that it's easier to use WPILib swerve functions.
  */
 public class ModuleMap {
 
   /**
-   * Creates a {@code Map} with {@link ModulePosition} keys from multiple values, in the order
+   * Creates a {@code Map} with {@link ModulePosition} keys from multiple values,
+   * in the order
    * specified in the {@link ModulePosition} enum.
    *
-   * <p>For processing the output of a WPILib swerve function which returns an array.
+   * <p>
+   * For processing the output of a WPILib swerve function which returns an array.
    *
-   * @param values Must have at least as many elements as {@link ModulePosition} has entries. Any
-   *     entries after will be ignored.
+   * @param values Must have at least as many elements as {@link ModulePosition}
+   *               has entries. Any
+   *               entries after will be ignored.
    */
   @SafeVarargs
   public static <V> Map<ModulePosition, V> of(V... values) {
@@ -39,31 +43,41 @@ public class ModuleMap {
   }
 
   /**
-   * Returns the values from a map as a {@link List} in the same order as in the {@link
+   * Returns the values from a map as a {@link List} in the same order as in the
+   * {@link
    * ModulePosition} enum.
    *
-   * <p>You can use this in a for/in loop without needing to supply an empty array like in {@link
+   * <p>
+   * You can use this in a for/in loop without needing to supply an empty array
+   * like in {@link
    * #orderedValues(Map, Object[]) orderedValues}.
    */
   public static <V> List<V> orderedValuesList(Map<ModulePosition, V> map) {
     ArrayList<V> list = new ArrayList<>();
+    // System.out.println("Map: " + map.size());
     for (ModulePosition i : ModulePosition.values()) {
+      // System.out.println(i.name());
       list.add(map.get(i));
     }
     return list;
   }
 
   /**
-   * Returns the values from the map as an {@code Array} in the same order as in the {@link
+   * Returns the values from the map as an {@code Array} in the same order as in
+   * the {@link
    * ModulePosition} enum.
    *
-   * <p>Useful when a WPILib swerve function requires an array as input.
+   * <p>
+   * Useful when a WPILib swerve function requires an array as input.
    *
-   * @param swerveModulePositions An array of the class to output an array of, e.g. {@code
-   *     moduleTranslations.valuesArray(new Translation2d[0])}. Required because Java can't make an
-   *     array of generics.
+   * @param swerveModulePositions An array of the class to output an array of,
+   *                              e.g. {@code
+   *     moduleTranslations.valuesArray(new Translation2d[0])}. Required because
+   *                              Java can't make an
+   *                              array of generics.
    */
-  public static <V> SwerveModulePosition[] orderedValues(Map<ModulePosition, SwerveModuleState> map, SwerveModulePosition[] swerveModulePositions) {
+  public static <V> SwerveModulePosition[] orderedValues(Map<ModulePosition, SwerveModuleState> map,
+      SwerveModulePosition[] swerveModulePositions) {
     return (SwerveModulePosition[]) orderedValuesList(map).toArray(swerveModulePositions);
   }
 
@@ -76,16 +90,17 @@ public class ModuleMap {
     return null;
   }
 
-  public static SwerveModulePosition[] orderedValues(Map<ModulePosition, SwerveModuleState> moduleStates,
+  public static SwerveModuleState[] orderedValues(Map<ModulePosition, SwerveModuleState> moduleStates,
       SwerveModuleState[] swerveModuleStates) {
-    return null;
+        return (SwerveModuleState[]) orderedValuesList(moduleStates).toArray(swerveModuleStates);
   }
 
-public static Translation2d orderedValues(Map<ModulePosition, Translation2d> kmoduletranslations,
-		Translation2d[] translation2ds) {
-	return null;
-}
-public static <V> V[] orderedValues(Map<ModulePosition, V> map, V[] array) {
-  return orderedValuesList(map).toArray(array);
-}
+  public static <V> V[] orderedValues(Map<ModulePosition, V> map, V[] array) {
+    return orderedValuesList(map).toArray(array);
+  }
+
+  public static Translation2d[] orderedValues(Map<ModulePosition, Translation2d> kmoduletranslations,
+      Translation2d[] translation2ds) {
+        return (Translation2d[]) orderedValuesList(kmoduletranslations).toArray(translation2ds);
+  }
 }

@@ -102,6 +102,8 @@ public class RobotContainer {
     // Buttons.JoystickButton1.onTrue(new RunCommand(() -> System.out.println("1 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
+
+    Buttons.JoystickButton2.onTrue(new RunCommand(() -> drivetrainSubsystem.hockeyStop()));
   }
 
   private void setupDashboard() {

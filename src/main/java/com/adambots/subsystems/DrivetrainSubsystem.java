@@ -241,4 +241,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void stop() {
     drive(0, 0, 0, false);
   }
+
+  public void hockeyStop(){
+    // TODO: Set proper angles 
+
+    m_frontLeft.turn(45);
+    m_frontRight.turn(-45);
+    m_rearLeft.turn(-45);
+    m_rearRight.turn(45);
+  }
 }

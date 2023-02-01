@@ -19,6 +19,8 @@ import com.adambots.Constants.ModuleConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -34,6 +36,9 @@ public class SwerveModule {
 
   private final PIDController m_drivePIDController =
       new PIDController(ModuleConstants.kPModuleDriveController, 0, 0);
+  
+  // private final SparkMaxPIDController m_drivePIDController = m_driveMotor.getPIDController();
+  
 
   // Using a TrapezoidProfile PIDController to allow for smooth turning
   private final ProfiledPIDController m_turningPIDController =
@@ -86,6 +91,14 @@ public class SwerveModule {
     // m_canCoderConfig.unitString = "rad";
     // m_encoder.configAllSettings(m_canCoderConfig);
     m_absoluteEncoder.clearStickyFaults();
+
+
+    // m_drivePIDController = m_driveMotor.getPIDController();
+    // m_drivePIDController.setP(ModuleConstants.kPModuleDriveController, 1);
+    // m_drivePIDController.setD(ModuleConstants.kDModuleDriveController, 1);
+    // m_drivePIDController.setD(ModuleConstants.kIModuleDriveController, 1);
+    // m_drivePIDController.setIZone(1, 1);
+
 
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
     resetEncoders();
@@ -157,6 +170,9 @@ public class SwerveModule {
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
 
+    // If using motor's PID Controller, then enable this instead of the set above.
+    // m_drivePIDController.setReference(state.speedMetersPerSecond, ControlType.kVelocity, 1);
+
     // System.out.printf("Drive Output: %f\n", driveOutput);
     // System.out.printf("Turn Output: %f\n", turnOutput);
   }
@@ -177,7 +193,6 @@ public class SwerveModule {
       pidOut = 0;
 
     m_turningMotor.set(pidOut);
-
   }
 
   public void stop(){

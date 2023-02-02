@@ -64,27 +64,26 @@ TalonFX rightArmExtender;
     leftArmExtender.set(ControlMode.PercentOutput, speed);
   }
 
-  public void ScoreInLowZone (int speed, double position) {
-    armLifter.setSelectedSensorPosition(0);
+  public void ScoreInLowZone (int speed) {
     // if (armLifter.getSelectedSensorPosition()
-    if (getArmLifterEncoder() < position * Constants.ModuleConstants.kEncoderCPR) {
-      armLifter.set(ControlMode.PercentOutput, speed);
-    }
-    else {
-      armLifter.set(ControlMode.PercentOutput, 0);
-    }
+    // if (getArmLifterEncoder() < position) {
+    //   armLifter.set(ControlMode.PercentOutput, speed);
+    // }
+    // else {
+    //   armLifter.set(ControlMode.PercentOutput, 0);
+    // }
   }
 
   public double getArmLifterEncoder () {
-    return armLifter.getSelectedSensorPosition();
+    return armLifter.getSelectedSensorPosition() / Constants.ModuleConstants.kEncoderCPR;
   }
 
   public double getLeftExtenderEncoder () {
-    return leftArmExtender.getSelectedSensorPosition();
+    return leftArmExtender.getSelectedSensorPosition() / Constants.ModuleConstants.kEncoderCPR;
   }
 
   public double getRightExtenderEncoder () {
-    return rightArmExtender.getSelectedSensorPosition();
+    return rightArmExtender.getSelectedSensorPosition() / Constants.ModuleConstants.kEncoderCPR  ;
   }
 
   @Override

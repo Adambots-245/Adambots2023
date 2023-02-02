@@ -8,6 +8,7 @@ package com.adambots.utils;
 import java.util.*;
 
 import com.adambots.Constants.DriveConstants.ModulePosition;
+import com.adambots.subsystems.SwerveModule;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -29,9 +30,10 @@ public class ModuleMap {
    * <p>
    * For processing the output of a WPILib swerve function which returns an array.
    *
-   * @param values Must have at least as many elements as {@link ModulePosition}
-   *               has entries. Any
-   *               entries after will be ignored.
+   * @param values
+   *          Must have at least as many elements as {@link ModulePosition}
+   *          has entries. Any
+   *          entries after will be ignored.
    */
   @SafeVarargs
   public static <V> Map<ModulePosition, V> of(V... values) {
@@ -65,20 +67,29 @@ public class ModuleMap {
   /**
    * Returns the values from the map as an {@code Array} in the same order as in
    * the {@link
-   * ModulePosition} enum.
+   * ModulePosition} enum. This avoids any error in the order of the motors and
+   * modules.
    *
    * <p>
    * Useful when a WPILib swerve function requires an array as input.
    *
-   * @param swerveModulePositions An array of the class to output an array of,
-   *                              e.g. {@code
-   *     moduleTranslations.valuesArray(new Translation2d[0])}. Required because
-   *                              Java can't make an
-   *                              array of generics.
+   * @param swerveModulePositions
+   *          An array of the class to output an array of,
+   *          e.g. {@code
+   *     moduleTranslations.valuesArray(new SwerveModulePosition[0])}. Required
+   *          because
+   *          Java can't make an
+   *          array of generics.
    */
-  public static <V> SwerveModulePosition[] orderedValues(Map<ModulePosition, SwerveModuleState> map,
-      SwerveModulePosition[] swerveModulePositions) {
-    return (SwerveModulePosition[]) orderedValuesList(map).toArray(swerveModulePositions);
+  public static SwerveModulePosition[] orderedModulePositions(Map<ModulePosition, SwerveModule> map) {
+
+    ArrayList<SwerveModulePosition> list = new ArrayList<>();
+
+    for (ModulePosition i : ModulePosition.values()) {
+      list.add(map.get(i).getPosition());
+    }
+
+    return (SwerveModulePosition[]) list.toArray(new SwerveModulePosition[0]);
   }
 
   public static Pose2d orderedValues(Map<ModulePosition, Pose2d> m_swerveModulePoses, Pose2d poser) {
@@ -92,7 +103,7 @@ public class ModuleMap {
 
   public static SwerveModuleState[] orderedValues(Map<ModulePosition, SwerveModuleState> moduleStates,
       SwerveModuleState[] swerveModuleStates) {
-        return (SwerveModuleState[]) orderedValuesList(moduleStates).toArray(swerveModuleStates);
+    return (SwerveModuleState[]) orderedValuesList(moduleStates).toArray(swerveModuleStates);
   }
 
   public static <V> V[] orderedValues(Map<ModulePosition, V> map, V[] array) {
@@ -101,6 +112,14 @@ public class ModuleMap {
 
   public static Translation2d[] orderedValues(Map<ModulePosition, Translation2d> kmoduletranslations,
       Translation2d[] translation2ds) {
-        return (Translation2d[]) orderedValuesList(kmoduletranslations).toArray(translation2ds);
+    return (Translation2d[]) orderedValuesList(kmoduletranslations).toArray(translation2ds);
+  }
+
+  public static void setDesiredState(HashMap<ModulePosition, SwerveModule> swerveModules, SwerveModuleState[] swerveModuleStates) {
+
+    int idx = 0;
+    for (ModulePosition i : ModulePosition.values()) {
+      swerveModules.get(i).setDesiredState(swerveModuleStates[idx++]);
+    }
   }
 }

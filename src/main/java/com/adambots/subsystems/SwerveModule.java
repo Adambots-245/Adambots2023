@@ -135,7 +135,7 @@ public class SwerveModule {
    *
    * @return The current position of the module.
    */
-  public SwerveModulePosition getM_position() {
+  public SwerveModulePosition getPosition() {
     double distance = m_driveEncoder.getPosition() * ModuleConstants.kDriveEncoderScale;
     // double turningDistance = m_turningEncoder.getPosition() * ModuleConstants.kDriveEncoderScale; //ModuleConstants.kTurningEncoderDistancePerPulse;
     double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;

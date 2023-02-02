@@ -37,10 +37,10 @@ public final class Constants {
         public static final boolean kFrontRightTurningEncoderReversed = true; // false
         public static final boolean kRearRightTurningEncoderReversed = false;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kRearLeftDriveEncoderReversed = true;
+        public static final boolean kFrontLeftDriveEncoderReversed = true;
+        public static final boolean kRearLeftDriveEncoderReversed = false;
         public static final boolean kFrontRightDriveEncoderReversed = false;
-        public static final boolean kRearRightDriveEncoderReversed = true;
+        public static final boolean kRearRightDriveEncoderReversed = false;
 
         // In Meters
         // Distance between centers of right and left wheels on robot
@@ -61,16 +61,16 @@ public final class Constants {
               ModulePosition.REAR_LEFT, new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
               ModulePosition.REAR_RIGHT, new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
       
-          public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-              ModuleMap.orderedValues(DriveConstants.kModuleTranslations, new Translation2d[0]));
+        //   public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+        //       ModuleMap.orderedValues(DriveConstants.kModuleTranslations, new Translation2d[0]));
       
 
         // Distance between front and back wheels on robot
-        // public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-        //         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-        //         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-        //         new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-        //         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+        public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+                new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+                new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         public static final boolean kGyroReversed = true;
 

@@ -93,6 +93,7 @@ public class SwerveModule {
     m_turningEncoder = m_turningMotor.getEncoder();
 
     //TODO: Utilize driveEncoder and turningEncoder Reversed flags - instead of negating Joystick values in RobotContainer
+    m_driveMotor.setInverted(driveEncoderReversed);
     
     // m_canCoderConfig.unitString = "rad";
     // m_encoder.configAllSettings(m_canCoderConfig);

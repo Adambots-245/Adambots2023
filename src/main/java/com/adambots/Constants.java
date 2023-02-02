@@ -37,7 +37,7 @@ public final class Constants {
         public static final boolean kFrontRightTurningEncoderReversed = true; // false
         public static final boolean kRearRightTurningEncoderReversed = false;
 
-        public static final boolean kFrontLeftDriveEncoderReversed = true;
+        public static final boolean kFrontLeftDriveEncoderReversed = false;
         public static final boolean kRearLeftDriveEncoderReversed = false;
         public static final boolean kFrontRightDriveEncoderReversed = false;
         public static final boolean kRearRightDriveEncoderReversed = false;

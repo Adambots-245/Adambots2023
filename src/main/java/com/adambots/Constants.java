@@ -70,7 +70,7 @@ public final class Constants {
         public static final double kMaxModuleAngularSpeedRadiansPerSecond = 16 * Math.PI;
         public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 16 * Math.PI;
 
-        public static final int kEncoderCPR = 4096;
+        public static final int kEncoderCPR = 2048;
         public static final double kWheelDiameterMeters = 0.15;
         public static final double kDriveEncoderDistancePerPulse =
                 // Assumes the encoders are directly mounted on the wheel shafts
@@ -217,5 +217,19 @@ public final class Constants {
         public static final int kDpadWAngle = 270;
         public static final int kDpadNWAngle = 315;
     }
+
+    public static final class GrabbyConstants {
+
+        public static final double lowZoneLifterValue = 0;
+        public static final double lowZoneExtenderValue = 0;
+
+        public static final double midZoneLifterValue = 0.5;
+        public static final double midZoneExtenderValue = 0.5;
+
+        public static final double highZoneLifterValue = 1;
+        public static final double highZoneExtenderValue = 1;
+    }
+
+
     
 }

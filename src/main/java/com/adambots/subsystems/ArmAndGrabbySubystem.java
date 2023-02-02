@@ -35,6 +35,10 @@ TalonFX rightArmExtender;
     this.armLifter = armLifter;
     this.leftArmExtender = leftArmExtender;
     this.rightArmExtender = rightArmExtender;
+    
+    armLifter.setSelectedSensorPosition(0);
+    leftArmExtender.setSelectedSensorPosition(0);
+    rightArmExtender.setSelectedSensorPosition(0);  
   }
 
   public void openGrabby () {
@@ -46,22 +50,22 @@ TalonFX rightArmExtender;
     // rightGrabby.set(false);
   }
 
-  public void raiseArm (int speed) {
+  public void raiseArm (double speed) {
     armLifter.set(ControlMode.PercentOutput, speed);
   }
 
-  public void lowerArm (int speed) {
+  public void lowerArm (double speed) {
     armLifter.set(ControlMode.PercentOutput, -speed);
   }
 
-  public void extendArm (int speed) {
-    rightArmExtender.set(ControlMode.PercentOutput, speed);
-    leftArmExtender.set(ControlMode.PercentOutput, -speed);
-  }
-
-  public void retractArm(int speed) {
+  public void extendArm (double speed) {
     rightArmExtender.set(ControlMode.PercentOutput, -speed);
     leftArmExtender.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void retractArm(double speed) {
+    rightArmExtender.set(ControlMode.PercentOutput, speed);
+    leftArmExtender.set(ControlMode.PercentOutput, -speed);
   }
 
   public void ScoreInLowZone (int speed) {
@@ -90,9 +94,8 @@ TalonFX rightArmExtender;
   public void periodic() {
 
     SmartDashboard.putNumber("armEncoder", getArmLifterEncoder());
-    SmartDashboard.putNumber("leftExtenderEncoder", getArmLifterEncoder());
-    SmartDashboard.putNumber("rightExtenderEncoder", getArmLifterEncoder());
-
+    SmartDashboard.putNumber("leftExtenderEncoder", getRightExtenderEncoder());
+    SmartDashboard.putNumber("rightExtenderEncoder", getLeftExtenderEncoder());
 
     // This method will be called once per scheduler run
   }

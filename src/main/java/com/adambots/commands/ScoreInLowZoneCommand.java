@@ -14,8 +14,8 @@ import com.adambots.Constants.GrabbyConstants;
 public class ScoreInLowZoneCommand extends CommandBase {
   /** Creates a new ScoreInLowZoneCommabnd. */
   ArmAndGrabbySubystem armAndGrabbySubystem;
-  int speed;
-  double position;
+  double speed;
+  //double position;
   public ScoreInLowZoneCommand(ArmAndGrabbySubystem armAndGrabbySubystem) {
     // this.speed = speed;
     this.armAndGrabbySubystem = armAndGrabbySubystem;
@@ -31,13 +31,36 @@ public class ScoreInLowZoneCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAndGrabbySubystem.ScoreInLowZone(speed);
-    while (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 0.1 ) {
+   // armAndGrabbySubystem.ScoreInLowZone(speed);
+    while (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getLeftExtenderEncoder()) > 0.1) {
       if (armAndGrabbySubystem.getArmLifterEncoder() > Constants.GrabbyConstants.lowZoneLifterValue) {
-        armAndGrabbySubystem.lowerArm(30);
+        if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
+          armAndGrabbySubystem.lowerArm(0.3);
+        } else {
+          armAndGrabbySubystem.lowerArm(0.1);
+        }
       } else if (armAndGrabbySubystem.getArmLifterEncoder() < Constants.GrabbyConstants.lowZoneLifterValue) {
-        armAndGrabbySubystem.raiseArm(30);
+        if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
+          armAndGrabbySubystem.raiseArm(0.3);
+        } else {
+          armAndGrabbySubystem.raiseArm(0.1);
+        }
       }
+
+      if (armAndGrabbySubystem.getRightExtenderEncoder() > Constants.GrabbyConstants.lowZoneExtenderValue) {
+        if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
+          armAndGrabbySubystem.extendArm(0.3);
+        } else {
+          armAndGrabbySubystem.extendArm(0.1);
+        }
+      } else if (armAndGrabbySubystem.getRightExtenderEncoder() < Constants.GrabbyConstants.lowZoneExtenderValue) {
+        if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
+          armAndGrabbySubystem.retractArm(0.3);
+        } else {
+          armAndGrabbySubystem.retractArm(0.1);
+        }
+      }
+
 
     }
   }
@@ -46,11 +69,12 @@ public class ScoreInLowZoneCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     armAndGrabbySubystem.raiseArm(0);
+    armAndGrabbySubystem.extendArm(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

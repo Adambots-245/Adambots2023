@@ -7,6 +7,7 @@ package com.adambots.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -195,15 +196,20 @@ public class SwerveModule {
   }
 
   /**
-   * Turn by this angle
-   * @param angle in radians
+   * Turn this module wheel by this angle in degrees
+   * @param angle in degrees
    */
   public void turn(double angle) {
 
-    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); 
-    double turnAngleError = Math.abs(angle - turningRadians);
+    double currentModuleAngleInRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); 
+    var radAngle = Units.degreesToRadians(angle);
+    double turnAngleError = Math.abs(radAngle - currentModuleAngleInRadians);
+    
+    var swerveModuleStates = new SwerveModuleState(0.5, new Rotation2d(radAngle));
+    var desiredState = SwerveModuleState.optimize(swerveModuleStates, new Rotation2d(currentModuleAngleInRadians));
+    m_turningPIDController.reset(currentModuleAngleInRadians);
+    double pidOut = m_turningPIDController.calculate(currentModuleAngleInRadians, desiredState.angle.getRadians());
 
-    double pidOut = m_turningPIDController.calculate(turningRadians, angle);
     // if robot is not moving, stop the turn motor oscillating
     if (turnAngleError < 0.5
         && Math.abs(getState().speedMetersPerSecond) <= (DriveConstants.kMaxSpeedMetersPerSecond * 0.01))

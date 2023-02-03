@@ -16,18 +16,25 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.adambots.commands.*;
 import com.adambots.Constants;
 
-
-
 public class ArmAndGrabbySubystem extends SubsystemBase {
 
   //private final 
   /** Creates a new ArmAndGrabbySubystem. */
 
-DoubleSolenoid grabby;
+private final DoubleSolenoid grabby;
 // Solenoid rightGrabby;
-TalonFX armLifter;
-TalonFX leftArmExtender;
-TalonFX rightArmExtender;
+private final TalonFX armLifter;
+private final TalonFX leftArmExtender;
+private final TalonFX rightArmExtender;
+
+private double lifterSpeed = Constants.GrabbyConstants.lifterSpeed;
+private double extenderSpeed = Constants.GrabbyConstants.extenderSpeed;
+
+private final double lowZoneLifterValue = Constants.GrabbyConstants.lowZoneLifterValue;
+private final double lowZoneExtenderValue = Constants.GrabbyConstants.lowZoneExtenderValue;
+
+
+private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
 
   public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX leftArmExtender, TalonFX rightArmExtender) {
     this.grabby = grabby;
@@ -41,62 +48,86 @@ TalonFX rightArmExtender;
     rightArmExtender.setSelectedSensorPosition(0);  
   }
 
-  public void openGrabby () {
+  public void openGrabby() {
     grabby.set(Value.kForward);
     // rightGrabby.set(true);
   }
-  public void closeGrabby () {
+
+  public void closeGrabby() {
     grabby.set(Value.kReverse);
     // rightGrabby.set(false);
   }
 
-  public void raiseArm (double speed) {
-    armLifter.set(ControlMode.PercentOutput, speed);
+  public void raiseArm() {
+    armLifter.set(ControlMode.PercentOutput, lifterSpeed);
   }
 
-  public void lowerArm (double speed) {
-    armLifter.set(ControlMode.PercentOutput, -speed);
+  public void lowerArm() {
+    armLifter.set(ControlMode.PercentOutput, -lifterSpeed);
   }
 
-  public void extendArm (double speed) {
-    rightArmExtender.set(ControlMode.PercentOutput, -speed);
-    leftArmExtender.set(ControlMode.PercentOutput, speed);
+  public void stopArmLifter() {
+    armLifter.set(ControlMode.PercentOutput, 0);
   }
 
-  public void retractArm(double speed) {
-    rightArmExtender.set(ControlMode.PercentOutput, speed);
-    leftArmExtender.set(ControlMode.PercentOutput, -speed);
+  public void extendArm() {
+    leftArmExtender.set(ControlMode.PercentOutput, -extenderSpeed);
+    rightArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
   }
 
-  public void ScoreInLowZone (int speed) {
-    // if (armLifter.getSelectedSensorPosition()
-    // if (getArmLifterEncoder() < position) {
-    //   armLifter.set(ControlMode.PercentOutput, speed);
-    // }
-    // else {
-    //   armLifter.set(ControlMode.PercentOutput, 0);
-    // }
+  public void retractArm() {
+    leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
+    rightArmExtender.set(ControlMode.PercentOutput, -extenderSpeed);
   }
 
-  public double getArmLifterEncoder () {
-    return armLifter.getSelectedSensorPosition() / Constants.ModuleConstants.kEncoderCPR;
+  public void stopArmExtender() {
+    leftArmExtender.set(ControlMode.PercentOutput, 0);
+    rightArmExtender.set(ControlMode.PercentOutput, 0);
   }
 
-  public double getLeftExtenderEncoder () {
-    return leftArmExtender.getSelectedSensorPosition() / Constants.ModuleConstants.kEncoderCPR;
+  public double getArmLifterEncoder() {
+    return armLifter.getSelectedSensorPosition() / armEncoderCPR;
   }
 
-  public double getRightExtenderEncoder () {
-    return rightArmExtender.getSelectedSensorPosition() / Constants.ModuleConstants.kEncoderCPR  ;
+  public double getLeftExtenderEncoder() {
+    return leftArmExtender.getSelectedSensorPosition() / armEncoderCPR;
+  }
+
+  public double getRightExtenderEncoder() {
+    return rightArmExtender.getSelectedSensorPosition() / armEncoderCPR;
   }
 
   @Override
   public void periodic() {
+    // This method will be called once per scheduler run
 
     SmartDashboard.putNumber("armEncoder", getArmLifterEncoder());
     SmartDashboard.putNumber("leftExtenderEncoder", getRightExtenderEncoder());
     SmartDashboard.putNumber("rightExtenderEncoder", getLeftExtenderEncoder());
 
-    // This method will be called once per scheduler run
+    if (Math.abs(lowZoneLifterValue - getArmLifterEncoder()) > 0.1) {
+      if (getArmLifterEncoder() > lowZoneLifterValue) {
+        lowerArm();
+      } else if (getArmLifterEncoder() < lowZoneLifterValue) {
+          raiseArm();
+      } 
+    } else {
+        stopArmExtender();
+    }
+
+    armLifter.set(ControlMode.PercentOutput, lifterSpeed);
+    leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
+    leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
+
+     /*
+      if (getRightExtenderEncoder() > Constants.GrabbyConstants.lowZoneExtenderValue) {
+        if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - getArmLifterEncoder()) > 1) {
+           lowerArm(0.1);
+         } else if (getArmLifterEncoder() > Constants.GrabbyConstants.lowZoneLifterValue) {
+           raiseArm(0.1);
+         }
+      */
+
   }
+
 }

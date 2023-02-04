@@ -19,6 +19,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import java.util.ArrayList;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -31,7 +33,7 @@ import com.adambots.Vision.ReflectivePipeline;
 import com.adambots.utils.AprilTagReader;
 import com.adambots.utils.Log;
 
-public class CameraSubsystem extends SubsystemBase {
+public class VisionProcessingSubsystem extends SubsystemBase {
 
   private Solenoid ringLight;
   private ReflectivePipeline reflectiveGrip;
@@ -44,7 +46,7 @@ public class CameraSubsystem extends SubsystemBase {
   private static Point[] pts = new Point[4];
 
 
-  public CameraSubsystem(Solenoid ringLight, ReflectivePipeline reflectivePipeline) {
+  public VisionProcessingSubsystem(Solenoid ringLight, ReflectivePipeline reflectivePipeline) {
     this.ringLight = ringLight;
     this.reflectiveGrip = reflectivePipeline;
     init();
@@ -81,7 +83,10 @@ public class CameraSubsystem extends SubsystemBase {
         var pose = tagReader.getPose(0);
         var rot = pose.getRotation();
         Log.infoF("x=%d, y=%d, z=%d, rX=%d, rY=%d, rZ=%d\n", pose.getX(), pose.getY(), pose.getZ(), rot.getX(), rot.getY(), rot.getZ());
-        
+        SmartDashboard.putNumber("X Pose", pose.getX());
+        SmartDashboard.putNumber("Y Pose", pose.getY());
+        SmartDashboard.putNumber("Z Pose", pose.getZ());
+
         var outlineColor = new Scalar(0, 0, 255);
         Point[] corners = tagReader.getBoundingBox(0);
         for (var i = 0; i <= 3; i++) {
@@ -124,10 +129,6 @@ public class CameraSubsystem extends SubsystemBase {
 public void draw(RotatedRect rect) {
     rect.points(pts);
     drawRect(pts);
-    // findCrosshair(pts);
-
-    // if (crosshair != null)
-    //     drawCrosshair();
 }
 
 // Draw bounding box around the reflective tape

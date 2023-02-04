@@ -207,7 +207,7 @@ public class SwerveModule {
     
     var swerveModuleStates = new SwerveModuleState(0.5, new Rotation2d(radAngle));
     var desiredState = SwerveModuleState.optimize(swerveModuleStates, new Rotation2d(currentModuleAngleInRadians));
-    m_turningPIDController.reset(currentModuleAngleInRadians);
+    // m_turningPIDController.reset(currentModuleAngleInRadians);
     double pidOut = m_turningPIDController.calculate(currentModuleAngleInRadians, desiredState.angle.getRadians());
 
     // if robot is not moving, stop the turn motor oscillating

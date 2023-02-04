@@ -15,6 +15,7 @@ import java.util.List;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Gamepad.Buttons;
+import com.adambots.commands.AutoBalanceCommand;
 // import com.adambots.commands.*;
 // import com.adambots.commands.autonCommands.*;
 import com.adambots.subsystems.*;
@@ -104,7 +105,7 @@ public class RobotContainer {
     // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
 
-    Buttons.JoystickButton2.onTrue(new InstantCommand(() -> drivetrainSubsystem.hockeyStop()));
+    Buttons.JoystickButton9.whileTrue(new RunCommand(() -> drivetrainSubsystem.hockeyStop()));
   }
 
   private void setupDashboard() {

@@ -25,6 +25,7 @@ import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -86,15 +87,15 @@ public class SwerveModule {
     this.m_position = position; // Use position.name() to get the name of the position as a String
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-    // m_driveMotor.setIdleMode(IdleMode.kBrake);
-    // m_turningMotor.setIdleMode(IdleMode.kBrake);
+    m_driveMotor.setIdleMode(IdleMode.kBrake);
+    m_turningMotor.setIdleMode(IdleMode.kBrake);
 
     m_absoluteEncoder = new WPI_CANCoder(turningEncoderChannel);
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = m_turningMotor.getEncoder();
 
     //TODO: Utilize driveEncoder and turningEncoder Reversed flags - instead of negating Joystick values in RobotContainer
-    m_driveMotor.setInverted(driveEncoderReversed);
+    // m_driveMotor.setInverted(driveEncoderReversed);
     
     // m_canCoderConfig.unitString = "rad";
     // m_encoder.configAllSettings(m_canCoderConfig);

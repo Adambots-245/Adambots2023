@@ -87,8 +87,8 @@ public final class Constants {
         public static final double kMaxSpeedMetersPerSecond = 3; //Only used in Drive and SetModuleStates
 
         public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
-        public static int kOffBalanceAngleThresholdDegrees = 10;
-        public static int kOonBalanceAngleThresholdDegrees = 5;
+        public static int kOffBalanceAngleThresholdDegrees = 3;
+        public static int kOonBalanceAngleThresholdDegrees = 3;
     }
 
     public static final class ModuleConstants {

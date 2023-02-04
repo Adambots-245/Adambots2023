@@ -106,6 +106,7 @@ public class RobotContainer {
     // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
 
     Buttons.JoystickButton9.whileTrue(new RunCommand(() -> drivetrainSubsystem.hockeyStop()));
+    Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
   }
 
   private void setupDashboard() {
@@ -192,7 +193,7 @@ public class RobotContainer {
     */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    String trajectoryJSON = "Unnamed.wpilib.json";
+    String trajectoryJSON = "Test2.wpilib.json";
     Trajectory exampleTrajectory = new Trajectory();
 
     try {

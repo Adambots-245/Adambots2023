@@ -144,12 +144,12 @@ public class Buttons {
          */
         public static DoubleSupplier sidewaysSupplier = () -> isJoystickConnected.getAsBoolean()
                         ? deaden(ex3dPro.getX(), GamepadConstants.kDeadZone)
-                        : deaden(primaryJoystick.getLeftX(), 0.3);
+                        : deaden(primaryJoystick.getLeftX(), GamepadConstants.kDeadZone);
 
         /**
          * getZ or RightX
          */
         public static DoubleSupplier rotateSupplier = () -> isJoystickConnected.getAsBoolean()
-                        ? deaden(ex3dPro.getZ(), 0.314)
-                        : deaden(primaryJoystick.getRightX(), 0.25);
+                        ? deaden(ex3dPro.getZ(), 0.4)
+                        : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
 }

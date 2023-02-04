@@ -269,8 +269,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from 0 to 360
    */
   public double getHeading() {
-    // return m_gyro.getRotation2d().getDegrees();
-    return Math.IEEEremainder(m_gyro.getAngle(), 360); // Constrain to 360
+    return m_gyro.getRotation2d().getDegrees();
+    // return Math.IEEEremainder(m_gyro.getAngle(), 360); // Constrain to 360
     // return MathUtil.inputModulus(m_gyro.getAngle(), -180, 180); // use this if
     // you want to constrain by -180 to 180
   }

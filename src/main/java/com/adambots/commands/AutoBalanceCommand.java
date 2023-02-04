@@ -8,6 +8,7 @@ import com.adambots.Constants.DriveConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class AutoBalanceCommand extends CommandBase {
@@ -15,6 +16,7 @@ public class AutoBalanceCommand extends CommandBase {
   private Gyro m_gyro;
   private boolean autoBalanceXMode;
   private boolean autoBalanceYMode;
+  private int count = 0;
 
   /** Creates a new AutoBalanceCommand. */
   public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro) {
@@ -48,10 +50,10 @@ public class AutoBalanceCommand extends CommandBase {
       autoBalanceXMode = false;
     }
     if (!autoBalanceYMode &&
-        (Math.abs(pitchAngleDegrees) >= Math.abs(DriveConstants.kOffBalanceAngleThresholdDegrees))) {
+        (Math.abs(rollAngleDegrees) >= Math.abs(DriveConstants.kOffBalanceAngleThresholdDegrees))) {
       autoBalanceYMode = true;
     } else if (autoBalanceYMode &&
-        (Math.abs(pitchAngleDegrees) <= Math.abs(DriveConstants.kOonBalanceAngleThresholdDegrees))) {
+        (Math.abs(rollAngleDegrees) <= Math.abs(DriveConstants.kOonBalanceAngleThresholdDegrees))) {
       autoBalanceYMode = false;
     }
 
@@ -68,24 +70,25 @@ public class AutoBalanceCommand extends CommandBase {
       yAxisRate = Math.sin(rollAngleRadians) * -1;
     }
 
-    m_drivetrainSubsystem.drive(xAxisRate, yAxisRate, 0, false);
+    SmartDashboard.putNumber("xAxisRate", pitchAngleDegrees);
+    SmartDashboard.putNumber("yAxisRate", rollAngleDegrees);
+    m_drivetrainSubsystem.drive(yAxisRate*0.5, xAxisRate*0.5, 0, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
-    // TODO: Instead of stopping, perform Hockey Stop (45 degree wheels)
     m_drivetrainSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
     if (!autoBalanceXMode && !autoBalanceYMode)
-      return true;
+      count++;
     else
-      return false;
+      count = Math.max(count-1, 0);
+
+    return count > 20;
   }
 }

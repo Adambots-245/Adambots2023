@@ -102,12 +102,6 @@ public class RobotMap {
         public static final WPI_TalonFX rightArmExtender = new WPI_TalonFX(rightArmExtenderPort);
         public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
         
-        public static final WPI_CANCoder leftArmExtenderEncoder = new WPI_CANCoder(leftArmExtenderEncoderPort);
-        public static final WPI_CANCoder rightArmExtenderEncoder = new WPI_CANCoder(rightArmExtenderEncoderPort);
-        public static final WPI_CANCoder armLiftEncoder = new WPI_CANCoder(armLiftEncoderPort);
-
-
-
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;
         public static final int kPrimaryControllerPort = 1; // XBOX Controller

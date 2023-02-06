@@ -18,6 +18,7 @@ import com.adambots.Gamepad.Buttons;
 // import com.adambots.commands.*;
 // import com.adambots.commands.autonCommands.*;
 import com.adambots.subsystems.*;
+import com.adambots.subsystems.ArmTester.Position;
 import com.adambots.utils.Log;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -34,6 +35,9 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -62,7 +66,8 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
   RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
-  private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender);
+  // private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAn÷dGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender);
+  private final ArmTester armTester = new ArmTester(RobotMap.grabby, RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -94,13 +99,50 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    Buttons.secondaryDPadE.onTrue(new CloseGrabbyCommand(armAndGrabbySubystem));
-    Buttons.secondaryDPadW.onTrue(new OpenGrabbyCommand(armAndGrabbySubystem));
-    Buttons.secondaryRB.whileTrue(new ExtendArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryXButton.onTrue(new ScoreInLowZoneCommand(armAndGrabbySubystem));
+    Buttons.primaryAButton.whileTrue(new FunctionalCommand(
+        () -> {}, //init
+        () -> armTester.raiseArm(), //execute 
+        interrupted -> armTester.stopArmTurner(), // onend 
+        () -> false,  // isFinished
+        armTester)
+      );
+
+      Buttons.primaryBButton.whileTrue(new FunctionalCommand(
+        () -> {}, //init
+        () -> armTester.lowerArm(), //execute 
+        interrupted -> armTester.stopArmTurner(), // onend 
+        () -> false,  // isFinished
+        armTester)
+      );
+
+      Buttons.primaryXButton.whileTrue(new FunctionalCommand(
+        () -> {}, //init
+        () -> armTester.extendArm(), //execute 
+        interrupted -> armTester.stopArmExtender(), // onend 
+        () -> false,  // isFinished
+        armTester)
+      );
+
+      Buttons.primaryYButton.whileTrue(new FunctionalCommand(
+        () -> {}, //init
+        () -> armTester.retractArm(), //execute 
+        interrupted -> armTester.stopArmExtender(), // onend 
+        () -> false,  // isFinished
+        armTester)
+      );
+
+      Buttons.primaryDPadS.onTrue(new InstantCommand(
+        () -> armTester.gotoPosition(Position.LOW)
+      ));
+    
+      Buttons.primaryDPadN.onTrue(new InstantCommand(
+        () -> armTester.gotoPosition(Position.TOP)
+      ));
+
+      Buttons.primaryDPadE.or(Buttons.primaryDPadW).onTrue(new InstantCommand(
+        () -> armTester.gotoPosition(Position.MID)
+      ));
+
     // Buttons.primaryAButton.onTrue(command);
     // Buttons.secondaryDPadE.onTrue(command);
 

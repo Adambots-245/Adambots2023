@@ -138,6 +138,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // }
     );
 
+    System.out.println("Angle: " + m_simAngle.get());
     System.out.println("Pose: " + getPose().toString());
 
     m_field.setRobotPose(getPose());

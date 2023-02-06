@@ -1,4 +1,18 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [17]": {
+        "header": {
+          "open": true
+        }
+      },
+      "navX-Sensor[0]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -7,6 +21,7 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "image": "/Users/rajeevb/Public/Projects/Adambots2023/src/main/java/com/adambots/utils/2023-field.png",
         "window": {
           "visible": true
         }

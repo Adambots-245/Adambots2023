@@ -26,13 +26,13 @@ public class RetractArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAndGrabbySubystem.retractArm(speed);
+    armAndGrabbySubystem.retractArm();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armAndGrabbySubystem.retractArm(0);
+    armAndGrabbySubystem.stopArmExtender();
   }
 
   // Returns true when the command should end.

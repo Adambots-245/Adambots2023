@@ -25,13 +25,13 @@ public class LowerArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAndGrabbySubystem.lowerArm(speed);
+    armAndGrabbySubystem.lowerArm();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armAndGrabbySubystem.lowerArm(0);
+    armAndGrabbySubystem.stopArmLifter();
   }
 
   // Returns true when the command should end.

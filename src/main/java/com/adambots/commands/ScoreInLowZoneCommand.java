@@ -35,29 +35,29 @@ public class ScoreInLowZoneCommand extends CommandBase {
     while (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getLeftExtenderEncoder()) > 0.1) {
       if (armAndGrabbySubystem.getArmLifterEncoder() > Constants.GrabbyConstants.lowZoneLifterValue) {
         if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
-          armAndGrabbySubystem.lowerArm(0.3);
+          armAndGrabbySubystem.lowerArm();
         } else {
-          armAndGrabbySubystem.lowerArm(0.1);
+          armAndGrabbySubystem.lowerArm();
         }
       } else if (armAndGrabbySubystem.getArmLifterEncoder() < Constants.GrabbyConstants.lowZoneLifterValue) {
         if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
-          armAndGrabbySubystem.raiseArm(0.3);
+          armAndGrabbySubystem.raiseArm();
         } else {
-          armAndGrabbySubystem.raiseArm(0.1);
+          armAndGrabbySubystem.raiseArm();
         }
       }
 
       if (armAndGrabbySubystem.getRightExtenderEncoder() > Constants.GrabbyConstants.lowZoneExtenderValue) {
         if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
-          armAndGrabbySubystem.extendArm(0.3);
+          armAndGrabbySubystem.extendArm();
         } else {
-          armAndGrabbySubystem.extendArm(0.1);
+          armAndGrabbySubystem.extendArm();
         }
       } else if (armAndGrabbySubystem.getRightExtenderEncoder() < Constants.GrabbyConstants.lowZoneExtenderValue) {
         if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
-          armAndGrabbySubystem.retractArm(0.3);
+          armAndGrabbySubystem.retractArm();
         } else {
-          armAndGrabbySubystem.retractArm(0.1);
+          armAndGrabbySubystem.retractArm();
         }
       }
 
@@ -68,8 +68,8 @@ public class ScoreInLowZoneCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armAndGrabbySubystem.raiseArm(0);
-    armAndGrabbySubystem.extendArm(0);
+    armAndGrabbySubystem.stopArmLifter();
+    armAndGrabbySubystem.stopArmExtender();
   }
 
   // Returns true when the command should end.

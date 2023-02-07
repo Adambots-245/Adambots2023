@@ -4,17 +4,15 @@
 
 package com.adambots.subsystems;
 
-import com.adambots.RobotMap;
+import com.adambots.Constants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.adambots.commands.*;
-import com.adambots.Constants;
 
 public class ArmAndGrabbySubystem extends SubsystemBase {
 
@@ -26,26 +24,38 @@ private final DoubleSolenoid grabby;
 private final TalonFX armLifter;
 private final TalonFX leftArmExtender;
 private final TalonFX rightArmExtender;
+private final DigitalInput rightExtenderLimit;
+private final DigitalInput leftExtenderLimit;
 
 private double lifterSpeed = Constants.GrabbyConstants.lifterSpeed;
 private double extenderSpeed = Constants.GrabbyConstants.extenderSpeed;
 
-private final double lowZoneLifterValue = Constants.GrabbyConstants.lowZoneLifterValue;
-private final double lowZoneExtenderValue = Constants.GrabbyConstants.lowZoneExtenderValue;
+private boolean manualControl = false;
+private double lifterSpeedCurrent = 0;
+private double rightExtenderSpeedCurrent = 0;
+private double leftExtenderSpeedCurrent = 0;
 
+private double extendTarget = Constants.GrabbyConstants.lowZoneExtenderValue;
+private double liftTarget = Constants.GrabbyConstants.lowZoneLifterValue;
+private double extendInit;
+private double liftInit;
 
 private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
 
-  public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX leftArmExtender, TalonFX rightArmExtender) {
+  public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX leftArmExtender, TalonFX rightArmExtender, DigitalInput rightExtenderLimit, DigitalInput leftExtenderLimit) {
     this.grabby = grabby;
    // this.rightGrabby = rightGrabby;
     this.armLifter = armLifter;
     this.leftArmExtender = leftArmExtender;
     this.rightArmExtender = rightArmExtender;
+    this.leftExtenderLimit = leftExtenderLimit;
+    this.rightExtenderLimit = rightExtenderLimit;
     
     armLifter.setSelectedSensorPosition(0);
     leftArmExtender.setSelectedSensorPosition(0);
     rightArmExtender.setSelectedSensorPosition(0);  
+    extendInit = getRightExtenderEncoder();
+    liftInit = getArmLifterEncoder();
   }
 
   public void openGrabby() {
@@ -59,30 +69,41 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
   }
 
   public void raiseArm() {
-    armLifter.set(ControlMode.PercentOutput, lifterSpeed);
+    manualControl = true;
+    lifterSpeedCurrent = lifterSpeed;
   }
 
   public void lowerArm() {
-    armLifter.set(ControlMode.PercentOutput, -lifterSpeed);
+    manualControl = true;
+    lifterSpeedCurrent = -lifterSpeed;
   }
 
   public void stopArmLifter() {
-    armLifter.set(ControlMode.PercentOutput, 0);
+    lifterSpeedCurrent = 0;
   }
 
   public void extendArm() {
-    leftArmExtender.set(ControlMode.PercentOutput, -extenderSpeed);
-    rightArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
+    manualControl = true;
+    rightExtenderSpeedCurrent = extenderSpeed;
+    leftExtenderSpeedCurrent = extenderSpeed;
+
+    //leftArmExtender.set(ControlMode.PercentOutput, -extenderSpeed);
+    //rightArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
   }
 
   public void retractArm() {
-    leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
-    rightArmExtender.set(ControlMode.PercentOutput, -extenderSpeed);
+    manualControl = true;
+    rightExtenderSpeedCurrent = -extenderSpeed;
+    leftExtenderSpeedCurrent = -extenderSpeed;
+    //leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
+    //rightArmExtender.set(ControlMode.PercentOutput, -extenderSpeed);
   }
 
   public void stopArmExtender() {
-    leftArmExtender.set(ControlMode.PercentOutput, 0);
-    rightArmExtender.set(ControlMode.PercentOutput, 0);
+    rightExtenderSpeedCurrent = 0;
+    leftExtenderSpeedCurrent = 0;
+    //leftArmExtender.set(ControlMode.PercentOutput, 0);
+    //rightArmExtender.set(ControlMode.PercentOutput, 0);
   }
 
   public double getArmLifterEncoder() {
@@ -97,6 +118,38 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
     return rightArmExtender.getSelectedSensorPosition() / armEncoderCPR;
   }
 
+  public boolean getRightLimit(){
+    return rightExtenderLimit.get();
+  }
+  
+  public boolean getLeftLimit(){
+    return leftExtenderLimit.get();
+  }
+
+  public void lowExtendAndLift() {
+    extendInit = getRightExtenderEncoder();
+    liftInit = getArmLifterEncoder();
+    manualControl = false;
+    extendTarget = Constants.GrabbyConstants.lowZoneExtenderValue;
+    liftTarget = Constants.GrabbyConstants.lowZoneLifterValue;
+  }
+
+  public void midExtendAndLift() {
+    extendInit = getRightExtenderEncoder();
+    liftInit = getArmLifterEncoder();
+    manualControl = false;
+    extendTarget = Constants.GrabbyConstants.midZoneExtenderValue;
+    liftTarget = Constants.GrabbyConstants.midZoneLifterValue;
+  }
+
+  public void highExtendAndLift() {
+    extendInit = getRightExtenderEncoder();
+    liftInit = getArmLifterEncoder();
+    manualControl = false;
+    extendTarget = Constants.GrabbyConstants.highZoneExtenderValue;
+    liftTarget = Constants.GrabbyConstants.highZoneLifterValue;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -105,7 +158,7 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
     SmartDashboard.putNumber("leftExtenderEncoder", getRightExtenderEncoder());
     SmartDashboard.putNumber("rightExtenderEncoder", getLeftExtenderEncoder());
 
-    if (Math.abs(lowZoneLifterValue - getArmLifterEncoder()) > 0.1) {
+    /*if (Math.abs(lowZoneLifterValue - getArmLifterEncoder()) > 0.1) {
       if (getArmLifterEncoder() > lowZoneLifterValue) {
         lowerArm();
       } else if (getArmLifterEncoder() < lowZoneLifterValue) {
@@ -113,12 +166,71 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
       } 
     } else {
         stopArmExtender();
+    }*/
+    if(!manualControl){
+     if(liftTarget > getArmLifterEncoder() && liftTarget > liftInit) {
+        lifterSpeedCurrent = lifterSpeed;
+     }else if (liftTarget < getArmLifterEncoder() && liftTarget < liftInit) {
+        lifterSpeedCurrent = -lifterSpeed;
+     }else{
+         stopArmLifter();
+       }
+
+     if(extendTarget < getRightExtenderEncoder() && extendTarget < extendInit) {
+      rightExtenderSpeedCurrent = -extenderSpeed; 
+       }else if (extendTarget > getRightExtenderEncoder() && extendTarget > extendInit) {
+         rightExtenderSpeedCurrent = extenderSpeed;
+       }else {
+        rightExtenderSpeedCurrent = 0;
+        }
+    
+      if(extendTarget < getLeftExtenderEncoder() && extendTarget < extendInit) {
+        leftExtenderSpeedCurrent = -extenderSpeed;
+          }else if (extendTarget > getLeftExtenderEncoder() && extendTarget > extendInit) {
+            leftExtenderSpeedCurrent = extenderSpeed;
+          }else{
+              leftExtenderSpeedCurrent = 0;
+        }
     }
 
-    armLifter.set(ControlMode.PercentOutput, lifterSpeed);
-    leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
-    leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
+    if(getRightExtenderEncoder() >= 4){
+      if(rightExtenderSpeedCurrent == extenderSpeed){
+        rightExtenderSpeedCurrent = 0;
+      }
+      if(leftExtenderSpeedCurrent == extenderSpeed){
+        leftExtenderSpeedCurrent = 0;
+      }
+    }
 
+    if(getRightLimit()){
+      if(rightExtenderSpeedCurrent == -extenderSpeed){
+        rightExtenderSpeedCurrent = 0;
+      }
+      rightArmExtender.setSelectedSensorPosition(0); 
+    }
+
+    if(getLeftLimit()){
+      if(leftExtenderSpeedCurrent == -extenderSpeed){
+        leftExtenderSpeedCurrent = 0;
+      }
+      leftArmExtender.setSelectedSensorPosition(0); 
+    }
+
+    //Make sure right and left extenders are at the same position in manual control
+    if(manualControl){
+      if(Math.abs(getRightExtenderEncoder()-getLeftExtenderEncoder()) < 0.1){
+        //doNothing
+      }else if(getRightExtenderEncoder() > getLeftExtenderEncoder()){
+        leftExtenderSpeedCurrent = extenderSpeed;
+      }else{
+        leftExtenderSpeedCurrent = -extenderSpeed;
+      }
+    }
+
+
+    armLifter.set(ControlMode.PercentOutput, lifterSpeedCurrent);
+    leftArmExtender.set(ControlMode.PercentOutput, leftExtenderSpeedCurrent);
+    rightArmExtender.set(ControlMode.PercentOutput, -rightExtenderSpeedCurrent);
      /*
       if (getRightExtenderEncoder() > Constants.GrabbyConstants.lowZoneExtenderValue) {
         if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - getArmLifterEncoder()) > 1) {

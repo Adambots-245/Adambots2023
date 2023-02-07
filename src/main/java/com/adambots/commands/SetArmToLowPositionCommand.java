@@ -8,15 +8,12 @@ import com.adambots.subsystems.ArmAndGrabbySubystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ExtendArmCommand extends CommandBase {
-  /** Creates a new ExtendArmCommand. */
+public class SetArmToLowPositionCommand extends CommandBase {
+  /** Creates a new SetArmToLowPositionCommand. */
   ArmAndGrabbySubystem armAndGrabbySubystem;
-  int speed;
-  public ExtendArmCommand(ArmAndGrabbySubystem armAndGrabbySubystem, int speed) {
-      this.speed = speed;
-      this.armAndGrabbySubystem = armAndGrabbySubystem;
-      addRequirements(armAndGrabbySubystem);
-    // Use addRequirements() here to declare subsystem dependencies.
+  public SetArmToLowPositionCommand(ArmAndGrabbySubystem armAndGrabbySubystem) {
+    this.armAndGrabbySubystem = armAndGrabbySubystem;
+    addRequirements(armAndGrabbySubystem);
   }
 
   // Called when the command is initially scheduled.
@@ -26,18 +23,16 @@ public class ExtendArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAndGrabbySubystem.extendArm();
+    armAndGrabbySubystem.lowExtendAndLift();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    armAndGrabbySubystem.stopArmExtender();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

@@ -74,14 +74,14 @@ public class RobotMap {
         public static final int kRearRightEncoderPort = 3;
         public static final int kFrontLeftEncoderPort = 4;
         public static final int kFrontRightEncoderPort = 5;
-        public static final int kFrontRightTurningMotorPort = 11;
-        public static final int kFrontRightDriveMotorPort = 12;
-        public static final int kRearRightTurningMotorPort = 13;
-        public static final int kRearRightDriveMotorPort = 14;
-        public static final int kRearLeftTurningMotorPort = 15;
-        public static final int kRearLeftDriveMotorPort = 16;
-        public static final int kFrontLeftTurningMotorPort = 17;
-        public static final int kFrontLeftDriveMotorPort = 18;
+        public static final int kFrontRightTurningMotorPort = 13;
+        public static final int kFrontRightDriveMotorPort = 11;
+        public static final int kRearRightTurningMotorPort = 18;
+        public static final int kRearRightDriveMotorPort = 16;
+        public static final int kRearLeftTurningMotorPort = 14;
+        public static final int kRearLeftDriveMotorPort = 12;
+        public static final int kFrontLeftTurningMotorPort = 15;
+        public static final int kFrontLeftDriveMotorPort = 17;
 
         // Arm and Grabby ports
         public static final int armLiftPort = 5;
@@ -90,9 +90,8 @@ public class RobotMap {
         public static final int grabbyPort = 1;
         public static final int ungrabbyPort = 0;
         // public static final int rightGrabbyPort = 0;
-        public static final int armLiftEncoderPort = 2;
-        public static final int leftArmExtenderEncoderPort = 3;
-        public static final int rightArmExtenderEncoderPort = 4;
+        public static final int leftArmLimitPort = 3;
+        public static final int rightArmLimitPort = 4;
 
         // Arm and Grabby Devices
         public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
@@ -102,9 +101,8 @@ public class RobotMap {
         public static final WPI_TalonFX rightArmExtender = new WPI_TalonFX(rightArmExtenderPort);
         public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
         
-        public static final WPI_CANCoder leftArmExtenderEncoder = new WPI_CANCoder(leftArmExtenderEncoderPort);
-        public static final WPI_CANCoder rightArmExtenderEncoder = new WPI_CANCoder(rightArmExtenderEncoderPort);
-        public static final WPI_CANCoder armLiftEncoder = new WPI_CANCoder(armLiftEncoderPort);
+        public static final DigitalInput leftArmLimitSwitch = new DigitalInput(leftArmLimitPort);
+        public static final DigitalInput rightArmLimitSwitch = new DigitalInput(rightArmLimitPort);
 
 
 

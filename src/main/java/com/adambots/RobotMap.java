@@ -85,8 +85,8 @@ public class RobotMap {
 
         // Arm and Grabby ports
         public static final int armLiftPort = 5;
-        public static final int leftArmExtenderPort = 6;
-        public static final int rightArmExtenderPort = 7;
+        public static final int leftArmExtenderPort = 11;
+        public static final int rightArmExtenderPort = 13;
         public static final int grabbyPort = 1;
         public static final int ungrabbyPort = 0;
         // public static final int rightGrabbyPort = 0;

@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,14 +28,14 @@ public class ArmTester extends SubsystemBase {
 
   // Set these to actual values from encoder
   private final int lowLevelExtenderPosition = 0;
-  private final int midLevelExtenderPosition = 100;
-  private final int topLevelExtenderPosition = 200;
+  private final int midLevelExtenderPosition = 34;
+  private final int topLevelExtenderPosition = 59;
   
   private final int lowLevelTurnPosition = 0;
   private final int midLevelTurnPosition = 100;
   private final int topLevelTurnPosition = 200;
 
-  private int extensionLimiter = topLevelExtenderPosition;
+  private int extensionLimiter = midLevelExtenderPosition;
   private int turnLimiter = topLevelTurnPosition;
 
   public enum Position{
@@ -52,11 +53,12 @@ public class ArmTester extends SubsystemBase {
     this.leftArmExtender = leftArmExtender;
     this.rightArmExtender = rightArmExtender;
 
-    this.rightArmExtender.setInverted(true);
-    resetToHome(armTurner, leftArmExtender, rightArmExtender);
+    this.leftArmExtender.setInverted(true);
+    this.leftArmExtender.setNeutralMode(NeutralMode.Coast);
+    resetToHome();
   }
 
-  public void resetToHome(TalonFX armTurner, TalonFX leftArmExtender, TalonFX rightArmExtender) {
+  public void resetToHome() {
     armTurner.setSelectedSensorPosition(0);
     leftArmExtender.setSelectedSensorPosition(0);
     rightArmExtender.setSelectedSensorPosition(0);
@@ -174,6 +176,7 @@ public class ArmTester extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
+
     double armPosition = getArmTurnerPosition();
     double rightExtenderPosition = getRightExtenderPosition();
     double leftExtenderPosition = getLeftExtenderPosition();
@@ -183,31 +186,34 @@ public class ArmTester extends SubsystemBase {
     SmartDashboard.putNumber("leftExtenderEncoder", leftExtenderPosition);
     SmartDashboard.putNumber("rightExtenderEncoder", rightExtenderPosition);
 
-    if (armPosition <= 0 || armPosition >= topLevelTurnPosition){
-      stopArmTurner();
-    }
+    // if (armPosition <= 0 || armPosition >= topLevelTurnPosition){
+      // stopArmTurner();
+    // }
 
-    if (leftExtenderPosition <= lowLevelExtenderPosition || rightExtenderPosition <=lowLevelExtenderPosition){
+    if (leftExtenderPosition < lowLevelExtenderPosition){ // || rightExtenderPosition <=lowLevelExtenderPosition){
       stopArmExtender();
     }
 
     if (direction > 0){ // going up
-      if (leftExtenderPosition >= extensionLimiter || rightExtenderPosition >= extensionLimiter){
+      if (leftExtenderPosition > extensionLimiter) { // || rightExtenderPosition >= extensionLimiter){
         stopArmExtender();
       }
     } else { // going down
-      if (leftExtenderPosition <= extensionLimiter || rightExtenderPosition <= extensionLimiter){
+      if (leftExtenderPosition < extensionLimiter) { // || rightExtenderPosition <= extensionLimiter){
         stopArmExtender();
       }
     }
 
     // one more failsafe
-    if (leftExtenderPosition >= topLevelExtenderPosition || rightExtenderPosition >= topLevelExtenderPosition){
+    if (leftExtenderPosition > topLevelExtenderPosition){ // || rightExtenderPosition >= topLevelExtenderPosition){
       stopArmExtender();
     }
 
-    armTurner.set(ControlMode.PercentOutput, lifterSpeed);
+    SmartDashboard.putNumber("ExtenderSpeed", extenderSpeed);
+    // System.out.println("Speed: **********" + extenderSpeed);
+
+    // armTurner.set(ControlMode.PercentOutput, lifterSpeed);
     leftArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
-    rightArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
+    // rightArmExtender.set(ControlMode.PercentOutput, extenderSpeed);
   }
 }

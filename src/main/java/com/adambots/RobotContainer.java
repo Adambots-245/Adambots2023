@@ -142,6 +142,10 @@ public class RobotContainer {
         () -> armTester.gotoPosition(Position.MID)
       ));
 
+      Buttons.primaryStartButton.onTrue(new InstantCommand(
+        () -> armTester.resetToHome()
+      ));
+
     // Buttons.primaryAButton.onTrue(command);
     // Buttons.secondaryDPadE.onTrue(command);
 

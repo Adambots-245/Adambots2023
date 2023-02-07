@@ -232,7 +232,7 @@ public final class Constants {
         public static final double highZoneExtenderValue = 1;
 
         public static final double lifterSpeed = 0.1;
-        public static final double extenderSpeed = 0.1;
+        public static final double extenderSpeed = 0.5;
     }
 
 

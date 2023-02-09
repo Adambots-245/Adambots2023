@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.adambots.commands.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -93,6 +94,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    Buttons.secondaryDPadE.onTrue(new CloseGrabbyCommand(armAndGrabbySubystem));
+    Buttons.secondaryDPadW.onTrue(new OpenGrabbyCommand(armAndGrabbySubystem));
+    Buttons.secondaryRB.whileTrue(new ExtendArmCommand(armAndGrabbySubystem, 50));
+    Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
+    Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
+    Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
     // Buttons.primaryAButton.onTrue(command);
     // Buttons.secondaryDPadE.onTrue(command);
 

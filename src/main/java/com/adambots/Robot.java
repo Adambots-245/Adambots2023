@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 
     Log.instance();
     Log.setFilter(Level.OFF);
-    
+
     if (Robot.isReal()) {
 
       // Starts vision thread only if not running in simulation mode

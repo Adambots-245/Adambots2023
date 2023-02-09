@@ -15,6 +15,7 @@ import java.util.List;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Gamepad.Buttons;
+import com.adambots.commands.AutoBalanceCommand;
 // import com.adambots.commands.*;
 // import com.adambots.commands.autonCommands.*;
 import com.adambots.subsystems.*;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -59,8 +61,7 @@ public class RobotContainer {
   // RobotMap.BackLeftMotor,
   // RobotMap.BackRightMotor);
 
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
-      RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
+  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -103,6 +104,9 @@ public class RobotContainer {
     // Buttons.JoystickButton1.onTrue(new RunCommand(() -> System.out.println("1 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
+
+    Buttons.JoystickButton9.whileTrue(new RunCommand(() -> drivetrainSubsystem.hockeyStop()));
+    Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
   }
 
   private void setupDashboard() {
@@ -189,7 +193,7 @@ public class RobotContainer {
     */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    String trajectoryJSON = "Unnamed.wpilib.json";
+    String trajectoryJSON = "Test2.wpilib.json";
     Trajectory exampleTrajectory = new Trajectory();
 
     try {
@@ -226,6 +230,6 @@ public class RobotContainer {
     field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.drive(0, 0, 0, false));
+    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
   }
 }

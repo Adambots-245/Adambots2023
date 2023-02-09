@@ -7,6 +7,10 @@
 
 package com.adambots;
 
+import java.util.Map;
+
+import com.adambots.utils.ModuleMap;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -34,15 +38,32 @@ public final class Constants {
         public static final boolean kRearRightTurningEncoderReversed = false;
 
         public static final boolean kFrontLeftDriveEncoderReversed = false;
-        public static final boolean kRearLeftDriveEncoderReversed = true;
+        public static final boolean kRearLeftDriveEncoderReversed = false;
         public static final boolean kFrontRightDriveEncoderReversed = false;
-        public static final boolean kRearRightDriveEncoderReversed = true;
+        public static final boolean kRearRightDriveEncoderReversed = false;
 
         // In Meters
         // Distance between centers of right and left wheels on robot
         public static final double kTrackWidth = 0.61; // 0.5
         // Distance between front and back wheels on robot
         public static final double kWheelBase = 0.61; // 0.7
+
+        public enum ModulePosition {
+            FRONT_LEFT,
+            FRONT_RIGHT,
+            REAR_LEFT,
+            REAR_RIGHT
+          }
+      
+          public static final Map<ModulePosition, Translation2d> kModuleTranslations = Map.of(
+              ModulePosition.FRONT_LEFT, new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+              ModulePosition.FRONT_RIGHT, new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+              ModulePosition.REAR_LEFT, new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+              ModulePosition.REAR_RIGHT, new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+      
+        //   public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+        //       ModuleMap.orderedValues(DriveConstants.kModuleTranslations, new Translation2d[0]));
+      
 
         // Distance between front and back wheels on robot
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
@@ -66,8 +87,8 @@ public final class Constants {
         public static final double kMaxSpeedMetersPerSecond = 3; //Only used in Drive and SetModuleStates
 
         public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
-        public static int kOffBalanceAngleThresholdDegrees = 10;
-        public static int kOonBalanceAngleThresholdDegrees = 5;
+        public static int kOffBalanceAngleThresholdDegrees = 3;
+        public static int kOonBalanceAngleThresholdDegrees = 3;
     }
 
     public static final class ModuleConstants {

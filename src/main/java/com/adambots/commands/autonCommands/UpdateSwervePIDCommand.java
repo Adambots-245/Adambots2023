@@ -4,7 +4,8 @@
 
 package com.adambots.commands.autonCommands;
 
-import com.adambots.Constants;
+import com.adambots.Constants.ModuleConstants;
+import com.adambots.Constants.PreferencesConstants;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,6 +22,13 @@ public class UpdateSwervePIDCommand extends CommandBase {
     addRequirements(driveTrainSubsystem);
 
     this.driveTrainSubsystem = driveTrainSubsystem;
+
+    if (!Preferences.containsKey(PreferencesConstants.kPModuleTurningKey)) {
+      Preferences.setDouble(PreferencesConstants.kPModuleTurningKey, ModuleConstants.kPModuleTurningController);
+    }
+    if (!Preferences.containsKey(PreferencesConstants.kDModuleTurningKey)) {
+      Preferences.setDouble(PreferencesConstants.kDModuleTurningKey, ModuleConstants.kDModuleTurningController);
+    }
   }
 
   // Called when the command is initially scheduled.
@@ -31,8 +39,8 @@ public class UpdateSwervePIDCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double kP = Preferences.getDouble(Constants.PreferencesConstants.kPModuleTurningKey, 0);
-    double kD = Preferences.getDouble(Constants.PreferencesConstants.kPModuleTurningKey, 0);
+    double kP = Preferences.getDouble(PreferencesConstants.kPModuleTurningKey, 0);
+    double kD = Preferences.getDouble(PreferencesConstants.kDModuleTurningKey, 0);
     driveTrainSubsystem.setPIDValues(kP, 0d, kD);
   }
 

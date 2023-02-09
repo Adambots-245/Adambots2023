@@ -7,17 +7,25 @@ package com.adambots.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.ModuleConstants;
+import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -33,6 +41,9 @@ public class SwerveModule {
 
   private final PIDController m_drivePIDController =
       new PIDController(ModuleConstants.kPModuleDriveController, 0, 0);
+  
+  // private final SparkMaxPIDController m_drivePIDController = m_driveMotor.getPIDController();
+  
 
   // Using a TrapezoidProfile PIDController to allow for smooth turning
   private final ProfiledPIDController m_turningPIDController =
@@ -43,6 +54,10 @@ public class SwerveModule {
           new TrapezoidProfile.Constraints(
               ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond,
               ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared));
+  private ModulePosition m_position;
+  private double m_actualAngleDegrees;
+  private double m_angleIncrementPer20ms;
+  private double m_angleDifference;
 
   public void setPIDValues(double kP, double kI, double kD) {
     m_turningPIDController.setP(kP);
@@ -53,6 +68,7 @@ public class SwerveModule {
   /**
    * Constructs a SwerveModule.
    *
+   * @param position The position of this module (front or back, right or left)
    * @param driveMotorChannel The channel of the drive motor.
    * @param turningMotorChannel The channel of the turning motor.
    * @param driveEncoderChannels The channels of the drive encoder.
@@ -61,27 +77,46 @@ public class SwerveModule {
    * @param turningEncoderReversed Whether the turning encoder is reversed.
    */
   public SwerveModule(
+      ModulePosition position,
       int driveMotorChannel,
       int turningMotorChannel,
       int turningEncoderChannel,
       boolean driveEncoderReversed,
       boolean turningEncoderReversed) {
     
+    this.m_position = position; // Use position.name() to get the name of the position as a String
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
-    // m_driveMotor.setIdleMode(IdleMode.kBrake);
-    // m_turningMotor.setIdleMode(IdleMode.kBrake);
+    m_driveMotor.setIdleMode(IdleMode.kBrake);
+    m_turningMotor.setIdleMode(IdleMode.kBrake);
 
     m_absoluteEncoder = new WPI_CANCoder(turningEncoderChannel);
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = m_turningMotor.getEncoder();
+
+    //TODO: Utilize driveEncoder and turningEncoder Reversed flags - instead of negating Joystick values in RobotContainer
+    // m_driveMotor.setInverted(driveEncoderReversed);
     
     // m_canCoderConfig.unitString = "rad";
     // m_encoder.configAllSettings(m_canCoderConfig);
     m_absoluteEncoder.clearStickyFaults();
 
+
+    // m_drivePIDController = m_driveMotor.getPIDController();
+    // m_drivePIDController.setP(ModuleConstants.kPModuleDriveController, 1);
+    // m_drivePIDController.setD(ModuleConstants.kDModuleDriveController, 1);
+    // m_drivePIDController.setD(ModuleConstants.kIModuleDriveController, 1);
+    // m_drivePIDController.setIZone(1, 1);
+
+
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
     resetEncoders();
+
+    if (RobotBase.isSimulation()) {
+
+      REVPhysicsSim.getInstance().addSparkMax(m_driveMotor, DCMotor.getNEO(1));
+
+    }
   }
 
   /**
@@ -108,7 +143,7 @@ public class SwerveModule {
     double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;
     
     // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
-    SmartDashboard.putNumber("Turningdistance" + hashCode(), m_turningEncoder.getPosition());
+    SmartDashboard.putNumber("Turningdistance " + m_position.name(), m_turningEncoder.getPosition());
 
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));
@@ -150,8 +185,38 @@ public class SwerveModule {
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
 
+    // If using motor's PID Controller, then enable this instead of the set above.
+    // m_drivePIDController.setReference(state.speedMetersPerSecond, ControlType.kVelocity, 1);
+
     // System.out.printf("Drive Output: %f\n", driveOutput);
     // System.out.printf("Turn Output: %f\n", turnOutput);
+
+    if (RobotBase.isSimulation()){
+      simTurnPosition(state.angle.getDegrees());
+    }
+  }
+
+  /**
+   * Turn this module wheel by this angle in degrees
+   * @param angle in degrees
+   */
+  public void turn(double angle) {
+
+    double currentModuleAngleInRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); 
+    var radAngle = Units.degreesToRadians(angle);
+    double turnAngleError = Math.abs(radAngle - currentModuleAngleInRadians);
+    
+    var swerveModuleStates = new SwerveModuleState(0.5, new Rotation2d(radAngle));
+    var desiredState = SwerveModuleState.optimize(swerveModuleStates, new Rotation2d(currentModuleAngleInRadians));
+    // m_turningPIDController.reset(currentModuleAngleInRadians);
+    double pidOut = m_turningPIDController.calculate(currentModuleAngleInRadians, desiredState.angle.getRadians());
+
+    // if robot is not moving, stop the turn motor oscillating
+    if (turnAngleError < 0.5
+        && Math.abs(getState().speedMetersPerSecond) <= (DriveConstants.kMaxSpeedMetersPerSecond * 0.01))
+      pidOut = 0;
+
+    m_turningMotor.set(pidOut);
   }
 
   public void stop(){
@@ -163,5 +228,33 @@ public class SwerveModule {
   public void resetEncoders() {
     m_driveEncoder.setPosition(0);
     // m_absoluteEncoder.setPosition(m_absoluteEncoder.getAbsolutePosition());
+  }
+
+  public void simulationPeriodic(){
+    if (RobotBase.isSimulation()){
+      REVPhysicsSim.getInstance().run();
+    }
+  }
+
+  private void simTurnPosition(double angle) {
+    
+    if (angle != m_actualAngleDegrees && m_angleIncrementPer20ms == 0) {
+
+      m_angleDifference = angle - m_actualAngleDegrees;
+
+      m_angleIncrementPer20ms = m_angleDifference / 20;// 10*20ms = .2 sec move time
+    }
+
+    if (m_angleIncrementPer20ms != 0) {
+
+      m_actualAngleDegrees += m_angleIncrementPer20ms;
+
+      if ((Math.abs(angle - m_actualAngleDegrees)) < .1) {
+
+        m_actualAngleDegrees = angle;
+
+        m_angleIncrementPer20ms = 0;
+      }
+    }
   }
 }

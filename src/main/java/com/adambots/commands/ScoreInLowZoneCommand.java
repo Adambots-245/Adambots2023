@@ -32,44 +32,44 @@ public class ScoreInLowZoneCommand extends CommandBase {
   @Override
   public void execute() {
    // armAndGrabbySubystem.ScoreInLowZone(speed);
-    while (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getLeftExtenderEncoder()) > 0.1) {
-      if (armAndGrabbySubystem.getArmLifterEncoder() > Constants.GrabbyConstants.lowZoneLifterValue) {
-        if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
-          armAndGrabbySubystem.lowerArm();
-        } else {
-          armAndGrabbySubystem.lowerArm();
-        }
-      } else if (armAndGrabbySubystem.getArmLifterEncoder() < Constants.GrabbyConstants.lowZoneLifterValue) {
-        if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
-          armAndGrabbySubystem.raiseArm();
-        } else {
-          armAndGrabbySubystem.raiseArm();
-        }
-      }
+    // while (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 0.1 || Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getLeftExtenderEncoder()) > 0.1) {
+    //   if (armAndGrabbySubystem.getArmLifterEncoder() > Constants.GrabbyConstants.lowZoneLifterValue) {
+    //     if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
+    //       armAndGrabbySubystem.lowerArm();
+    //     } else {
+    //       armAndGrabbySubystem.lowerArm();
+    //     }
+    //   } else if (armAndGrabbySubystem.getArmLifterEncoder() < Constants.GrabbyConstants.lowZoneLifterValue) {
+    //     if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - armAndGrabbySubystem.getArmLifterEncoder()) > 1) {
+    //       armAndGrabbySubystem.raiseArm();
+    //     } else {
+    //       armAndGrabbySubystem.raiseArm();
+    //     }
+    //   }
 
-      if (armAndGrabbySubystem.getRightExtenderEncoder() > Constants.GrabbyConstants.lowZoneExtenderValue) {
-        if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
-          armAndGrabbySubystem.extendArm();
-        } else {
-          armAndGrabbySubystem.extendArm();
-        }
-      } else if (armAndGrabbySubystem.getRightExtenderEncoder() < Constants.GrabbyConstants.lowZoneExtenderValue) {
-        if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
-          armAndGrabbySubystem.retractArm();
-        } else {
-          armAndGrabbySubystem.retractArm();
-        }
-      }
+    //   if (armAndGrabbySubystem.getRightExtenderEncoder() > Constants.GrabbyConstants.lowZoneExtenderValue) {
+    //     if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
+    //       armAndGrabbySubystem.extendArm();
+    //     } else {
+    //       armAndGrabbySubystem.extendArm();
+    //     }
+    //   } else if (armAndGrabbySubystem.getRightExtenderEncoder() < Constants.GrabbyConstants.lowZoneExtenderValue) {
+    //     if (Math.abs(Constants.GrabbyConstants.lowZoneExtenderValue - armAndGrabbySubystem.getRightExtenderEncoder()) > 1) {
+    //       armAndGrabbySubystem.retractArm();
+    //     } else {
+    //       armAndGrabbySubystem.retractArm();
+    //     }
+    //   }
 
 
-    }
+    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    armAndGrabbySubystem.stopArmLifter();
-    armAndGrabbySubystem.stopArmExtender();
+    // armAndGrabbySubystem.stopArmLifter();
+    // armAndGrabbySubystem.stopArmExtender();
   }
 
   // Returns true when the command should end.

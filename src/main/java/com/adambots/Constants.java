@@ -222,9 +222,64 @@ public final class Constants {
 
         public static final int armEncoderCPR = 2048;
         
-        public static final double lowZoneLifterValue = 0;
-        public static final double lowZoneExtenderValue = 0;
+        // misc.
+        public static final double initiaLifterValue = 0;
+        public static final double initialFirstExtenderValue = 0;
+        public static final double initialSecondExtenderValue = 0;
 
+        public static final double groundLifterValue = 1;
+        public static final double groundFirstExtenderValue = 0;
+        public static final double groundSecondExtenderValue = 0;
+
+        // cube
+        public static final double midCubeLifterValue = 2;
+        public static final double midCubeFirstExtenderValue = 2;
+        public static final double midCubeSecondExtenderValue = 0;
+
+        public static final double highCubeLifterValue = 3;
+        public static final double highCubeFirstExtenderValue = 3;
+        public static final double highCubeSecondExtenderValue = 3;
+        
+        // cone
+        public static final double midConeLifterValue = 2.5;
+        public static final double midConeFirstExtenderValue = 2.5;
+        public static final double midConeSecondExtenderValue = 0;
+
+        public static final double highConeLifterValue = 3.5;
+        public static final double highConeFirstExtenderValue = 3.5;
+        public static final double highConeSecondExtenderValue = 3.5;
+
+        public static class State{
+            double armLiftTarget;
+            double firstExtendTarget;
+            double secondExtendTarget;
+            public State(double armLiftTarget, double firstExtendTarget, double secondExtendTarget){
+                this.armLiftTarget = armLiftTarget;
+                this.firstExtendTarget = firstExtendTarget;
+                this.secondExtendTarget = secondExtendTarget;
+            }
+
+            public double getArmLiftTarget(){
+                return armLiftTarget;
+            }
+
+            public double getFirstExtendTarget(){
+                return firstExtendTarget;
+            }
+
+            public double getSecondExtendTarget(){
+                return secondExtendTarget;
+            }
+        }
+
+        public static final State initState = new State(initiaLifterValue, initialFirstExtenderValue, initialSecondExtenderValue);
+        public static final State groundState = new State(groundLifterValue, groundFirstExtenderValue, groundSecondExtenderValue);
+        public static final State midCubeState = new State(midCubeLifterValue, midCubeFirstExtenderValue, midCubeSecondExtenderValue);
+        public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
+        public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
+        public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
+
+        // antiquated
         public static final double midZoneLifterValue = 0.5;
         public static final double midZoneExtenderValue = 0.5;
 

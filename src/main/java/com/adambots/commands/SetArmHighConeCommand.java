@@ -8,17 +8,14 @@ import com.adambots.subsystems.ArmAndGrabbySubystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ExtendArmCommand extends CommandBase {
-  /** Creates a new ExtendArmCommand. */
-  ArmAndGrabbySubystem armAndGrabbySubystem;
-  int speed;
-  public ExtendArmCommand(ArmAndGrabbySubystem armAndGrabbySubystem, int speed) {
-      this.speed = speed;
-      this.armAndGrabbySubystem = armAndGrabbySubystem;
-      addRequirements(armAndGrabbySubystem);
+public class SetArmHighConeCommand extends CommandBase {
+  /** Creates a new SetArmHomeCommand. */
+  ArmAndGrabbySubystem armAndGrabbySubsystem;
+  public SetArmHighConeCommand(ArmAndGrabbySubystem armAndGrabbySubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.armAndGrabbySubsystem = armAndGrabbySubsystem;
+    addRequirements(armAndGrabbySubsystem);
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -26,18 +23,16 @@ public class ExtendArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // armAndGrabbySubystem.extendArm();
+    armAndGrabbySubsystem.setTargetState(armAndGrabbySubsystem.highConeState);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    // armAndGrabbySubystem.stopArmExtender();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

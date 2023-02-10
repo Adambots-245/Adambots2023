@@ -18,6 +18,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.wpilibj.Counter;
@@ -90,8 +91,9 @@ public class RobotMap {
         public static final int grabbyPort = 1;
         public static final int ungrabbyPort = 0;
         // public static final int rightGrabbyPort = 0;
-        public static final int leftArmLimitPort = 3;
-        public static final int rightArmLimitPort = 4;
+        public static final int leftArmLimitPort = 0;
+        public static final int rightArmLimitPort = 1;
+        public static final int armRotationEncoderPort = 8;
 
         // Arm and Grabby Devices
         public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
@@ -100,9 +102,10 @@ public class RobotMap {
         public static final WPI_TalonFX leftArmExtender = new WPI_TalonFX(leftArmExtenderPort);
         public static final WPI_TalonFX rightArmExtender = new WPI_TalonFX(rightArmExtenderPort);
         public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
-        
-        public static final DigitalInput leftArmLimitSwitch = new DigitalInput(leftArmLimitPort);
-        public static final DigitalInput rightArmLimitSwitch = new DigitalInput(rightArmLimitPort);
+
+        public static final CANCoder armRotationEncoder = new CANCoder(armRotationEncoderPort);        
+        public static final PhotoEye leftArmPhotoEye = new PhotoEye(leftArmLimitPort);
+        public static final PhotoEye rightArmPhotoEye = new PhotoEye(rightArmLimitPort);
 
 
 

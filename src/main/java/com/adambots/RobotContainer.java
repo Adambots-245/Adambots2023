@@ -62,7 +62,7 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
   RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
-  private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender, RobotMap.rightArmLimitSwitch, RobotMap.leftArmLimitSwitch);
+  private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender, RobotMap.rightArmPhotoEye, RobotMap.leftArmPhotoEye, RobotMap.armRotationEncoder);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -96,13 +96,17 @@ public class RobotContainer {
 
     Buttons.secondaryDPadE.onTrue(new CloseGrabbyCommand(armAndGrabbySubystem));
     Buttons.secondaryDPadW.onTrue(new OpenGrabbyCommand(armAndGrabbySubystem));
-    Buttons.secondaryRB.whileTrue(new ExtendArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
-    Buttons.secondaryXButton.onTrue(new SetArmToLowPositionCommand(armAndGrabbySubystem));
-    Buttons.secondaryBButton.onTrue(new SetArmToMidPositionCommand(armAndGrabbySubystem));
-    Buttons.secondaryStartButton.onTrue(new SetArmToHighPositionCommand(armAndGrabbySubystem));
+    // Buttons.secondaryRB.whileTrue(new ExtendArmCommand(armAndGrabbySubystem, 50));
+    // Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
+    // Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
+    // Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
+    //  Buttons.secondaryXButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
+    Buttons.secondaryBButton.onTrue(new SetArmMidCubeCommand(armAndGrabbySubystem));
+    Buttons.secondaryAButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
+    Buttons.secondaryYButton.onTrue(new SetArmHighCubeCommand(armAndGrabbySubystem));
+    Buttons.secondaryDPadN.onTrue(new SetArmHighConeCommand(armAndGrabbySubystem));
+    Buttons.secondaryDPadS.onTrue(new SetArmMidConeCommand(armAndGrabbySubystem));
+    Buttons.secondaryStartButton.onTrue(new SetArmInitCommand(armAndGrabbySubystem));
 
 
     // Buttons.primaryAButton.onTrue(command);

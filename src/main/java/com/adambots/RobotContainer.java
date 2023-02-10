@@ -222,12 +222,9 @@ public class RobotContainer {
     // Reset odometry to the starting pose of the trajectory.
     drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
 
-    var field = new Field2d();
-    SmartDashboard.putData("Field", field);
-
     // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
     // The field image for 2023 is in utils folder
-    field.getObject("traj").setTrajectory(exampleTrajectory);
+    Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());

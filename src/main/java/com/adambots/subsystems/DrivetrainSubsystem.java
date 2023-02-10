@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.adambots.Constants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.utils.ModuleMap;
@@ -310,6 +311,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   private void updateDashboard() {
+    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
     SmartDashboard.putNumber("m_frontLeft", swerveModules.get(ModulePosition.FRONT_LEFT).getState().angle.getDegrees());
     SmartDashboard.putNumber("m_rearLeft", swerveModules.get(ModulePosition.REAR_LEFT).getState().angle.getDegrees());
     SmartDashboard.putNumber("m_frontRight", swerveModules.get(ModulePosition.FRONT_RIGHT).getState().angle.getDegrees());

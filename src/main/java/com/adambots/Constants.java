@@ -279,6 +279,11 @@ public final class Constants {
         public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
 
+
+        //general
+        public static final double firstExtenderMaxExtend = 6;
+        public static final double secondExtenderMaxExtend = 6;
+
         // antiquated
         public static final double midZoneLifterValue = 0.5;
         public static final double midZoneExtenderValue = 0.5;

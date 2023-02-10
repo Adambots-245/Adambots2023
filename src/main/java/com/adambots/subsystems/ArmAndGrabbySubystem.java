@@ -11,6 +11,7 @@ import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -30,7 +31,7 @@ private final TalonFX firstArmExtender;
 private final TalonFX secondArmExtender;
 private final PhotoEye secondExtenderPhotoEye;
 private final PhotoEye firstExtenderPhotoEye;
-private final CANCoder armRotationEncoder;
+private final WPI_CANCoder armRotationEncoder;
 
 private double lifterSpeed = Constants.GrabbyConstants.lifterSpeed;
 private double extenderSpeed = Constants.GrabbyConstants.extenderSpeed;
@@ -46,9 +47,9 @@ public double secondExtenderTarget = Constants.GrabbyConstants.initialSecondExte
 
 private boolean manual = true;
 
-private boolean armErrorFlag = false;
-private boolean firstExtenderErrorFlag = false;
-private boolean secondExtenderErrorFlag = false;
+private int liftArmDir;
+private int firstArmDir;
+private int secondArmDir;
 
 public State initState = Constants.GrabbyConstants.initState;
 public State groundState = Constants.GrabbyConstants.groundState;
@@ -61,7 +62,7 @@ private State currentState = new State(initState.getArmLiftTarget(), initState.g
 
 private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
 
-  public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX firstArmExtender, TalonFX secondArmExtender, PhotoEye secondExtenderPhotoEye, PhotoEye firstExtenderPhotoEye, CANCoder armRotationEncoder) {
+  public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX firstArmExtender, TalonFX secondArmExtender, PhotoEye secondExtenderPhotoEye, PhotoEye firstExtenderPhotoEye, WPI_CANCoder armRotationEncoder) {
     this.grabby = grabby;
    // this.rightGrabby = rightGrabby;
     this.armLifter = armLifter;
@@ -86,10 +87,6 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
   // }
 
   public void setTargetState(State targetState) {
-    armErrorFlag = true;
-    firstExtenderErrorFlag = true;
-    secondExtenderErrorFlag = true;
-
     armTarget = targetState.getArmLiftTarget();
     firstExtenderTarget = targetState.getFirstExtendTarget();
     secondExtenderTarget = targetState.getSecondExtendTarget();
@@ -185,79 +182,63 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
 
     //Make sure right and left extenders are at the same position in manual control
 
-    if(firstExtenderErrorFlag){
-
-      int firstArmDir = 1;
+      firstArmDir = 0;
       if(currentState.getFirstExtendTarget() > firstExtenderTarget){
         firstArmDir = -1;
+      }else if(currentState.getSecondExtendTarget() < secondExtenderTarget){
+        firstArmDir = 1;
       }
 
       if(firstArmExtender.getSelectedSensorPosition() * firstArmDir >= firstExtenderTarget * firstArmDir){
         firstExtenderSpeedCurrent = 0;
-        firstExtenderErrorFlag = false;
         currentState = new State(currentState.getArmLiftTarget(), firstExtenderTarget, currentState.getSecondExtendTarget());
       } else if(firstArmDir > 0){
         firstExtenderSpeedCurrent = extenderSpeed;
       }else{
         firstExtenderSpeedCurrent = -extenderSpeed;
       }
-    }
 
-    if(secondExtenderErrorFlag){
-
-      int secondArmDir = 1;
+      secondArmDir = 0;
       if(currentState.getSecondExtendTarget() > secondExtenderTarget){
         secondArmDir = -1;
+      }else if(currentState.getSecondExtendTarget() < secondExtenderTarget){
+        secondArmDir = 1;
       }
 
       if(secondArmExtender.getSelectedSensorPosition() * secondArmDir >= secondExtenderTarget * secondArmDir){
         secondExtenderSpeedCurrent = 0;
-        secondExtenderErrorFlag = false;
         currentState = new State(currentState.getArmLiftTarget(), currentState.getFirstExtendTarget(), secondExtenderTarget);
       }else if(secondArmDir > 0){
         secondExtenderSpeedCurrent = extenderSpeed;
       }else{
         secondExtenderSpeedCurrent = -extenderSpeed;
       }
-    }
 
-    if(armErrorFlag){
-
-      int liftArmDir = 1;
+      liftArmDir = 0;
       if(currentState.getArmLiftTarget() > armTarget){
         liftArmDir = -1;
+      }else if(currentState.getArmLiftTarget() < armTarget){
+        liftArmDir = 1;
       }
 
       if(armLifter.getSelectedSensorPosition() * liftArmDir >= armTarget * liftArmDir){
         lifterSpeedCurrent = 0;
-        armErrorFlag = false;
         currentState = new State(armTarget, currentState.getFirstExtendTarget(), currentState.getSecondExtendTarget());
       }else if(liftArmDir > 0){
         lifterSpeedCurrent = lifterSpeed;
-      }else{
+      }else if(liftArmDir < 0){
         lifterSpeedCurrent = -lifterSpeed;
       }
-    }
 
-    if(firstExtenderPhotoEye.isDetecting()){
-      if(firstExtenderSpeedCurrent < 0){
-        firstExtenderSpeedCurrent = 0;
-      }
-      firstArmExtender.setSelectedSensorPosition(0);
-    }
+    failSafes();
 
-    if(secondExtenderPhotoEye.isDetecting()){
-      if(secondExtenderSpeedCurrent < 0){
-        secondExtenderSpeedCurrent = 0;
-      }
-      secondArmExtender.setSelectedSensorPosition(0);
-    }
+    
 
     armLifter.set(ControlMode.PercentOutput, lifterSpeedCurrent);
     firstArmExtender.set(ControlMode.PercentOutput, firstExtenderSpeedCurrent);
     secondArmExtender.set(ControlMode.PercentOutput, secondExtenderSpeedCurrent);
-    System.out.println("2nd Encoder: " + secondArmExtender.getSelectedSensorPosition());
-     /*
+    System.out.println("CANCoder: " + armRotationEncoder.getAbsolutePosition());
+     /*   
       if (getRightExtenderEncoder() > Constants.GrabbyConstants.lowZoneExtenderValue) {
         if (Math.abs(Constants.GrabbyConstants.lowZoneLifterValue - getArmLifterEncoder()) > 1) {
            lowerArm(0.1);
@@ -266,6 +247,38 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
          }
       */
 
+  }
+
+
+  private void failSafes() {
+
+    //First Arm
+    if(firstExtenderPhotoEye.isDetecting()){
+      if(firstExtenderSpeedCurrent < 0){
+        firstExtenderSpeedCurrent = 0;
+      }
+      firstArmExtender.setSelectedSensorPosition(0);
+    }
+
+    if(firstArmExtender.getSelectedSensorPosition() > Constants.GrabbyConstants.firstExtenderMaxExtend){
+      if(secondExtenderSpeedCurrent > 0){
+        secondExtenderSpeedCurrent = 0;
+      }
+    }
+
+    //Second Arm
+    if(secondExtenderPhotoEye.isDetecting()){
+      if(secondExtenderSpeedCurrent < 0){
+        secondExtenderSpeedCurrent = 0;
+      }
+      secondArmExtender.setSelectedSensorPosition(0);
+    }
+
+    if(secondArmExtender.getSelectedSensorPosition() > Constants.GrabbyConstants.secondExtenderMaxExtend){
+      if(secondExtenderSpeedCurrent > 0){
+        secondExtenderSpeedCurrent = 0;
+      }
+    }
   }
 
 

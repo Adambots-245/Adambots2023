@@ -103,7 +103,7 @@ public class RobotMap {
         public static final WPI_TalonFX rightArmExtender = new WPI_TalonFX(rightArmExtenderPort);
         public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
 
-        public static final CANCoder armRotationEncoder = new CANCoder(armRotationEncoderPort);        
+        public static final WPI_CANCoder armRotationEncoder = new WPI_CANCoder(armRotationEncoderPort);        
         public static final PhotoEye leftArmPhotoEye = new PhotoEye(leftArmLimitPort);
         public static final PhotoEye rightArmPhotoEye = new PhotoEye(rightArmLimitPort);
 

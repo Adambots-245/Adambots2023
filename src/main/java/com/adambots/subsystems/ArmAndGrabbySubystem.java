@@ -162,6 +162,11 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("firstExtender", getLeftExtenderEncoder());
+    SmartDashboard.putNumber("secondExtender", getRightExtenderEncoder());
+    SmartDashboard.putNumber("rotationEncoder", getArmLifterEncoder());
+
+
     // This method will be called once per scheduler run
 
     /*if (Math.abs(lowZoneLifterValue - getArmLifterEncoder()) > 0.1) {
@@ -189,7 +194,7 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
         firstArmDir = 1;
       }
 
-      if(firstArmExtender.getSelectedSensorPosition() * firstArmDir >= firstExtenderTarget * firstArmDir){
+      if(getLeftExtenderEncoder() * firstArmDir >= firstExtenderTarget * firstArmDir){
         firstExtenderSpeedCurrent = 0;
         currentState = new State(currentState.getArmLiftTarget(), firstExtenderTarget, currentState.getSecondExtendTarget());
       } else if(firstArmDir > 0){
@@ -205,7 +210,7 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
         secondArmDir = 1;
       }
 
-      if(secondArmExtender.getSelectedSensorPosition() * secondArmDir >= secondExtenderTarget * secondArmDir){
+      if(getRightExtenderEncoder() * secondArmDir >= secondExtenderTarget * secondArmDir){
         secondExtenderSpeedCurrent = 0;
         currentState = new State(currentState.getArmLiftTarget(), currentState.getFirstExtendTarget(), secondExtenderTarget);
       }else if(secondArmDir > 0){
@@ -221,7 +226,7 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
         liftArmDir = 1;
       }
 
-      if(armLifter.getSelectedSensorPosition() * liftArmDir >= armTarget * liftArmDir){
+      if(getArmLifterEncoder() * liftArmDir >= armTarget * liftArmDir){
         lifterSpeedCurrent = 0;
         currentState = new State(armTarget, currentState.getFirstExtendTarget(), currentState.getSecondExtendTarget());
       }else if(liftArmDir > 0){
@@ -279,8 +284,13 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
         secondExtenderSpeedCurrent = 0;
       }
     }
-  }
 
+    //Triiiiiiiiiiiiiiiiiiiiiiiiig
+    
+    double getMaxExtention = (45 / Math.cos(armRotationEncoder.getAbsolutePosition())) * Constants.GrabbyConstants.rotationPerInch;
+
+  //   if(getMaxExtention > )
+  }
 
   private void setSpeedValues() {
     // if (currentState == Constants.initState){

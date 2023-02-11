@@ -37,6 +37,8 @@ private double lifterSpeed = Constants.GrabbyConstants.lifterSpeed;
 private double extenderSpeed = Constants.GrabbyConstants.extenderSpeed;
 
 private boolean manualControl = false;
+private boolean grabCube = true; //this is true if robot grabs a cube
+private int midHeight = 1; //this is true if robot is at mid height
 private double lifterSpeedCurrent = 0;
 private double secondExtenderSpeedCurrent = 0;
 private double firstExtenderSpeedCurrent = 0;
@@ -309,6 +311,19 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
     // if (homePhotoEye.get()) {
     //   currentState = Constants.initState;
     //}
+  }
+
+  public boolean getCube(){
+    return grabCube;
+  }
+  public int getMidHeight(){
+    return midHeight;
+  }
+  public void setCube(boolean x){
+    grabCube = x;
+  }
+  public void setMidHeight(int y){
+    midHeight = y;
   }
 
 }

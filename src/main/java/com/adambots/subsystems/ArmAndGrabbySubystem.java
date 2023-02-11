@@ -289,7 +289,11 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
     
     double getMaxExtention = (45 / Math.cos(armRotationEncoder.getAbsolutePosition())) * Constants.GrabbyConstants.rotationPerInch;
 
-  //   if(getMaxExtention > )
+     if( getMaxExtention < getRightExtenderEncoder() + getLeftExtenderEncoder()){
+      secondExtenderSpeedCurrent = -extenderSpeed;
+     }
+
+
   }
 
   private void setSpeedValues() {

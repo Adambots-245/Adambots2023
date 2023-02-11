@@ -283,6 +283,7 @@ public final class Constants {
         //general
         public static final double firstExtenderMaxExtend = 6;
         public static final double secondExtenderMaxExtend = 6;
+        public static final double rotationPerInch = 1;
 
         // antiquated
         public static final double midZoneLifterValue = 0.5;

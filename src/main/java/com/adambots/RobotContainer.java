@@ -105,7 +105,7 @@ public class RobotContainer {
     // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
 
-    // Buttons.JoystickButton9.whileTrue(new RunCommand(() -> drivetrainSubsystem.hockeyStop()));
+    Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,1,false)).withTimeout(1));
     Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
   }
 

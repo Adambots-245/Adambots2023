@@ -302,8 +302,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void hockeyStop() {
-    // TODO: Set proper angles
-
     swerveModules.get(ModulePosition.FRONT_LEFT).turn(45);
     swerveModules.get(ModulePosition.FRONT_RIGHT).turn(-45);
     swerveModules.get(ModulePosition.REAR_LEFT).turn(-45);

@@ -9,6 +9,7 @@ import com.adambots.Constants.GrabbyConstants.State;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -73,10 +74,18 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
     this.firstExtenderPhotoEye = firstExtenderPhotoEye;
     this.secondExtenderPhotoEye = secondExtenderPhotoEye;
     this.armRotationEncoder = armRotationEncoder;
+
+    this.armLifter.setNeutralMode(NeutralMode.Brake);
+    this.firstArmExtender.setNeutralMode(NeutralMode.Brake);
+    this.secondArmExtender.setNeutralMode(NeutralMode.Brake);
+
+
     
     armLifter.setSelectedSensorPosition(initState.getArmLiftTarget());
     firstArmExtender.setSelectedSensorPosition(initState.getFirstExtendTarget());
     secondArmExtender.setSelectedSensorPosition(initState.getSecondExtendTarget());  
+    this.firstArmExtender.setInverted(true);
+    this.armLifter.setInverted(true);
   }
 
   
@@ -166,7 +175,7 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
   public void periodic() {
     SmartDashboard.putNumber("firstExtender", getLeftExtenderEncoder());
     SmartDashboard.putNumber("secondExtender", getRightExtenderEncoder());
-    SmartDashboard.putNumber("rotationEncoder", getArmLifterEncoder());
+    SmartDashboard.putNumber("rotationEncoder", armRotationEncoder.getAbsolutePosition());
 
 
     // This method will be called once per scheduler run
@@ -189,11 +198,16 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
 
     //Make sure right and left extenders are at the same position in manual control
 
+    String run;
+
       firstArmDir = 0;
       if(currentState.getFirstExtendTarget() > firstExtenderTarget){
         firstArmDir = -1;
-      }else if(currentState.getSecondExtendTarget() < secondExtenderTarget){
+        run = "Dir -1";
+      }else if(currentState.getFirstExtendTarget() < firstExtenderTarget){
         firstArmDir = 1;
+        run = "Dir -1";
+
       }
 
       if(getLeftExtenderEncoder() * firstArmDir >= firstExtenderTarget * firstArmDir){
@@ -228,7 +242,7 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
         liftArmDir = 1;
       }
 
-      if(getArmLifterEncoder() * liftArmDir >= armTarget * liftArmDir){
+      if(armRotationEncoder.getAbsolutePosition() * liftArmDir >= armTarget * liftArmDir){
         lifterSpeedCurrent = 0;
         currentState = new State(armTarget, currentState.getFirstExtendTarget(), currentState.getSecondExtendTarget());
       }else if(liftArmDir > 0){
@@ -286,6 +300,8 @@ private final int armEncoderCPR = Constants.GrabbyConstants.armEncoderCPR;
         secondExtenderSpeedCurrent = 0;
       }
     }
+
+
 
     //Triiiiiiiiiiiiiiiiiiiiiiiiig
     

@@ -223,29 +223,29 @@ public final class Constants {
         public static final int armEncoderCPR = 2048;
         
         // misc.
-        public static final double initiaLifterValue = 0;
+        public static final double initiaLifterValue = 192;
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
-        public static final double groundLifterValue = 1;
+        public static final double groundLifterValue = 80;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
         // cube
-        public static final double midCubeLifterValue = 2;
+        public static final double midCubeLifterValue = 128.6;
         public static final double midCubeFirstExtenderValue = 2;
         public static final double midCubeSecondExtenderValue = 0;
 
-        public static final double highCubeLifterValue = 3;
+        public static final double highCubeLifterValue = 136.2;
         public static final double highCubeFirstExtenderValue = 3;
         public static final double highCubeSecondExtenderValue = 3;
         
         // cone
-        public static final double midConeLifterValue = 2.5;
+        public static final double midConeLifterValue = 146.2;
         public static final double midConeFirstExtenderValue = 2.5;
         public static final double midConeSecondExtenderValue = 0;
 
-        public static final double highConeLifterValue = 3.5;
+        public static final double highConeLifterValue = 146.2;
         public static final double highConeFirstExtenderValue = 3.5;
         public static final double highConeSecondExtenderValue = 3.5;
 
@@ -279,6 +279,12 @@ public final class Constants {
         public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
 
+
+        //general
+        public static final double firstExtenderMaxExtend = 6;
+        public static final double secondExtenderMaxExtend = 6;
+        public static final double rotationPerInch = 1;
+
         // antiquated
         public static final double midZoneLifterValue = 0.5;
         public static final double midZoneExtenderValue = 0.5;
@@ -286,8 +292,8 @@ public final class Constants {
         public static final double highZoneLifterValue = 1;
         public static final double highZoneExtenderValue = 1;
 
-        public static final double lifterSpeed = 0.1;
-        public static final double extenderSpeed = 0.1;
+        public static final double lifterSpeed = 0.25;
+        public static final double extenderSpeed = 0.25;
     }
 
 

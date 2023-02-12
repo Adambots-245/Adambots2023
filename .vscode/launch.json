@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch TestStates",
+      "request": "launch",
+      "mainClass": "com.adambots.utils.TestStates",
+      "projectName": "Adambots2023"
+    },
+    {
+      "type": "java",
       "name": "Launch Test",
       "request": "launch",
       "mainClass": "com.adambots.utils.Test",

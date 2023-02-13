@@ -221,6 +221,7 @@ public final class Constants {
     public static final class GrabbyConstants {
 
         public static final int armEncoderCPR = 2048;
+        public static final int mech2dAdjustment = +45;
         
         // misc.
         public static final double initiaLifterValue = 192;

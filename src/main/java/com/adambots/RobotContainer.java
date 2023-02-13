@@ -14,11 +14,16 @@ import java.util.List;
 
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 // import com.adambots.commands.*;
 // import com.adambots.commands.autonCommands.*;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
+import com.adambots.utils.MockCancoder;
+import com.adambots.utils.MockDoubleSolenoid;
+import com.adambots.utils.MockMotor;
+import com.adambots.utils.MockPhotoEye;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -34,6 +39,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -62,7 +68,7 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
   RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
-  private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender, RobotMap.rightArmPhotoEye, RobotMap.leftArmPhotoEye, RobotMap.armRotationEncoder);
+  // private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender, RobotMap.rightArmPhotoEye, RobotMap.leftArmPhotoEye, RobotMap.armRotationEncoder);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -94,20 +100,90 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    Buttons.secondaryDPadE.onTrue(new CloseGrabbyCommand(armAndGrabbySubystem));
-    Buttons.secondaryDPadW.onTrue(new OpenGrabbyCommand(armAndGrabbySubystem));
+    //Buttons.secondaryDPadE.onTrue(new CloseGrabbyCommand(armAndGrabbySubystem));
+    //Buttons.secondaryDPadW.onTrue(new OpenGrabbyCommand(armAndGrabbySubystem));
+    
     // Buttons.secondaryRB.whileTrue(new ExtendArmCommand(armAndGrabbySubystem, 50));
     // Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
     // Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
     // Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
     //  Buttons.secondaryXButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
-    Buttons.secondaryBButton.onTrue(new SetArmMidCubeCommand(armAndGrabbySubystem));
-    Buttons.secondaryAButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
-    Buttons.secondaryYButton.onTrue(new SetArmHighCubeCommand(armAndGrabbySubystem));
-    Buttons.secondaryDPadN.onTrue(new SetArmHighConeCommand(armAndGrabbySubystem));
-    Buttons.secondaryDPadS.onTrue(new SetArmMidConeCommand(armAndGrabbySubystem));
-    Buttons.secondaryStartButton.onTrue(new SetArmInitCommand(armAndGrabbySubystem));
+    
+    // Buttons.secondaryBButton.onTrue(new SetArmMidCubeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryAButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryYButton.onTrue(new SetArmHighCubeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryDPadN.onTrue(new SetArmHighConeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryDPadS.onTrue(new SetArmMidConeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryStartButton.onTrue(new SetArmInitCommand(armAndGrabbySubystem));
 
+    MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
+    GrabberSubsystem subsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
+
+    Buttons.primaryAButton.onTrue(new InstantCommand(() -> {
+      subsystem.armUp();
+    }));
+    
+    Buttons.primaryBButton.onTrue(new InstantCommand(() -> {
+      subsystem.armDown();
+      // subsystem.setPosition(subsystem.groundPosition);
+
+    }));
+
+    Buttons.primaryXButton.onTrue(new InstantCommand(() -> {
+      System.out.println("Extend First Stage");
+      subsystem.extendFirstStage();
+    }));
+
+    Buttons.primaryYButton.onTrue(new InstantCommand(() -> {
+      System.out.println("Retract First Stage");
+      subsystem.retractFirstStage();
+    }));
+
+    Buttons.primaryBackButton.onTrue(new InstantCommand(() -> {
+      System.out.println("Extend Second Stage");
+
+      subsystem.extendSecondStage();
+    }));
+
+    Buttons.primaryStartButton.onTrue(new InstantCommand(() -> {
+      System.out.println("Retract Second Stage");
+
+      subsystem.retractSecondStage();
+    }));
+
+    Buttons.primaryLB.onTrue(new InstantCommand(() -> {
+      subsystem.openGrabby();
+    }));
+    
+    Buttons.primaryRB.onTrue(new InstantCommand(() -> {
+      subsystem.closeGrabby();
+    }));
+    
+    Buttons.primaryDPadN.onTrue(new InstantCommand(() -> {
+      subsystem.setPosition(subsystem.midCubePosition);
+    }));
+    
+    Buttons.primaryDPadNE.onTrue(new InstantCommand(() -> {
+      subsystem.setPosition(subsystem.highCubePosition);
+    }));
+
+    Buttons.primaryDPadE.onTrue(new InstantCommand(() -> {
+      subsystem.setPosition(subsystem.midConePosition);
+    }));
+    
+    Buttons.primaryDPadSE.onTrue(new InstantCommand(() -> {
+      subsystem.setPosition(subsystem.highConePosition);
+    }));
+
+    Buttons.primaryDPadS.onTrue(new InstantCommand(() -> {
+      subsystem.setPosition(subsystem.groundPosition);
+    }));
+    
+    Buttons.primaryDPadSW.onTrue(new InstantCommand(() -> {
+      subsystem.setPosition(subsystem.homePosition);
+    }));
+
+    
 
     // Buttons.primaryAButton.onTrue(command);
     // Buttons.secondaryDPadE.onTrue(command);

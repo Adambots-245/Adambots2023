@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "Launch GrabberSubsystem",
+      "request": "launch",
+      "mainClass": "com.adambots.subsystems.GrabberSubsystem",
+      "projectName": "Adambots2023"
+    },
+    {
+      "type": "java",
       "name": "Launch TestStates",
       "request": "launch",
       "mainClass": "com.adambots.utils.TestStates",

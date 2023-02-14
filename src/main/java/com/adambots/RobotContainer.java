@@ -10,6 +10,8 @@ package com.adambots;
 
 import java.util.List;
 
+import javax.sound.sampled.SourceDataLine;
+
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Gamepad.Buttons;
@@ -54,6 +56,11 @@ public class RobotContainer {
 
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
       RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
+
+  
+  private final VisionSubsystem visionSubsystem = new VisionSubsystem();
+
+      
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -85,7 +92,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // Buttons.primaryAButton.onTrue(command);
+     Buttons.primaryAButton.onTrue(new ChangeStream());
     // Buttons.secondaryDPadE.onTrue(command);
 
     // Buttons.primaryBackButton.whileTrue(command);

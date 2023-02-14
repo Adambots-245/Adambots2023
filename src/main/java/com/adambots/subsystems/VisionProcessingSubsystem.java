@@ -1,37 +1,37 @@
 package com.adambots.subsystems;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.cscore.*;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.apriltag.AprilTagDetection;
-import edu.wpi.first.apriltag.AprilTagDetector;
-import edu.wpi.first.apriltag.AprilTagPoseEstimator;
+import java.util.ArrayList;
+
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
+import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
+import com.adambots.Constants.VisionConstants;
+import com.adambots.Vision.ReflectivePipeline;
+import com.adambots.utils.AprilTagReader;
+import com.adambots.utils.LimelightHelpers;
+import com.adambots.utils.Log;
+import com.adambots.utils.LimelightHelpers.LimelightTarget_Retro;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode.PixelFormat;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.networktables.IntegerArrayPublisher;
+import edu.wpi.first.cscore.VideoMode;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.util.ArrayList;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.core.*;
-import com.adambots.Constants.VisionConstants;
-import com.adambots.Vision.ConePipeline;
-import com.adambots.Vision.CubePipeline;
-import com.adambots.Vision.ReflectivePipeline;
-import com.adambots.utils.AprilTagReader;
-import com.adambots.utils.Log;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionProcessingSubsystem extends SubsystemBase {
 
@@ -44,6 +44,10 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   private static CvSource processedReflectedOutputStream;
   private static Mat mat;
   private static Point[] pts = new Point[4];
+  private final Field2d aprilTagField = new Field2d();
+  private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  private NetworkTableEntry tx = table.getEntry("botpose");
+  // private LimelightHelpers limelightHelper = new LimelightHelpers();
 
 
   public VisionProcessingSubsystem(Solenoid ringLight, ReflectivePipeline reflectivePipeline) {
@@ -59,6 +63,7 @@ public class VisionProcessingSubsystem extends SubsystemBase {
     processedAprilOutputStream = CameraServer.putVideo("Detected", 640, 480);    processedAprilOutputStream = CameraServer.putVideo("Detected", 640, 480);
     processedReflectedOutputStream = CameraServer.putVideo("Reflected", 640, 480);
     mat = new Mat();
+    SmartDashboard.putData("April Tag Field", aprilTagField);
     visionThread = new Thread(() -> {
       run();
     });
@@ -77,7 +82,7 @@ public class VisionProcessingSubsystem extends SubsystemBase {
         System.out.println("Number of tags detected: " + tagReader.count());
 
         var id = tagReader.getId(0);
-        System.out.println("Tags id: " + id);
+       // System.out.println("Tags id: " + id);
        // var id2 = tagReader.getId(1);
 
         var pose = tagReader.getPose(0);
@@ -86,6 +91,8 @@ public class VisionProcessingSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("X Pose", pose.getX());
         SmartDashboard.putNumber("Y Pose", pose.getY());
         SmartDashboard.putNumber("Z Pose", pose.getZ());
+        // ArrayList[] test = SmartDashboard.getNumberArray("botpose", [0]);
+        SmartDashboard.putNumber("test", 7);
 
         var outlineColor = new Scalar(0, 0, 255);
         Point[] corners = tagReader.getBoundingBox(0);
@@ -105,8 +112,20 @@ public class VisionProcessingSubsystem extends SubsystemBase {
           draw(rect);
       }
       processedReflectedOutputStream.putFrame(mat);
+      aprilTagField.setRobotPose(getPose());
     }
   }
+  public Pose2d getPose() {
+    double [] def = {0,0,0,0,0};
+    double[] poseValues = tx.getDoubleArray(def);
+    //System.out.println(poseValues[0]);
+  // Translation using z and x
+  Translation2d t2d = new Translation2d(-poseValues[1], poseValues[0]);
+  // Rotation using ry
+  Rotation2d r2d = new Rotation2d(poseValues[4]);
+  Pose2d pose = LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue();
+  return pose; 
+}
   public RotatedRect[] findBoundingBoxes() {
     ArrayList<MatOfPoint> contours = reflectiveGrip.filterContoursOutput();
     RotatedRect[] rects = new RotatedRect[contours.size()];

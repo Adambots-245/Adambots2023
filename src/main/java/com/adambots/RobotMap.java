@@ -86,8 +86,8 @@ public class RobotMap {
 
         // Arm and Grabby ports
         public static final int armLiftPort = 22;
-        public static final int leftArmExtenderPort = 21;
-        public static final int rightArmExtenderPort = 7;
+        public static final int firstArmExtenderPort = 21;
+        public static final int secondArmExtenderPort = 7;
         public static final int grabbyPort = 1;
         public static final int ungrabbyPort = 0;
         // public static final int rightGrabbyPort = 0;
@@ -99,13 +99,13 @@ public class RobotMap {
         public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
         // public static final Solenoid rightGrabby = new Solenoida (PneumaticsModuleType.CTREPCM, rightGrabbyPort);
         
-        public static final WPI_TalonFX leftArmExtender = new WPI_TalonFX(leftArmExtenderPort);
-        public static final WPI_TalonFX rightArmExtender = new WPI_TalonFX(rightArmExtenderPort);
+        public static final WPI_TalonFX firstArmExtender = new WPI_TalonFX(firstArmExtenderPort);
+        public static final WPI_TalonFX secondArmExtender = new WPI_TalonFX(secondArmExtenderPort);
         public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
 
         public static final WPI_CANCoder armRotationEncoder = new WPI_CANCoder(armRotationEncoderPort);        
-        public static final PhotoEye leftArmPhotoEye = new PhotoEye(leftArmLimitPort);
-        public static final PhotoEye rightArmPhotoEye = new PhotoEye(rightArmLimitPort);
+        public static final PhotoEye firstExtenderPhotoEye = new PhotoEye(leftArmLimitPort);
+        public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
 
 
 

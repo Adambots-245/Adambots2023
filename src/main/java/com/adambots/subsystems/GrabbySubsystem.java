@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants.GrabbyConstants;
+import com.adambots.sensors.PhotoEye;
 import com.adambots.utils.ArmMechanism;
 import com.adambots.utils.MockCancoder;
 import com.adambots.utils.MockDoubleSolenoid;
@@ -12,36 +13,40 @@ import com.adambots.utils.MockMotor;
 import com.adambots.utils.MockPhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class GrabberSubsystem extends SubsystemBase {
+public class GrabbySubsystem extends SubsystemBase {
 
-  private MockMotor armMotor;
-  private MockMotor firstStageMotor;
-  private MockMotor secondStageMotor;
-  private MockCancoder armCancoder;
-  private MockDoubleSolenoid clawSolenoid;
-  private MockPhotoEye firstStagePhotoEye;
-  private MockPhotoEye secondStagePhotoEye;
   private ArmMechanism armDiagram;
+
+  private final TalonFX armLifter;
+  private final TalonFX firstArmExtender;
+  private final TalonFX secondArmExtender;
+  private final PhotoEye secondExtenderPhotoEye;
+  private final PhotoEye firstExtenderPhotoEye;
+  private final WPI_CANCoder armRotationEncoder;
+  private final DoubleSolenoid grabby;
 
   public class Position {
     private String name;
     private double armAngleLimit;
     private double firstStageLimit;
     private double secondStageLimit;
-    private boolean openClaw;
+    private boolean openGrabby;
 
     public Position(String name, double armAngleLimit, double firstStageLimit, double secondStageLimit,
-        boolean openClaw) {
+        boolean openGrabby) {
       this.name = name;
       this.armAngleLimit = armAngleLimit;
       this.firstStageLimit = firstStageLimit;
       this.secondStageLimit = secondStageLimit;
-      this.openClaw = openClaw;
+      this.openGrabby = openGrabby;
     }
 
     @Override
@@ -73,35 +78,28 @@ public class GrabberSubsystem extends SubsystemBase {
   private double armSpeed = 0;
   private double firstStageExtenderSpeed = 0;
   private double secondStageExtenderSpeed = 0;
+  public GrabbySubsystem(TalonFX armLifter, TalonFX firstArmExtender, TalonFX secondArmExtender, 
+                          WPI_CANCoder armRotationEncoder, DoubleSolenoid grabby, 
+                         PhotoEye secondExtenderPhotoEye, PhotoEye firstExtenderPhotoEye) {
+  // public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX firstArmExtender, TalonFX secondArmExtender, PhotoEye secondExtenderPhotoEye, PhotoEye firstExtenderPhotoEye, WPI_CANCoder armRotationEncoder) {
 
-  public GrabberSubsystem(MockMotor armMotor, MockMotor firstStageMotor, MockMotor secondStageMotor,
-      MockCancoder armCancoder, MockDoubleSolenoid clawSolenoid, MockPhotoEye firstStagePhotoEye,
-      MockPhotoEye secondStagePhotoEye) {
+    this.armLifter = armLifter;
+    this.firstArmExtender = firstArmExtender;
+    this.secondArmExtender = secondArmExtender;
+    this.armRotationEncoder = armRotationEncoder;
+    this.grabby = grabby;
+    this.firstExtenderPhotoEye = firstExtenderPhotoEye;
+    this.secondExtenderPhotoEye = secondExtenderPhotoEye;
 
-    this.armMotor = armMotor;
-    this.firstStageMotor = firstStageMotor;
-    this.secondStageMotor = secondStageMotor;
-    this.armCancoder = armCancoder;
-    this.clawSolenoid = clawSolenoid;
-    this.firstStagePhotoEye = firstStagePhotoEye;
-    this.secondStagePhotoEye = secondStagePhotoEye;
-
-    this.armMotor.setInverted(true);
-    this.firstStageMotor.setInverted(true);
-    // this.secondStageMotor.setInverted(true);
+    this.armLifter.setInverted(true);
+    this.firstArmExtender.setInverted(true);
+    // this.secondArmExtender.setInverted(true);
 
     setNeutralMode(NeutralMode.Brake);
 
     this.currentPosition = homePosition;
-    armDiagram = new ArmMechanism(armCancoder.getAbsolutePosition());
+    armDiagram = new ArmMechanism(armRotationEncoder.getAbsolutePosition());
 
-    firstStagePhotoEye.setStatus(() -> {
-      return (firstStageMotor.getSelectedSensorPosition() <= 0.0);
-    });
-
-    secondStagePhotoEye.setStatus(() -> {
-      return (secondStageMotor.getSelectedSensorPosition() <= 0.0);
-    });
   }
 
   public void setPosition(Position position) {
@@ -109,24 +107,24 @@ public class GrabberSubsystem extends SubsystemBase {
     SmartDashboard.putString("TargetPosition", targetPosition.toString());
     // System.out.println("TargetPosition: " + targetPosition.toString());
     armSpeed = GrabbyConstants.lifterSpeed
-        * Math.signum(armCancoder.getAbsolutePosition() - targetPosition.armAngleLimit);
-    // System.out.println("ASE: " + armCancoder.getAbsolutePosition() + " - " +
+        * Math.signum(armRotationEncoder.getAbsolutePosition() - targetPosition.armAngleLimit);
+    // System.out.println("ASE: " + armRotationEncoder.getAbsolutePosition() + " - " +
     // targetPosition.armAngleLimit);
     // System.out.println("ARM Speed: " + armSpeed);
 
     if (targetPosition.firstStageLimit != 0.0) {
       extendFirstStage();
-    } else if (!firstStagePhotoEye.isDetecting()) {
+    } else if (!firstExtenderPhotoEye.isDetecting()) {
       retractFirstStage();
     }
 
     if (targetPosition.secondStageLimit != 0.0) {
       extendSecondStage();
-    } else if (!secondStagePhotoEye.isDetecting()) {
+    } else if (!secondExtenderPhotoEye.isDetecting()) {
       retractSecondStage();
     }
 
-    if (targetPosition.openClaw) {
+    if (targetPosition.openGrabby) {
       openGrabby();
     } else {
       closeGrabby();
@@ -143,12 +141,12 @@ public class GrabberSubsystem extends SubsystemBase {
 
   public void openGrabby() {
     armDiagram.openClaw();
-    clawSolenoid.set(Value.kForward);
+    grabby.set(Value.kForward);
   }
 
   public void closeGrabby() {
     armDiagram.closeClaw();
-    clawSolenoid.set(Value.kReverse);
+    grabby.set(Value.kReverse);
   }
 
   public void extendFirstStage() {
@@ -170,7 +168,7 @@ public class GrabberSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putNumber("Cancoder", armCancoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Cancoder", armRotationEncoder.getAbsolutePosition());
 
     // currentPosition = getCurrentPosition();
     if (targetPosition != null) {
@@ -182,10 +180,10 @@ public class GrabberSubsystem extends SubsystemBase {
     // if (armSpeed != 0)
     //   System.out.println("ArmSpeed: " + armSpeed);
 
-    armMotor.set(ControlMode.PercentOutput, armSpeed);
-    // System.out.println("AP: " + armCancoder.getAbsolutePosition());
-    firstStageMotor.set(ControlMode.PercentOutput, firstStageExtenderSpeed);
-    secondStageMotor.set(ControlMode.PercentOutput, secondStageExtenderSpeed);
+    armLifter.set(ControlMode.PercentOutput, armSpeed);
+    // System.out.println("AP: " + armRotationEncoder.getAbsolutePosition());
+    firstArmExtender.set(ControlMode.PercentOutput, firstStageExtenderSpeed);
+    secondArmExtender.set(ControlMode.PercentOutput, secondStageExtenderSpeed);
     setMech();
   }
 
@@ -194,7 +192,7 @@ public class GrabberSubsystem extends SubsystemBase {
     boolean completed = false;
 
     // Arm going up - if it has reached the angle limit (encoder) as per the target stop the motor
-    if (armSpeed < 0 && armCancoder.getAbsolutePosition() >= targetPosition.armAngleLimit) {
+    if (armSpeed < 0 && armRotationEncoder.getAbsolutePosition() >= targetPosition.armAngleLimit) {
       armSpeed = 0;
 
       System.out.println("Stopping Arm");
@@ -206,7 +204,7 @@ public class GrabberSubsystem extends SubsystemBase {
     }
 
     // Arm going down - if it has reached the anle limit (encoder) as per the target stop the motor
-    if (armSpeed > 0 && armCancoder.getAbsolutePosition() <= targetPosition.armAngleLimit) {
+    if (armSpeed > 0 && armRotationEncoder.getAbsolutePosition() <= targetPosition.armAngleLimit) {
       armSpeed = 0;
 
       System.out.println("Stopping Arm");
@@ -219,7 +217,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
     // First stage is being extended - stop once the encoder position has been reached
     // No checks for retraction - will be handled by FailSafe
-    if (firstStageExtenderSpeed > 0 && firstStageMotor.getSelectedSensorPosition() > targetPosition.firstStageLimit) {
+    if (firstStageExtenderSpeed > 0 && firstArmExtender.getSelectedSensorPosition() > targetPosition.firstStageLimit) {
       firstStageExtenderSpeed = 0;
 
       System.out.println("Stopping First Stage");
@@ -234,7 +232,7 @@ public class GrabberSubsystem extends SubsystemBase {
     // Second stage is being extended - stop once the encoder position has been reached
     // No checks for retraction - will be handled by FailSafe
     if (secondStageExtenderSpeed > 0
-        && secondStageMotor.getSelectedSensorPosition() > targetPosition.secondStageLimit) {
+        && secondArmExtender.getSelectedSensorPosition() > targetPosition.secondStageLimit) {
       secondStageExtenderSpeed = 0;
 
       System.out.println("Stopping Second Stage");
@@ -258,7 +256,7 @@ public class GrabberSubsystem extends SubsystemBase {
   private void setMech() {
 
     if (armSpeed != 0) {
-      armDiagram.setArmAngle(armCancoder.getAbsolutePosition());
+      armDiagram.setArmAngle(armRotationEncoder.getAbsolutePosition());
     }
 
     if (firstStageExtenderSpeed != 0) {
@@ -292,18 +290,18 @@ public class GrabberSubsystem extends SubsystemBase {
       armSpeed = 0;
     }
 
-    if (firstStageExtenderSpeed < 0 && firstStagePhotoEye.isDetecting()) {
+    if (firstStageExtenderSpeed < 0 && firstExtenderPhotoEye.isDetecting()) {
       firstStageExtenderSpeed = 0;
-      firstStageMotor.setSelectedSensorPosition(0);
+      firstArmExtender.setSelectedSensorPosition(0);
     }
 
     if (firstStageExtenderSpeed > 0 && isAtFirstExtenderLimit()) {
       firstStageExtenderSpeed = 0;
     }
 
-    if (secondStageExtenderSpeed < 0 && secondStagePhotoEye.isDetecting()) {
+    if (secondStageExtenderSpeed < 0 && secondExtenderPhotoEye.isDetecting()) {
       secondStageExtenderSpeed = 0;
-      secondStageMotor.setSelectedSensorPosition(0);
+      secondArmExtender.setSelectedSensorPosition(0);
     }
 
     if (secondStageExtenderSpeed > 0 && isAtSecondExtenderLimit()) {
@@ -314,24 +312,24 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   private boolean isAtFirstExtenderLimit() {
-    return (firstStageMotor.getSelectedSensorPosition() > GrabbyConstants.firstExtenderMaxExtend);
+    return (firstArmExtender.getSelectedSensorPosition() > GrabbyConstants.firstExtenderMaxExtend);
   }
 
   private boolean isAtSecondExtenderLimit() {
-    return (secondStageMotor.getSelectedSensorPosition() > GrabbyConstants.secondExtenderMaxExtend);
+    return (secondArmExtender.getSelectedSensorPosition() > GrabbyConstants.secondExtenderMaxExtend);
   }
 
   private boolean isArmAtUpperLimit() {
-    return (armCancoder.getAbsolutePosition() >= GrabbyConstants.initiaLifterValue);
+    return (armRotationEncoder.getAbsolutePosition() >= GrabbyConstants.initiaLifterValue);
   }
 
   private boolean isArmAtLowerLimit() {
-    return (armCancoder.getAbsolutePosition() <= GrabbyConstants.groundLifterValue);
+    return (armRotationEncoder.getAbsolutePosition() <= GrabbyConstants.groundLifterValue);
   }
 
   public void setNeutralMode(NeutralMode mode) {
-    this.armMotor.setNeutralMode(mode);
-    this.firstStageMotor.setNeutralMode(mode);
-    this.secondStageMotor.setNeutralMode(mode);
+    this.armLifter.setNeutralMode(mode);
+    this.firstArmExtender.setNeutralMode(mode);
+    this.secondArmExtender.setNeutralMode(mode);
   }
 }

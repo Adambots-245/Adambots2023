@@ -69,6 +69,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
   RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
   // private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender, RobotMap.rightArmPhotoEye, RobotMap.leftArmPhotoEye, RobotMap.armRotationEncoder);
+  private final GrabbySubsystem grabbysubsystem = new GrabbySubsystem(RobotMap.armLifter, RobotMap.firstArmExtender, RobotMap.secondArmExtender, RobotMap.armRotationEncoder, RobotMap.grabby, RobotMap.secondExtenderPhotoEye, RobotMap.firstExtenderPhotoEye);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -116,71 +117,70 @@ public class RobotContainer {
     // Buttons.secondaryDPadS.onTrue(new SetArmMidConeCommand(armAndGrabbySubystem));
     // Buttons.secondaryStartButton.onTrue(new SetArmInitCommand(armAndGrabbySubystem));
 
-    MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
-    GrabberSubsystem subsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
+    // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
+    // GrabberSubsystem subsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
     Buttons.primaryAButton.onTrue(new InstantCommand(() -> {
-      subsystem.armUp();
+      grabbysubsystem.armUp();
     }));
     
     Buttons.primaryBButton.onTrue(new InstantCommand(() -> {
-      subsystem.armDown();
+      grabbysubsystem.armDown();
       // subsystem.setPosition(subsystem.groundPosition);
-
     }));
 
     Buttons.primaryXButton.onTrue(new InstantCommand(() -> {
       System.out.println("Extend First Stage");
-      subsystem.extendFirstStage();
+      grabbysubsystem.extendFirstStage();
     }));
 
     Buttons.primaryYButton.onTrue(new InstantCommand(() -> {
       System.out.println("Retract First Stage");
-      subsystem.retractFirstStage();
+      grabbysubsystem.retractFirstStage();
     }));
 
     Buttons.primaryBackButton.onTrue(new InstantCommand(() -> {
       System.out.println("Extend Second Stage");
 
-      subsystem.extendSecondStage();
+      grabbysubsystem.extendSecondStage();
     }));
 
     Buttons.primaryStartButton.onTrue(new InstantCommand(() -> {
       System.out.println("Retract Second Stage");
 
-      subsystem.retractSecondStage();
+      grabbysubsystem.retractSecondStage();
     }));
 
     Buttons.primaryLB.onTrue(new InstantCommand(() -> {
-      subsystem.openGrabby();
+      grabbysubsystem.openGrabby();
     }));
     
     Buttons.primaryRB.onTrue(new InstantCommand(() -> {
-      subsystem.closeGrabby();
+      grabbysubsystem.closeGrabby();
     }));
     
     Buttons.primaryDPadN.onTrue(new InstantCommand(() -> {
-      subsystem.setPosition(subsystem.midCubePosition);
+      grabbysubsystem.setPosition(grabbysubsystem.midCubePosition);
     }));
     
     Buttons.primaryDPadNE.onTrue(new InstantCommand(() -> {
-      subsystem.setPosition(subsystem.highCubePosition);
+      grabbysubsystem.setPosition(grabbysubsystem.highCubePosition);
     }));
 
     Buttons.primaryDPadE.onTrue(new InstantCommand(() -> {
-      subsystem.setPosition(subsystem.midConePosition);
+      grabbysubsystem.setPosition(grabbysubsystem.midConePosition);
     }));
     
     Buttons.primaryDPadSE.onTrue(new InstantCommand(() -> {
-      subsystem.setPosition(subsystem.highConePosition);
+      grabbysubsystem.setPosition(grabbysubsystem.highConePosition);
     }));
 
     Buttons.primaryDPadS.onTrue(new InstantCommand(() -> {
-      subsystem.setPosition(subsystem.groundPosition);
+      grabbysubsystem.setPosition(grabbysubsystem.groundPosition);
     }));
     
     Buttons.primaryDPadSW.onTrue(new InstantCommand(() -> {
-      subsystem.setPosition(subsystem.homePosition);
+      grabbysubsystem.setPosition(grabbysubsystem.homePosition);
     }));
 
     

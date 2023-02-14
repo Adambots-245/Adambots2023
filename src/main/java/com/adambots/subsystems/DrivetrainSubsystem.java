@@ -6,7 +6,6 @@ package com.adambots.subsystems;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,7 +16,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.adambots.Constants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.utils.ModuleMap;
@@ -208,25 +206,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // System.out.printf("XSpeed: %f, YSpeed: %f, Rot: %f\n", xSpeed, ySpeed, rot);
     // System.out.printf("Left Speed: %f, Rot: %f\n",
-    // swerveModuleStates[0].speedMetersPerSecond,
-    // swerveModuleStates[0].angle.getDegrees());
-    /**
-     */
     ModuleMap.setDesiredState(swerveModules, swerveModuleStates);
     // m_frontLeft.setDesiredState(swerveModuleStates[0]);
     // m_frontRight.setDesiredState(swerveModuleStates[1]);
     // m_rearLeft.setDesiredState(swerveModuleStates[2]);
     // m_rearRight.setDesiredState(swerveModuleStates[3]);
-
-    // SmartDashboard.putNumber("m_frontLeftTarget",
-    // swerveModuleStates[0].angle.getDegrees());
-    // SmartDashboard.putNumber("m_frontRightTarget",
-    // swerveModuleStates[1].angle.getDegrees());
-    // SmartDashboard.putNumber("m_rearLeftTarget",
-    // swerveModuleStates[2].angle.getDegrees());
-    // SmartDashboard.putNumber("m_rearRightTarget",
-    // swerveModuleStates[3].angle.getDegrees());
-
   }
 
   /**
@@ -248,16 +232,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   /** Resets the drive encoders to currently read a position of 0. */
-  public void resetEncoders() {
-    swerveModules.get(ModulePosition.FRONT_LEFT).resetEncoders();
-    swerveModules.get(ModulePosition.FRONT_RIGHT).resetEncoders();
-    swerveModules.get(ModulePosition.REAR_LEFT).resetEncoders();
-    swerveModules.get(ModulePosition.REAR_RIGHT).resetEncoders();
-    // m_frontLeft.resetEncoders();
-    // m_frontRight.resetEncoders();
-    // m_rearLeft.resetEncoders();
-    // m_rearRight.resetEncoders();
-  }
+  // public void resetEncoders() {
+  //   swerveModules.get(ModulePosition.FRONT_LEFT).resetEncoders();
+  //   swerveModules.get(ModulePosition.FRONT_RIGHT).resetEncoders();
+  //   swerveModules.get(ModulePosition.REAR_LEFT).resetEncoders();
+  //   swerveModules.get(ModulePosition.REAR_RIGHT).resetEncoders();
+  //   // m_frontLeft.resetEncoders();
+  //   // m_frontRight.resetEncoders();
+  //   // m_rearLeft.resetEncoders();
+  //   // m_rearRight.resetEncoders();
+  // }
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
@@ -301,16 +285,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     drive(0, 0, 0, false);
   }
 
-  public void hockeyStop() {
-    swerveModules.get(ModulePosition.FRONT_LEFT).turn(45);
-    swerveModules.get(ModulePosition.FRONT_RIGHT).turn(-45);
-    swerveModules.get(ModulePosition.REAR_LEFT).turn(-45);
-    swerveModules.get(ModulePosition.REAR_RIGHT).turn(45);
-  }
+  // public void hockeyStop() {
+  //   swerveModules.get(ModulePosition.FRONT_LEFT).turn(45);
+  //   swerveModules.get(ModulePosition.FRONT_RIGHT).turn(-45);
+  //   swerveModules.get(ModulePosition.REAR_LEFT).turn(-45);
+  //   swerveModules.get(ModulePosition.REAR_RIGHT).turn(45);
+  // }
 
   private void updateDashboard() {
-    SmartDashboard.putData("Field", Constants.DriveConstants.field);
-
     SmartDashboard.putNumber("m_frontLeft", swerveModules.get(ModulePosition.FRONT_LEFT).getState().angle.getDegrees());
     SmartDashboard.putNumber("m_rearLeft", swerveModules.get(ModulePosition.REAR_LEFT).getState().angle.getDegrees());
     SmartDashboard.putNumber("m_frontRight", swerveModules.get(ModulePosition.FRONT_RIGHT).getState().angle.getDegrees());

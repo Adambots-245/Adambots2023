@@ -14,12 +14,12 @@ import com.adambots.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -45,14 +45,22 @@ public class DriveToAprilTagCommand extends CommandBase {
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
         AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
         .setKinematics(DriveConstants.kDriveKinematics);
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    Pose2d aprilTag = Constants.AutoConstants.aprilTags.get(index).toPose2d();
+    Translation2d waypoint = new Translation2d();
+    if (index <= 4) { //Check if apriltag is on left or right side of the field to get a waypoint in front of it and modify the rotation of the apriltag pose
+      waypoint = new Translation2d(aprilTag.getX()-0.75, aprilTag.getY());
+      aprilTag = new Pose2d(aprilTag.getX(), aprilTag.getY(), new Rotation2d(0));
+    } else {
+      waypoint = new Translation2d(aprilTag.getX()+0.75, aprilTag.getY());
+      aprilTag = new Pose2d(aprilTag.getX(), aprilTag.getY(), new Rotation2d(Units.degreesToRadians(180)));
+    }
+
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
         field.getRobotPose(),
-        List.of(new Translation2d(3, 0)),
-        Constants.AutoConstants.aprilTags.get(index).toPose2d(),
+        List.of(waypoint),
+        aprilTag,
         config); 
 
     var thetaController = new ProfiledPIDController(
@@ -60,21 +68,21 @@ public class DriveToAprilTagCommand extends CommandBase {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        driveTrainSubsystem::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
+      trajectory,
+      driveTrainSubsystem::getPose, // Functional interface to feed supplier
+      DriveConstants.kDriveKinematics,
 
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        driveTrainSubsystem::setModuleStates,
-        driveTrainSubsystem);
+      // Position controllers
+      new PIDController(AutoConstants.kPXController, 0, 0),
+      new PIDController(AutoConstants.kPYController, 0, 0),
+      thetaController,
+      driveTrainSubsystem::setModuleStates,
+      driveTrainSubsystem);
 
     // Reset odometry to the starting pose of the trajectory.
-    driveTrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
+    driveTrainSubsystem.resetOdometry(trajectory.getInitialPose());
 
-    Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
+    Constants.DriveConstants.field.getObject("traj").setTrajectory(trajectory);
     
     // Run path following command, then stop at the end.
     swerveControllerCommand.andThen(() -> driveTrainSubsystem.stop()).schedule();
@@ -93,6 +101,6 @@ public class DriveToAprilTagCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return true; //we can instantly return true since this command just serves to schedule a different command
   }
 }

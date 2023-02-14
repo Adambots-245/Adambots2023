@@ -140,6 +140,9 @@ public class RobotContainer {
     SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
+    double[] curve = {0, 0, 0, 0, 0.5, 0.5, 0.9, 0.9, 0.9, 1};
+    System.out.println(Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
   }
 
   private void setupDefaultCommands() {

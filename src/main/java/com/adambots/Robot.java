@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
 
     Log.instance();
     Log.setFilter(Level.OFF);
-    
+
     if (Robot.isReal()) {
 
       // Starts vision thread only if not running in simulation mode
@@ -82,6 +82,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     
+    m_robotContainer.updateDashboard();
+
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
     // interrupted commands,
@@ -89,7 +91,6 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.updateDashboard();
   }
 
   /**

@@ -126,7 +126,10 @@ public class Buttons {
                 } else {
                         return input;
                 }
+        }
 
+        public static double applyCurve (double rawInput, double[] curve) {
+                return curve[(int)Math.min(Math.floor(Math.abs(rawInput)*10), 9)];
         }
 
         // If Flight Joystick is connected, then return Joystick Y value - else return

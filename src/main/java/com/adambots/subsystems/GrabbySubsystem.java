@@ -7,10 +7,6 @@ package com.adambots.subsystems;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.adambots.utils.ArmMechanism;
-import com.adambots.utils.MockCancoder;
-import com.adambots.utils.MockDoubleSolenoid;
-import com.adambots.utils.MockMotor;
-import com.adambots.utils.MockPhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -40,8 +36,7 @@ public class GrabbySubsystem extends SubsystemBase {
     private double secondStageLimit;
     private boolean openGrabby;
 
-    public Position(String name, double armAngleLimit, double firstStageLimit, double secondStageLimit,
-        boolean openGrabby) {
+    public Position(String name, double armAngleLimit, double firstStageLimit, double secondStageLimit, boolean openGrabby) {
       this.name = name;
       this.armAngleLimit = armAngleLimit;
       this.firstStageLimit = firstStageLimit;
@@ -78,10 +73,10 @@ public class GrabbySubsystem extends SubsystemBase {
   private double armSpeed = 0;
   private double firstStageExtenderSpeed = 0;
   private double secondStageExtenderSpeed = 0;
+  
   public GrabbySubsystem(TalonFX armLifter, TalonFX firstArmExtender, TalonFX secondArmExtender, 
                           WPI_CANCoder armRotationEncoder, DoubleSolenoid grabby, 
                          PhotoEye secondExtenderPhotoEye, PhotoEye firstExtenderPhotoEye) {
-  // public ArmAndGrabbySubystem(DoubleSolenoid grabby, /*Solenoid rightGrabby,*/ TalonFX armLifter, TalonFX firstArmExtender, TalonFX secondArmExtender, PhotoEye secondExtenderPhotoEye, PhotoEye firstExtenderPhotoEye, WPI_CANCoder armRotationEncoder) {
 
     this.armLifter = armLifter;
     this.firstArmExtender = firstArmExtender;
@@ -104,13 +99,16 @@ public class GrabbySubsystem extends SubsystemBase {
 
   public void setPosition(Position position) {
     targetPosition = position;
+
+    if (targetPosition == null){
+      return;
+    }
+
     SmartDashboard.putString("TargetPosition", targetPosition.toString());
     // System.out.println("TargetPosition: " + targetPosition.toString());
+
     armSpeed = GrabbyConstants.lifterSpeed
         * Math.signum(armRotationEncoder.getAbsolutePosition() - targetPosition.armAngleLimit);
-    // System.out.println("ASE: " + armRotationEncoder.getAbsolutePosition() + " - " +
-    // targetPosition.armAngleLimit);
-    // System.out.println("ARM Speed: " + armSpeed);
 
     if (targetPosition.firstStageLimit != 0.0) {
       extendFirstStage();
@@ -189,6 +187,11 @@ public class GrabbySubsystem extends SubsystemBase {
 
   // Check the position only if a Target Position is set
   private void checkPosition() {
+
+    if (targetPosition == null){
+      return;
+    }
+    
     boolean completed = false;
 
     // Arm going up - if it has reached the angle limit (encoder) as per the target stop the motor

@@ -111,13 +111,21 @@ public class GrabbySubsystem extends SubsystemBase {
         * Math.signum(armRotationEncoder.getAbsolutePosition() - targetPosition.armAngleLimit);
 
     if (targetPosition.firstStageLimit != 0.0) {
-      extendFirstStage();
+      if(targetPosition.firstStageLimit - firstArmExtender.getSelectedSensorPosition() > 0){
+        extendFirstStage();  
+      }else{
+        retractFirstStage();
+      }
     } else if (!firstExtenderPhotoEye.isDetecting()) {
       retractFirstStage();
     }
 
     if (targetPosition.secondStageLimit != 0.0) {
-      extendSecondStage();
+      if(targetPosition.secondStageLimit - secondArmExtender.getSelectedSensorPosition() > 0){
+        extendSecondStage();
+      }else{
+        retractSecondStage();
+      }
     } else if (!secondExtenderPhotoEye.isDetecting()) {
       retractSecondStage();
     }
@@ -231,6 +239,17 @@ public class GrabbySubsystem extends SubsystemBase {
       }
     }
 
+    // First stage is being retracted - stop once the encoder position has been reached
+    if (firstStageExtenderSpeed < 0 && firstArmExtender.getSelectedSensorPosition() < targetPosition.firstStageLimit && targetPosition.firstStageLimit != 0) {
+      firstStageExtenderSpeed = 0;
+
+      System.out.println("Stopping First Stage");
+
+      // if arm is not running then set completed to true - it may still be running
+      if (armSpeed == 0) {
+        completed = true;
+      }
+    }
 
     // Second stage is being extended - stop once the encoder position has been reached
     // No checks for retraction - will be handled by FailSafe
@@ -240,6 +259,18 @@ public class GrabbySubsystem extends SubsystemBase {
 
       System.out.println("Stopping Second Stage");
 
+      if (armSpeed == 0) {
+        completed = true;
+      }
+    }
+
+    // Second stage is being retracted - stop once the encoder position has been reached
+    if (secondStageExtenderSpeed < 0 && secondArmExtender.getSelectedSensorPosition() < targetPosition.secondStageLimit && targetPosition.secondStageLimit != 0) {
+      secondStageExtenderSpeed = 0;
+
+      System.out.println("Stopping First Stage");
+
+      // if arm is not running then set completed to true - it may still be running
       if (armSpeed == 0) {
         completed = true;
       }

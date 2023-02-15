@@ -29,6 +29,9 @@ public class GrabbySubsystem extends SubsystemBase {
   private final WPI_CANCoder armRotationEncoder;
   private final DoubleSolenoid grabby;
 
+  private boolean reachedUpperLimit = false;
+  private boolean reachedLowerLimit = false;
+
   public class Position {
     private String name;
     private double armAngleLimit;
@@ -86,7 +89,7 @@ public class GrabbySubsystem extends SubsystemBase {
     this.firstExtenderPhotoEye = firstExtenderPhotoEye;
     this.secondExtenderPhotoEye = secondExtenderPhotoEye;
 
-    this.armLifter.setInverted(true);
+    // this.armLifter.setInverted(true);
     this.firstArmExtender.setInverted(true);
     // this.secondArmExtender.setInverted(true);
 
@@ -173,6 +176,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    setNeutralMode(NeutralMode.Brake);
 
     SmartDashboard.putNumber("Cancoder", armRotationEncoder.getAbsolutePosition());
 
@@ -181,6 +185,8 @@ public class GrabbySubsystem extends SubsystemBase {
       checkPosition();
     }
 
+    reachedLowerLimit = false;
+    reachedUpperLimit = false;
     failsafe();
 
     // if (armSpeed != 0)

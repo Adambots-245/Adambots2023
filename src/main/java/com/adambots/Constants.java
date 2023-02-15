@@ -224,11 +224,11 @@ public final class Constants {
         public static final int mech2dAdjustment = +45;
         
         // misc.
-        public static final double initiaLifterValue = 192;
+        public static final double initiaLifterValue = 191.5;
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
-        public static final double groundLifterValue = 80;
+        public static final double groundLifterValue = 75;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 

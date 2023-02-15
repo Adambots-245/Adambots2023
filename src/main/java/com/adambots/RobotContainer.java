@@ -150,11 +150,11 @@ public class RobotContainer {
       grabbysubsystem.retractSecondStage();
     }));
 
-    Buttons.primaryDPadN.onTrue(new InstantCommand(() -> {
+    Buttons.primaryDPadW.onTrue(new InstantCommand(() -> {
       grabbysubsystem.openGrabby();
     }));
     
-    Buttons.primaryDPadS.onTrue(new InstantCommand(() -> {
+    Buttons.primaryDPadE.onTrue(new InstantCommand(() -> {
       grabbysubsystem.closeGrabby();
     }));
     

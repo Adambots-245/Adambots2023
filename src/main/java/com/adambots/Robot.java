@@ -104,6 +104,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Coast);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Coast);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Coast);
   }
 
   /**

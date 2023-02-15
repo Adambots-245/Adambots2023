@@ -178,6 +178,7 @@ public class GrabbySubsystem extends SubsystemBase {
   public void periodic() {
     setNeutralMode(NeutralMode.Brake);
 
+    SmartDashboard.putNumber("First Stage Encoder", firstArmExtender.getSelectedSensorPosition());
     SmartDashboard.putNumber("Cancoder", armRotationEncoder.getAbsolutePosition());
 
     // currentPosition = getCurrentPosition();

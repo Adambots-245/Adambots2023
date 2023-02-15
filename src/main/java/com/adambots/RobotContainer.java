@@ -120,20 +120,20 @@ public class RobotContainer {
     // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
     // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
-    Buttons.primaryDPadN.onTrue(new InstantCommand(() -> {
+    Buttons.primaryDPadN.whileTrue(new InstantCommand(() -> {
       grabbysubsystem.armUp();
     }));
     
-    Buttons.primaryDPadS.onTrue(new InstantCommand(() -> {
+    Buttons.primaryDPadS.whileTrue(new InstantCommand(() -> {
       grabbysubsystem.armDown();
       // subsystem.setPosition(subsystem.groundPosition);
     }));
 
-    Buttons.primaryRB.onTrue(new InstantCommand(() -> {
+    Buttons.primaryRB.whileTrue(new InstantCommand(() -> {
       grabbysubsystem.extendFirstStage();
     }));
 
-    Buttons.primaryLB.onTrue(new InstantCommand(() -> {
+    Buttons.primaryLB.whileTrue(new InstantCommand(() -> {
       System.out.println("Retract First Stage");
       grabbysubsystem.retractFirstStage();
     }));

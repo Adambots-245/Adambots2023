@@ -100,13 +100,14 @@ public class Robot extends TimedRobot {
     // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);F
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Coast);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Coast);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
   public void disabledPeriodic() {
-    RobotMap.armLifter.setNeutralMode(NeutralMode.Coast);
-    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Coast);
-    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Coast);
+    
   }
 
   /**

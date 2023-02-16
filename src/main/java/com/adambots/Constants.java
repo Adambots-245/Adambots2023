@@ -224,11 +224,11 @@ public final class Constants {
         public static final int mech2dAdjustment = +45;
         
         // misc.
-        public static final double initiaLifterValue = 191.5;
+        public static final double initiaLifterValue = 212;
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
-        public static final double groundLifterValue = 75;
+        public static final double groundLifterValue = 94;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
@@ -283,7 +283,7 @@ public final class Constants {
 
         //general
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR;
-        public static final double secondExtenderMaxExtend = 6 * armEncoderCPR;
+        public static final double secondExtenderMaxExtend = 59.5 * armEncoderCPR;
         public static final double rotationPerInch = 1;
 
         // antiquated

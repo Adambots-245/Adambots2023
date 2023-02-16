@@ -128,9 +128,9 @@ public class RobotContainer {
 
     Buttons.primaryLB.whileTrue(new RetractFirstStageCommand(grabbysubsystem));
 
-    Buttons.primaryRightStickButton.onTrue(new ExtendSecondStageCommand(grabbysubsystem));
+    Buttons.primaryRightStickButton.whileTrue(new ExtendSecondStageCommand(grabbysubsystem));
 
-    Buttons.primaryLeftStickButton.onTrue(new RetractSecondStageCommand(grabbysubsystem));
+    Buttons.primaryLeftStickButton.whileTrue(new RetractSecondStageCommand(grabbysubsystem));
 
     Buttons.primaryDPadW.onTrue(new OpenGrabbyCommand(grabbysubsystem));
     

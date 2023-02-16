@@ -137,7 +137,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // }
     );
 
-    System.out.println("Pose: " + getPose().toString());
+    // System.out.println("Pose: " + getPose().toString());
 
     m_field.setRobotPose(getPose());
 

@@ -157,11 +157,8 @@ public class RobotContainer {
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    double[] curve = {0, 0, 0, 0, 0.5, 0.5, 0.9, 0.9, 0.9, 1};
-    System.out.println(Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
     SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
-    SmartDashboard.putNumber("Curve:" , Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
-
+    // SmartDashboard.putNumber("Curve:" , Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
     SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
     SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }
@@ -172,7 +169,7 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> drivetrainSubsystem.drive(
+            () -> drivetrainSubsystem.drive( //ADDED CURVES TO Buttons, CHANGE BACK IF IT DOESNT WORK - TOMMY
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),

@@ -4,17 +4,17 @@
 
 package com.adambots.commands;
 
-import com.adambots.subsystems.ArmAndGrabbySubystem;
+import com.adambots.subsystems.GrabbySubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class OpenGrabbyCommand extends CommandBase {
   /** Creates a new OpenGrabbyCommand. */
-  ArmAndGrabbySubystem armAndGrabbySubystem;
-  public OpenGrabbyCommand(ArmAndGrabbySubystem armAndGrabbySubystem) {
+  GrabbySubsystem grabbySubsystem;
+  public OpenGrabbyCommand(GrabbySubsystem grabbySubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.'
-    addRequirements(armAndGrabbySubystem);
-    this.armAndGrabbySubystem = armAndGrabbySubystem;
+    addRequirements(grabbySubsystem);
+    this.grabbySubsystem = grabbySubsystem;
 
   }
 
@@ -25,7 +25,7 @@ public class OpenGrabbyCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAndGrabbySubystem.openGrabby();
+    grabbySubsystem.openGrabby();
 
   }
 

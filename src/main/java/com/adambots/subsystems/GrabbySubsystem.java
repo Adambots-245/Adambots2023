@@ -148,6 +148,10 @@ public class GrabbySubsystem extends SubsystemBase {
     armSpeed = GrabbyConstants.lifterSpeed;
   }
 
+  public void stopArm(){
+    armSpeed = 0;
+  }
+
   public void openGrabby() {
     armDiagram.openClaw();
     grabby.set(Value.kForward);
@@ -166,12 +170,20 @@ public class GrabbySubsystem extends SubsystemBase {
     firstStageExtenderSpeed = -GrabbyConstants.extenderSpeed;
   }
 
+  public void stopFirstStage(){
+    firstStageExtenderSpeed = 0;
+  }
+
   public void extendSecondStage() {
     secondStageExtenderSpeed = GrabbyConstants.extenderSpeed;
   }
 
   public void retractSecondStage() {
     secondStageExtenderSpeed = -GrabbyConstants.extenderSpeed;
+  }
+
+  public void stopSecondStage(){
+    secondStageExtenderSpeed = 0;
   }
 
   @Override

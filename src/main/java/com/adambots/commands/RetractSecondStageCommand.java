@@ -4,19 +4,15 @@
 
 package com.adambots.commands;
 
-import com.adambots.subsystems.ArmAndGrabbySubystem;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import com.adambots.subsystems.GrabbySubsystem;
 
-public class RetractArmCommand extends CommandBase {
-  /** Creates a new RetractArmCommand. */
-  ArmAndGrabbySubystem armAndGrabbySubystem;
-  int speed;
-  public RetractArmCommand(ArmAndGrabbySubystem armAndGrabbySubystem, int speed) {
-    this.speed = speed;
-    this.armAndGrabbySubystem = armAndGrabbySubystem;
-    addRequirements(armAndGrabbySubystem);
-    // Use addRequirements() here to declare subsystem dependencies.
+public class RetractSecondStageCommand extends CommandBase {
+  /** Creates a new LiftArmCommand. */
+  GrabbySubsystem grabbySubystem;
+  public RetractSecondStageCommand(GrabbySubsystem grabbySubystem) {
+    addRequirements(grabbySubystem);
+    this.grabbySubystem = grabbySubystem;
   }
 
   // Called when the command is initially scheduled.
@@ -26,13 +22,13 @@ public class RetractArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // armAndGrabbySubystem.retractArm();
+    grabbySubystem.retractSecondStage();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // armAndGrabbySubystem.stopArmExtender();
+    grabbySubystem.stopSecondStage();
   }
 
   // Returns true when the command should end.

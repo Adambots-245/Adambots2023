@@ -233,11 +233,11 @@ public final class Constants {
         public static final double groundSecondExtenderValue = 0;
 
         // cube
-        public static final double midCubeLifterValue = 128.6;
-        public static final double midCubeFirstExtenderValue = 2;
+        public static final double midCubeLifterValue = 135.4;
+        public static final double midCubeFirstExtenderValue = 38.56 * armEncoderCPR;
         public static final double midCubeSecondExtenderValue = 0;
 
-        public static final double highCubeLifterValue = 136.2;
+        public static final double highCubeLifterValue = 143;
         public static final double highCubeFirstExtenderValue = 60.25 * armEncoderCPR;
         public static final double highCubeSecondExtenderValue = 3;
         

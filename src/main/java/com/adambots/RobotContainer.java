@@ -105,7 +105,7 @@ public class RobotContainer {
     // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
 
-    Buttons.JoystickButton9.whileTrue(new RunCommand(() -> drivetrainSubsystem.hockeyStop()));
+    Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,0.1,false)).withTimeout(1));
     Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
   }
 
@@ -138,6 +138,11 @@ public class RobotContainer {
     SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
     SmartDashboard.putNumber("pitch", RobotMap.GyroSensor.getPitch());
     SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
+
+    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
+    double[] curve = {0, 0, 0, 0, 0.5, 0.5, 0.9, 0.9, 0.9, 1};
+    System.out.println(Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
   }
 
   private void setupDefaultCommands() {
@@ -222,12 +227,9 @@ public class RobotContainer {
     // Reset odometry to the starting pose of the trajectory.
     drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
 
-    var field = new Field2d();
-    SmartDashboard.putData("Field", field);
-
     // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
     // The field image for 2023 is in utils folder
-    field.getObject("traj").setTrajectory(exampleTrajectory);
+    Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
     return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());

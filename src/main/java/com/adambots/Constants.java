@@ -7,14 +7,19 @@
 
 package com.adambots;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import com.adambots.utils.ModuleMap;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -32,6 +37,8 @@ public final class Constants {
     public static ShuffleboardTab debugTab;
 
     public static final class DriveConstants {
+        public static Field2d field = new Field2d();
+
         public static final boolean kFrontLeftTurningEncoderReversed = true; // false
         public static final boolean kRearLeftTurningEncoderReversed = false;
         public static final boolean kFrontRightTurningEncoderReversed = true; // false
@@ -127,6 +134,57 @@ public final class Constants {
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+        public static final Map<Integer, Pose3d> aprilTags =
+        Map.of(
+          1,
+          new Pose3d(
+              Units.inchesToMeters(610.77),
+              Units.inchesToMeters(42.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          2,
+          new Pose3d(
+              Units.inchesToMeters(610.77),
+              Units.inchesToMeters(108.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          3,
+          new Pose3d(
+              Units.inchesToMeters(610.77),
+              Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
+              Units.inchesToMeters(18.22),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          4,
+          new Pose3d(
+              Units.inchesToMeters(636.96),
+              Units.inchesToMeters(265.74),
+              Units.inchesToMeters(27.38),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          5,
+          new Pose3d(
+              Units.inchesToMeters(14.25),
+              Units.inchesToMeters(265.74),
+              Units.inchesToMeters(27.38),
+              new Rotation3d()),
+          6,
+          new Pose3d(
+              Units.inchesToMeters(40.45),
+              Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
+              Units.inchesToMeters(18.22),
+              new Rotation3d()),
+          7,
+          new Pose3d(
+              Units.inchesToMeters(40.45),
+              Units.inchesToMeters(108.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d()),
+          8,
+          new Pose3d(
+              Units.inchesToMeters(40.45),
+              Units.inchesToMeters(42.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d()));
     }
 
     public static final class VisionConstants {

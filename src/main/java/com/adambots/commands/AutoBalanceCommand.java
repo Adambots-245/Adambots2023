@@ -72,7 +72,8 @@ public class AutoBalanceCommand extends CommandBase {
 
     SmartDashboard.putNumber("xAxisRate", pitchAngleDegrees);
     SmartDashboard.putNumber("yAxisRate", rollAngleDegrees);
-    m_drivetrainSubsystem.drive(yAxisRate*0.5, xAxisRate*0.5, 0, false);
+    double speed = 0.5;
+    m_drivetrainSubsystem.drive(yAxisRate*speed, xAxisRate*speed, 0, false);
   }
 
   // Called once the command ends or is interrupted.

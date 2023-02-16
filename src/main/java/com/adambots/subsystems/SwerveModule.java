@@ -143,7 +143,7 @@ public class SwerveModule {
     double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;
     
     // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
-    SmartDashboard.putNumber("Turningdistance " + m_position.name(), m_turningEncoder.getPosition());
+    // SmartDashboard.putNumber("Turningdistance " + m_position.name(), m_turningEncoder.getPosition());
 
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));

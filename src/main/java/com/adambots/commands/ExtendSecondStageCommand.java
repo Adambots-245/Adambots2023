@@ -4,17 +4,15 @@
 
 package com.adambots.commands;
 
-import com.adambots.subsystems.ArmAndGrabbySubystem;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import com.adambots.subsystems.GrabbySubsystem;
 
-public class SetArmHomeCommand extends CommandBase {
-  /** Creates a new SetArmHomeCommand. */
-  ArmAndGrabbySubystem armAndGrabbySubsystem;
-  public SetArmHomeCommand(ArmAndGrabbySubystem armAndGrabbySubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.armAndGrabbySubsystem = armAndGrabbySubsystem;
-    addRequirements(armAndGrabbySubsystem);
+public class ExtendSecondStageCommand extends CommandBase {
+  /** Creates a new LiftArmCommand. */
+  GrabbySubsystem grabbySubystem;
+  public ExtendSecondStageCommand(GrabbySubsystem grabbySubystem) {
+    addRequirements(grabbySubystem);
+    this.grabbySubystem = grabbySubystem;
   }
 
   // Called when the command is initially scheduled.
@@ -24,16 +22,18 @@ public class SetArmHomeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    armAndGrabbySubsystem.setTargetState(armAndGrabbySubsystem.groundState);
+    grabbySubystem.extendSecondStage();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    grabbySubystem.stopSecondStage();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

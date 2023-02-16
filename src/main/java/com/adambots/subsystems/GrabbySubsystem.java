@@ -91,7 +91,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
     // this.armLifter.setInverted(true);
     this.firstArmExtender.setInverted(true);
-    // this.secondArmExtender.setInverted(true);
+    this.secondArmExtender.setInverted(true);
 
     setNeutralMode(NeutralMode.Brake);
 
@@ -148,6 +148,10 @@ public class GrabbySubsystem extends SubsystemBase {
     armSpeed = GrabbyConstants.lifterSpeed;
   }
 
+  public void stopArm(){
+    armSpeed = 0;
+  }
+
   public void openGrabby() {
     armDiagram.openClaw();
     grabby.set(Value.kForward);
@@ -166,6 +170,10 @@ public class GrabbySubsystem extends SubsystemBase {
     firstStageExtenderSpeed = -GrabbyConstants.extenderSpeed;
   }
 
+  public void stopFirstStage(){
+    firstStageExtenderSpeed = 0;
+  }
+
   public void extendSecondStage() {
     secondStageExtenderSpeed = GrabbyConstants.extenderSpeed;
   }
@@ -174,11 +182,16 @@ public class GrabbySubsystem extends SubsystemBase {
     secondStageExtenderSpeed = -GrabbyConstants.extenderSpeed;
   }
 
+  public void stopSecondStage(){
+    secondStageExtenderSpeed = 0;
+  }
+
   @Override
   public void periodic() {
     setNeutralMode(NeutralMode.Brake);
 
     SmartDashboard.putNumber("First Stage Encoder", firstArmExtender.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Second Stage Encoder", secondArmExtender.getSelectedSensorPosition());
     SmartDashboard.putNumber("Cancoder", armRotationEncoder.getAbsolutePosition());
 
     // currentPosition = getCurrentPosition();

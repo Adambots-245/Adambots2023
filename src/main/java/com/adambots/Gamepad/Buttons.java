@@ -14,6 +14,7 @@ import com.adambots.Constants.GamepadConstants;
 import com.adambots.RobotMap;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,7 +30,7 @@ public class Buttons {
         public static final CommandXboxController secondaryJoystick = new CommandXboxController(
                         GamepadConstants.kSecondaryDriver);
         public static final CommandJoystick ex3dPro = new CommandJoystick(RobotMap.kJoystickControllerPort);
-        public static final BooleanSupplier isJoystickConnected = () -> ex3dPro.getHID().isConnected();
+        public static final BooleanSupplier isJoystickConnected = () -> ex3dPro.getHID().isConnected() || RobotBase.isSimulation();
 
         // primary buttons
         public static final Trigger primaryBackButton = primaryJoystick.back();
@@ -125,7 +126,30 @@ public class Buttons {
                 } else {
                         return input;
                 }
+        }
 
+        public static double applyCurve(double rawInput, double[] curve) {
+                return curve[(int) Math.min(Math.floor(Math.abs(rawInput) * 10), 9)] * Math.signum(rawInput);
+        }
+
+        // Sigmoid Curve
+        public static double smoothInput(double input) {
+                // Adjust the parameter 'a' to control the steepness of the curve
+                double a = 4.0;
+
+                // Apply a sigmoid function to the input value
+                double sigmoid = 1.0 / (1.0 + Math.exp(-a * input));
+
+                // Apply a hyperbolic tangent function to the input value
+                // double tanh = Math.tanh(a * input);
+
+                // Map the output range from (0,1) to (minOutput, maxOutput)
+                double minOutput = -1; // minimum output value
+                double maxOutput = 1; // maximum output value
+                double output = sigmoid * (maxOutput - minOutput) + minOutput;
+                // double output = tanh * (maxOutput - minOutput) + minOutput;
+
+                return output;
         }
 
         // If Flight Joystick is connected, then return Joystick Y value - else return
@@ -143,12 +167,12 @@ public class Buttons {
          */
         public static DoubleSupplier sidewaysSupplier = () -> isJoystickConnected.getAsBoolean()
                         ? deaden(ex3dPro.getX(), GamepadConstants.kDeadZone)
-                        : deaden(primaryJoystick.getLeftX(), 0.3);
+                        : deaden(primaryJoystick.getLeftX(), GamepadConstants.kDeadZone);
 
         /**
          * getZ or RightX
          */
         public static DoubleSupplier rotateSupplier = () -> isJoystickConnected.getAsBoolean()
-                        ? deaden(ex3dPro.getZ(), 0.314)
-                        : deaden(primaryJoystick.getRightX(), 0.25);
+                        ? deaden(ex3dPro.getZ(), 0.4)
+                        : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
 }

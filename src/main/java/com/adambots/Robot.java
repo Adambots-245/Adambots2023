@@ -9,6 +9,7 @@ package com.adambots;
 
 import java.util.logging.Level;
 
+import com.adambots.Constants.PreferencesConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
@@ -81,6 +82,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     
+    m_robotContainer.updateDashboard();
+
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
     // interrupted commands,
@@ -88,7 +91,6 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.updateDashboard();
   }
 
   /**

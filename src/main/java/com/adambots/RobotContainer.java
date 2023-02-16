@@ -10,29 +10,18 @@ package com.adambots;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.List;
-
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
-import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
+import com.adambots.commands.AutoBalanceCommand;
 // import com.adambots.commands.*;
 // import com.adambots.commands.autonCommands.*;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
-import com.adambots.utils.MockCancoder;
-import com.adambots.utils.MockDoubleSolenoid;
-import com.adambots.utils.MockMotor;
-import com.adambots.utils.MockPhotoEye;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -42,10 +31,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.adambots.commands.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -66,14 +53,15 @@ public class RobotContainer {
   // RobotMap.BackLeftMotor,
   // RobotMap.BackRightMotor);
 
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
-  RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
   // private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender, RobotMap.rightArmPhotoEye, RobotMap.leftArmPhotoEye, RobotMap.armRotationEncoder);
   private final GrabbySubsystem grabbysubsystem = new GrabbySubsystem(RobotMap.armLifter, RobotMap.firstArmExtender, RobotMap.secondArmExtender, RobotMap.armRotationEncoder, RobotMap.grabby, RobotMap.secondExtenderPhotoEye, RobotMap.firstExtenderPhotoEye);
+  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+  private SlewRateLimiter slewFilter;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -195,6 +183,9 @@ public class RobotContainer {
     // Buttons.JoystickButton1.onTrue(new RunCommand(() -> System.out.println("1 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
     // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
+
+    Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,0.1,false)).withTimeout(1));
+    Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
   }
 
   private void setupDashboard() {
@@ -214,6 +205,7 @@ public class RobotContainer {
     // catapultSubsystem));
 
     SmartDashboard.putData("Auton Mode", autoChooser);
+    slewFilter  = new SlewRateLimiter(70);
   }
 
   /**
@@ -226,6 +218,16 @@ public class RobotContainer {
     SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
     SmartDashboard.putNumber("pitch", RobotMap.GyroSensor.getPitch());
     SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
+
+    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
+    double[] curve = {0, 0, 0, 0, 0.5, 0.5, 0.9, 0.9, 0.9, 1};
+    System.out.println(Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
+    SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
+    SmartDashboard.putNumber("Curve:" , Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
+
+    SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
+    SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }
 
   private void setupDefaultCommands() {
@@ -281,7 +283,7 @@ public class RobotContainer {
     */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    String trajectoryJSON = "Unnamed.wpilib.json";
+    String trajectoryJSON = "Test2.wpilib.json";
     Trajectory exampleTrajectory = new Trajectory();
 
     try {
@@ -310,14 +312,11 @@ public class RobotContainer {
     // Reset odometry to the starting pose of the trajectory.
     drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
 
-    var field = new Field2d();
-    SmartDashboard.putData("Field", field);
-
     // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
     // The field image for 2023 is in utils folder
-    field.getObject("traj").setTrajectory(exampleTrajectory);
+    Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.drive(0, 0, 0, false));
+    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
   }
 }

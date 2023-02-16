@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.SPI.Port;
 
 /**
  * Class that represents a Gyroscope sensor
@@ -29,7 +30,7 @@ public class Gyro extends BaseSensor implements edu.wpi.first.wpilibj.interfaces
         try {
             if (_navx == null){
                 if (!_isDisabled){
-                    _navx = new AHRS(SerialPort.Port.kMXP); // although this brings in depency, using setDevice this can be overwritten before calling getInstance
+                    _navx = new AHRS(Port.kMXP); // although this brings in depency, using setDevice this can be overwritten before calling getInstance
                     ((AHRS)_navx).enableBoardlevelYawReset(true);
                 } else {
                     _navx = new edu.wpi.first.wpilibj.interfaces.Gyro() {

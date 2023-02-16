@@ -44,18 +44,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  // subsystems
-  // private final TankDriveTrainSubsystem driveTrainSubsystem = new
-  // TankDriveTrainSubsystem(RobotMap.GyroSensor,
-  // RobotMap.GearShifter,
-  // RobotMap.FrontRightMotor,
-  // RobotMap.FrontLeftMotor,
-  // RobotMap.BackLeftMotor,
-  // RobotMap.BackRightMotor);
-
-  // private final ArmAndGrabbySubystem armAndGrabbySubystem = new ArmAndGrabbySubystem(RobotMap.grabby, /*RobotMap.rightGrabby,*/ RobotMap.armLifter, RobotMap.leftArmExtender, RobotMap.rightArmExtender, RobotMap.rightArmPhotoEye, RobotMap.leftArmPhotoEye, RobotMap.armRotationEncoder);
   private final GrabbySubsystem grabbysubsystem = new GrabbySubsystem(RobotMap.armLifter, RobotMap.firstArmExtender, RobotMap.secondArmExtender, RobotMap.armRotationEncoder, RobotMap.grabby, RobotMap.secondExtenderPhotoEye, RobotMap.firstExtenderPhotoEye);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
+
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
@@ -109,46 +100,25 @@ public class RobotContainer {
     // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
     Buttons.primaryDPadN.whileTrue(new LiftArmCommand(grabbysubsystem));
-    
     Buttons.primaryDPadS.whileTrue(new LowerArmCommand(grabbysubsystem));
 
     Buttons.primaryRB.whileTrue(new ExtendFirstStageCommand(grabbysubsystem));
-
     Buttons.primaryLB.whileTrue(new RetractFirstStageCommand(grabbysubsystem));
 
     Buttons.primaryRightStickButton.whileTrue(new ExtendSecondStageCommand(grabbysubsystem));
-
     Buttons.primaryLeftStickButton.whileTrue(new RetractSecondStageCommand(grabbysubsystem));
 
     Buttons.primaryDPadW.onTrue(new OpenGrabbyCommand(grabbysubsystem));
-    
     Buttons.primaryDPadE.onTrue(new CloseGrabbyCommand(grabbysubsystem));
     
     Buttons.primaryBButton.onTrue(new SetArmMidCubeCommand(grabbysubsystem));
-    
     Buttons.primaryYButton.onTrue(new SetArmHighCubeCommand(grabbysubsystem));
 
     Buttons.primaryXButton.onTrue(new SetArmMidConeCommand(grabbysubsystem));
-    
     Buttons.primaryAButton.onTrue(new SetArmHighConeCommand(grabbysubsystem));
 
     Buttons.primaryBackButton.onTrue(new SetArmGroundCommand(grabbysubsystem));
-    
     Buttons.primaryStartButton.onTrue(new SetArmInitCommand(grabbysubsystem));
-
-    
-
-    // Buttons.primaryAButton.onTrue(command);
-    // Buttons.secondaryDPadE.onTrue(command);
-
-    // Buttons.primaryBackButton.whileTrue(command);
-
-    // Buttons.primaryAButton.onTrue(new RunCommand(() -> System.out.println("1A Pressed..."), drivetrainSubsystem));
-    // Buttons.secondaryAButton.onTrue(new RunCommand(() -> System.out.println("2A Pressed..."), drivetrainSubsystem));
-
-    // Buttons.JoystickButton1.onTrue(new RunCommand(() -> System.out.println("1 Pressed..."), drivetrainSubsystem));
-    // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
-    // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
 
     Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,0.1,false)).withTimeout(1));
     Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));

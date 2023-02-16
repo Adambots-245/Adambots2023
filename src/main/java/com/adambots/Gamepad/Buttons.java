@@ -128,8 +128,28 @@ public class Buttons {
                 }
         }
 
-        public static double applyCurve (double rawInput, double[] curve) {
-                return curve[(int)Math.min(Math.floor(Math.abs(rawInput)*10), 9)];
+        public static double applyCurve(double rawInput, double[] curve) {
+                return curve[(int) Math.min(Math.floor(Math.abs(rawInput) * 10), 9)] * Math.signum(rawInput);
+        }
+
+        // Sigmoid Curve
+        public static double smoothInput(double input) {
+                // Adjust the parameter 'a' to control the steepness of the curve
+                double a = 4.0;
+
+                // Apply a sigmoid function to the input value
+                double sigmoid = 1.0 / (1.0 + Math.exp(-a * input));
+
+                // Apply a hyperbolic tangent function to the input value
+                // double tanh = Math.tanh(a * input);
+
+                // Map the output range from (0,1) to (minOutput, maxOutput)
+                double minOutput = -1; // minimum output value
+                double maxOutput = 1; // maximum output value
+                double output = sigmoid * (maxOutput - minOutput) + minOutput;
+                // double output = tanh * (maxOutput - minOutput) + minOutput;
+
+                return output;
         }
 
         // If Flight Joystick is connected, then return Joystick Y value - else return

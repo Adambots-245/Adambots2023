@@ -23,6 +23,7 @@ import com.adambots.utils.Log;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -67,6 +68,8 @@ public class RobotContainer {
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+  private SlewRateLimiter slewFilter;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -126,6 +129,7 @@ public class RobotContainer {
     // catapultSubsystem));
 
     SmartDashboard.putData("Auton Mode", autoChooser);
+    slewFilter  = new SlewRateLimiter(70);
   }
 
   /**
@@ -143,6 +147,11 @@ public class RobotContainer {
 
     double[] curve = {0, 0, 0, 0, 0.5, 0.5, 0.9, 0.9, 0.9, 1};
     System.out.println(Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
+    SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
+    SmartDashboard.putNumber("Curve:" , Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
+
+    SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
+    SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }
 
   private void setupDefaultCommands() {

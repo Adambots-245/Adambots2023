@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
     // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);F
+    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
     RobotMap.armLifter.setNeutralMode(NeutralMode.Coast);
     RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Coast);
     RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Coast);
@@ -132,10 +132,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
     
-    // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Brake);
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   /**
@@ -157,10 +156,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     
-    // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   /**

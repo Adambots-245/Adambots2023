@@ -57,9 +57,6 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
       RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
 
-  
-  private final VisionSubsystem visionSubsystem = new VisionSubsystem();
-
       
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;

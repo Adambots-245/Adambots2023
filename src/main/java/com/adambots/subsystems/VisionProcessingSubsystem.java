@@ -44,7 +44,7 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   private static CvSource processedReflectedOutputStream;
   private static Mat mat;
   private static Point[] pts = new Point[4];
-  private final Field2d aprilTagField = new Field2d();
+  private final static Field2d aprilTagField = new Field2d();
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   private NetworkTableEntry tx = table.getEntry("botpose");
   // private LimelightHelpers limelightHelper = new LimelightHelpers();
@@ -155,6 +155,10 @@ public void drawRect(Point[] pts) {
     for (int i = 0; i < 4; i++)
         Imgproc.line(mat, pts[i], pts[(i + 1) % 4], VisionConstants.RED, 2);
 
+}
+
+public static Field2d getAprilField2d() {
+  return aprilTagField;
 }
 
   public Thread getVisionThread() {

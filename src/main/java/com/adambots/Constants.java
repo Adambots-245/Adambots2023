@@ -387,7 +387,8 @@ public final class Constants {
 
         public static final double lifterSpeed = 0.15;
         public static final double extenderSpeed = 0.25;
-        public static final double armStopSpeed = 0.04;
+        public static final double armStopSpeed = 0;
+        public static final double extenderStopSpeed = 0;
     }
 
 

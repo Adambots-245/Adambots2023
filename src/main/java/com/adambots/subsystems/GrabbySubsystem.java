@@ -14,7 +14,6 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -29,9 +28,6 @@ public class GrabbySubsystem extends SubsystemBase {
   private final PhotoEye firstExtenderPhotoEye;
   private final WPI_CANCoder armRotationEncoder;
   private final DoubleSolenoid grabby;
-
-  private boolean reachedUpperLimit = false;
-  private boolean reachedLowerLimit = false;
 
   public class Position {
     private String name;
@@ -108,6 +104,8 @@ public class GrabbySubsystem extends SubsystemBase {
       return;
     }
 
+    currentPosition = null;
+
     SmartDashboard.putString("TargetPosition", targetPosition.toString());
     // System.out.println("TargetPosition: " + targetPosition.toString());
 
@@ -172,7 +170,7 @@ public class GrabbySubsystem extends SubsystemBase {
   }
 
   public void stopFirstStage(){
-    firstStageExtenderSpeed = 0;
+    firstStageExtenderSpeed = GrabbyConstants.extenderStopSpeed;
   }
 
   public void extendSecondStage() {
@@ -184,7 +182,7 @@ public class GrabbySubsystem extends SubsystemBase {
   }
 
   public void stopSecondStage(){
-    secondStageExtenderSpeed = 0;
+    secondStageExtenderSpeed = GrabbyConstants.extenderStopSpeed;
   }
 
   @Override
@@ -200,14 +198,30 @@ public class GrabbySubsystem extends SubsystemBase {
       checkPosition();
     }
 
-    reachedLowerLimit = false;
-    reachedUpperLimit = false;
+    // Routine for hold position - once it is set to a position and it backdrives, bring it back to position
+    if (currentPosition != null){
+      double error = targetPosition.armAngleLimit - armRotationEncoder.getAbsolutePosition();
+      double kP = 0.04; // TODO: Move to constants file
+
+      double output = kP * error; 
+      if (Math.abs(error) > 2){ // TODO: Move to constants file
+        armSpeed = output;
+      }
+    }
+
     failsafe();
 
     // if (armSpeed != 0)
     //   System.out.println("ArmSpeed: " + armSpeed);
 
-    armLifter.set(ControlMode.PercentOutput, armSpeed);
+    // If a stop request has been received, put it in Neutral mode
+    // Not sure if this does anything different to engage the brakes
+    if (armSpeed == GrabbyConstants.armStopSpeed){
+      armLifter.set(ControlMode.Disabled, 0.0);
+    } else {
+      armLifter.set(ControlMode.PercentOutput, armSpeed);
+    }
+
     // System.out.println("AP: " + armRotationEncoder.getAbsolutePosition());
     firstArmExtender.set(ControlMode.PercentOutput, firstStageExtenderSpeed);
     secondArmExtender.set(ControlMode.PercentOutput, secondStageExtenderSpeed);
@@ -244,7 +258,7 @@ public class GrabbySubsystem extends SubsystemBase {
       System.out.println("Stopping Arm");
 
       // Set completed to true only if the extender has also stopped - it may still be running
-      if (firstStageExtenderSpeed == 0 && secondStageExtenderSpeed == 0) {
+      if (firstStageExtenderSpeed == GrabbyConstants.extenderStopSpeed && secondStageExtenderSpeed == GrabbyConstants.extenderStopSpeed) {
         completed = true;
       }
     }
@@ -252,7 +266,7 @@ public class GrabbySubsystem extends SubsystemBase {
     // First stage is being extended - stop once the encoder position has been reached
     // No checks for retraction - will be handled by FailSafe
     if (firstStageExtenderSpeed > 0 && firstArmExtender.getSelectedSensorPosition() > targetPosition.firstStageLimit) {
-      firstStageExtenderSpeed = 0;
+      stopFirstStage();
 
       System.out.println("Stopping First Stage");
 
@@ -264,7 +278,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
     // First stage is being retracted - stop once the encoder position has been reached
     if (firstStageExtenderSpeed < 0 && firstArmExtender.getSelectedSensorPosition() < targetPosition.firstStageLimit && targetPosition.firstStageLimit != 0) {
-      firstStageExtenderSpeed = 0;
+      stopFirstStage();
 
       System.out.println("Stopping First Stage");
 
@@ -276,9 +290,9 @@ public class GrabbySubsystem extends SubsystemBase {
 
     // Second stage is being extended - stop once the encoder position has been reached
     // No checks for retraction - will be handled by FailSafe
-    if (secondStageExtenderSpeed > 0
+    if (secondStageExtenderSpeed > GrabbyConstants.extenderStopSpeed
         && secondArmExtender.getSelectedSensorPosition() > targetPosition.secondStageLimit) {
-      secondStageExtenderSpeed = 0;
+      stopSecondStage();
 
       System.out.println("Stopping Second Stage");
 
@@ -289,7 +303,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
     // Second stage is being retracted - stop once the encoder position has been reached
     if (secondStageExtenderSpeed < 0 && secondArmExtender.getSelectedSensorPosition() < targetPosition.secondStageLimit && targetPosition.secondStageLimit != 0) {
-      secondStageExtenderSpeed = 0;
+      stopSecondStage();
 
       System.out.println("Stopping First Stage");
 
@@ -348,21 +362,21 @@ public class GrabbySubsystem extends SubsystemBase {
     }
 
     if (firstStageExtenderSpeed < 0 && firstExtenderPhotoEye.isDetecting()) {
-      firstStageExtenderSpeed = 0;
+      stopFirstStage();
       firstArmExtender.setSelectedSensorPosition(0);
     }
 
     if (firstStageExtenderSpeed > 0 && isAtFirstExtenderLimit()) {
-      firstStageExtenderSpeed = 0;
+      stopFirstStage();
     }
 
     if (secondStageExtenderSpeed < 0 && secondExtenderPhotoEye.isDetecting()) {
-      secondStageExtenderSpeed = 0;
+      stopSecondStage();
       secondArmExtender.setSelectedSensorPosition(0);
     }
 
     if (secondStageExtenderSpeed > 0 && isAtSecondExtenderLimit()) {
-      secondStageExtenderSpeed = 0;
+      stopSecondStage();
     }
 
     // System.out.println("FSE Speed: " + firstStageExtenderSpeed);

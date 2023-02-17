@@ -14,6 +14,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -73,7 +74,7 @@ public class GrabbySubsystem extends SubsystemBase {
   private Position currentPosition = homePosition;
   private Position targetPosition = null;
 
-  private double armSpeed = 0;
+  private double armSpeed = GrabbyConstants.armStopSpeed;
   private double firstStageExtenderSpeed = 0;
   private double secondStageExtenderSpeed = 0;
   
@@ -149,7 +150,7 @@ public class GrabbySubsystem extends SubsystemBase {
   }
 
   public void stopArm(){
-    armSpeed = 0;
+    armSpeed = Math.signum(armSpeed) * GrabbyConstants.armStopSpeed;
   }
 
   public void openGrabby() {
@@ -221,10 +222,12 @@ public class GrabbySubsystem extends SubsystemBase {
     }
     
     boolean completed = false;
+    SmartDashboard.putNumber("Arm Speed", armSpeed);
+    SmartDashboard.putNumber("Arm Angle Limit ", targetPosition.armAngleLimit);
 
     // Arm going up - if it has reached the angle limit (encoder) as per the target stop the motor
     if (armSpeed < 0 && armRotationEncoder.getAbsolutePosition() >= targetPosition.armAngleLimit) {
-      armSpeed = 0;
+      stopArm();
 
       System.out.println("Stopping Arm");
 
@@ -236,7 +239,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
     // Arm going down - if it has reached the anle limit (encoder) as per the target stop the motor
     if (armSpeed > 0 && armRotationEncoder.getAbsolutePosition() <= targetPosition.armAngleLimit) {
-      armSpeed = 0;
+      stopArm();
 
       System.out.println("Stopping Arm");
 
@@ -254,7 +257,7 @@ public class GrabbySubsystem extends SubsystemBase {
       System.out.println("Stopping First Stage");
 
       // if arm is not running then set completed to true - it may still be running
-      if (armSpeed == 0) {
+      if (armSpeed == GrabbyConstants.armStopSpeed) {
         completed = true;
       }
     }
@@ -266,7 +269,7 @@ public class GrabbySubsystem extends SubsystemBase {
       System.out.println("Stopping First Stage");
 
       // if arm is not running then set completed to true - it may still be running
-      if (armSpeed == 0) {
+      if (armSpeed == GrabbyConstants.armStopSpeed) {
         completed = true;
       }
     }
@@ -279,7 +282,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
       System.out.println("Stopping Second Stage");
 
-      if (armSpeed == 0) {
+      if (armSpeed == GrabbyConstants.armStopSpeed) {
         completed = true;
       }
     }
@@ -291,7 +294,7 @@ public class GrabbySubsystem extends SubsystemBase {
       System.out.println("Stopping First Stage");
 
       // if arm is not running then set completed to true - it may still be running
-      if (armSpeed == 0) {
+      if (armSpeed == GrabbyConstants.armStopSpeed) {
         completed = true;
       }
     }
@@ -337,11 +340,11 @@ public class GrabbySubsystem extends SubsystemBase {
     // upwards
     // Also ensure that negative speeds indicate upwards movement
     if (armSpeed < 0 && isArmAtUpperLimit()) {
-      armSpeed = 0;
+      stopArm();
     }
 
     if (armSpeed >= 0 && isArmAtLowerLimit()) {
-      armSpeed = 0;
+      stopArm();
     }
 
     if (firstStageExtenderSpeed < 0 && firstExtenderPhotoEye.isDetecting()) {

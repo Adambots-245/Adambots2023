@@ -201,10 +201,10 @@ public class GrabbySubsystem extends SubsystemBase {
     // Routine for hold position - once it is set to a position and it backdrives, bring it back to position
     if (currentPosition != null){
       double error = targetPosition.armAngleLimit - armRotationEncoder.getAbsolutePosition();
-      double kP = 0.04; // TODO: Move to constants file
+      double kP = GrabbyConstants.kArmKp; 
 
       double output = kP * error; 
-      if (Math.abs(error) > 2){ // TODO: Move to constants file
+      if (Math.abs(error) > GrabbyConstants.kAngleTolerance){ 
         armSpeed = output;
       }
     }

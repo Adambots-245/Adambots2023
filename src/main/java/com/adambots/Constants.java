@@ -342,35 +342,35 @@ public final class Constants {
         public static final double highConeFirstExtenderValue = 60.25 * armEncoderCPR;
         public static final double highConeSecondExtenderValue = 3.5;
 
-        public static class State{
-            double armLiftTarget;
-            double firstExtendTarget;
-            double secondExtendTarget;
-            public State(double armLiftTarget, double firstExtendTarget, double secondExtendTarget){
-                this.armLiftTarget = armLiftTarget;
-                this.firstExtendTarget = firstExtendTarget;
-                this.secondExtendTarget = secondExtendTarget;
-            }
+        // public static class State{
+        //     double armLiftTarget;
+        //     double firstExtendTarget;
+        //     double secondExtendTarget;
+        //     public State(double armLiftTarget, double firstExtendTarget, double secondExtendTarget){
+        //         this.armLiftTarget = armLiftTarget;
+        //         this.firstExtendTarget = firstExtendTarget;
+        //         this.secondExtendTarget = secondExtendTarget;
+        //     }
 
-            public double getArmLiftTarget(){
-                return armLiftTarget;
-            }
+        //     public double getArmLiftTarget(){
+        //         return armLiftTarget;
+        //     }
 
-            public double getFirstExtendTarget(){
-                return firstExtendTarget;
-            }
+        //     public double getFirstExtendTarget(){
+        //         return firstExtendTarget;
+        //     }
 
-            public double getSecondExtendTarget(){
-                return secondExtendTarget;
-            }
-        }
+        //     public double getSecondExtendTarget(){
+        //         return secondExtendTarget;
+        //     }
+        // }
 
-        public static final State initState = new State(initiaLifterValue, initialFirstExtenderValue, initialSecondExtenderValue);
-        public static final State groundState = new State(groundLifterValue, groundFirstExtenderValue, groundSecondExtenderValue);
-        public static final State midCubeState = new State(midCubeLifterValue, midCubeFirstExtenderValue, midCubeSecondExtenderValue);
-        public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
-        public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
-        public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
+        // public static final State initState = new State(initiaLifterValue, initialFirstExtenderValue, initialSecondExtenderValue);
+        // public static final State groundState = new State(groundLifterValue, groundFirstExtenderValue, groundSecondExtenderValue);
+        // public static final State midCubeState = new State(midCubeLifterValue, midCubeFirstExtenderValue, midCubeSecondExtenderValue);
+        // public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
+        // public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
+        // public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
 
 
         //general
@@ -389,6 +389,10 @@ public final class Constants {
         public static final double extenderSpeed = 0.25;
         public static final double armStopSpeed = 0;
         public static final double extenderStopSpeed = 0;
+        
+        public static double kArmKp = 0.04;
+        public static double kAngleTolerance = 2;
+
     }
 
 

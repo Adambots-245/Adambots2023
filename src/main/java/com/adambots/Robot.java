@@ -10,12 +10,14 @@ package com.adambots;
 import java.util.logging.Level;
 
 import com.adambots.Vision.ReflectivePipeline;
+import com.adambots.Constants.PreferencesConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -45,7 +47,7 @@ public class Robot extends TimedRobot {
 
     Log.instance();
     Log.setFilter(Level.OFF);
-    
+
     if (Robot.isReal()) {
 
       // Starts vision thread only if not running in simulation mode
@@ -80,6 +82,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     
+    m_robotContainer.updateDashboard();
+
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
     // interrupted commands,
@@ -87,7 +91,6 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_robotContainer.updateDashboard();
   }
 
   /**
@@ -98,11 +101,15 @@ public class Robot extends TimedRobot {
     // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);F
+    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Coast);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Coast);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
   public void disabledPeriodic() {
+    
   }
 
   /**
@@ -125,10 +132,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.schedule();
     }
     
-    // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Brake);
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   /**
@@ -150,10 +156,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     
-    // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   /**

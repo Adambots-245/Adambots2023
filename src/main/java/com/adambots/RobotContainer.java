@@ -12,26 +12,29 @@ import java.util.List;
 
 import javax.sound.sampled.SourceDataLine;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Gamepad.Buttons;
+import com.adambots.commands.AutoBalanceCommand;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -45,23 +48,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  // subsystems
-  // private final TankDriveTrainSubsystem driveTrainSubsystem = new
-  // TankDriveTrainSubsystem(RobotMap.GyroSensor,
-  // RobotMap.GearShifter,
-  // RobotMap.FrontRightMotor,
-  // RobotMap.FrontLeftMotor,
-  // RobotMap.BackLeftMotor,
-  // RobotMap.BackRightMotor);
+  private final GrabbySubsystem grabbysubsystem = new GrabbySubsystem(RobotMap.armLifter, RobotMap.firstArmExtender, RobotMap.secondArmExtender, RobotMap.armRotationEncoder, RobotMap.grabby, RobotMap.secondExtenderPhotoEye, RobotMap.firstExtenderPhotoEye);
+  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
 
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.frontLeftSwerveModule,
-      RobotMap.rearLeftSwerveModule, RobotMap.frontRightSwerveModule, RobotMap.rearRightSwerveModule);
-
-      
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+  private SlewRateLimiter slewFilter;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -89,17 +84,50 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-     Buttons.primaryAButton.onTrue(new ChangeStream());
+    // Buttons.primaryAButton.onTrue(new ChangeStream());
     // Buttons.secondaryDPadE.onTrue(command);
+    //Buttons.secondaryDPadE.onTrue(new CloseGrabbyCommand(armAndGrabbySubystem));
+    //Buttons.secondaryDPadW.onTrue(new OpenGrabbyCommand(armAndGrabbySubystem));
+    
+    // Buttons.secondaryRB.whileTrue(new ExtendArmCommand(armAndGrabbySubystem, 50));
+    // Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
+    // Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
+    // Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
+    //  Buttons.secondaryXButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
+    
+    // Buttons.secondaryBButton.onTrue(new SetArmMidCubeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryAButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryYButton.onTrue(new SetArmHighCubeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryDPadN.onTrue(new SetArmHighConeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryDPadS.onTrue(new SetArmMidConeCommand(armAndGrabbySubystem));
+    // Buttons.secondaryStartButton.onTrue(new SetArmInitCommand(armAndGrabbySubystem));
 
-    // Buttons.primaryBackButton.whileTrue(command);
+    // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
+    // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
-    // Buttons.primaryAButton.onTrue(new RunCommand(() -> System.out.println("1A Pressed..."), drivetrainSubsystem));
-    // Buttons.secondaryAButton.onTrue(new RunCommand(() -> System.out.println("2A Pressed..."), drivetrainSubsystem));
+    Buttons.primaryDPadN.whileTrue(new LiftArmCommand(grabbysubsystem));
+    Buttons.primaryDPadS.whileTrue(new LowerArmCommand(grabbysubsystem));
 
-    // Buttons.JoystickButton1.onTrue(new RunCommand(() -> System.out.println("1 Pressed..."), drivetrainSubsystem));
-    // Buttons.JoystickButton2.onTrue(new RunCommand(() -> System.out.println("2 Pressed..."), drivetrainSubsystem));
-    // Buttons.JoystickThumbUp.onTrue(new RunCommand(() -> System.out.println("Up Pressed..."), drivetrainSubsystem));
+    Buttons.primaryRB.whileTrue(new ExtendFirstStageCommand(grabbysubsystem));
+    Buttons.primaryLB.whileTrue(new RetractFirstStageCommand(grabbysubsystem));
+
+    Buttons.primaryRightStickButton.whileTrue(new ExtendSecondStageCommand(grabbysubsystem));
+    Buttons.primaryLeftStickButton.whileTrue(new RetractSecondStageCommand(grabbysubsystem));
+
+    Buttons.primaryDPadW.onTrue(new OpenGrabbyCommand(grabbysubsystem));
+    Buttons.primaryDPadE.onTrue(new CloseGrabbyCommand(grabbysubsystem));
+    
+    Buttons.primaryBButton.onTrue(new SetArmMidCubeCommand(grabbysubsystem));
+    Buttons.primaryYButton.onTrue(new SetArmHighCubeCommand(grabbysubsystem));
+
+    Buttons.primaryXButton.onTrue(new SetArmMidConeCommand(grabbysubsystem));
+    Buttons.primaryAButton.onTrue(new SetArmHighConeCommand(grabbysubsystem));
+
+    Buttons.primaryBackButton.onTrue(new SetArmGroundCommand(grabbysubsystem));
+    Buttons.primaryStartButton.onTrue(new SetArmInitCommand(grabbysubsystem));
+
+    Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,0.1,false)).withTimeout(1));
+    Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
   }
 
   private void setupDashboard() {
@@ -119,6 +147,7 @@ public class RobotContainer {
     // catapultSubsystem));
 
     SmartDashboard.putData("Auton Mode", autoChooser);
+    slewFilter  = new SlewRateLimiter(70);
   }
 
   /**
@@ -129,6 +158,15 @@ public class RobotContainer {
     SmartDashboard.putNumber("getY", Buttons.forwardSupplier.getAsDouble());
     SmartDashboard.putNumber("getX", Buttons.sidewaysSupplier.getAsDouble());
     SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
+    SmartDashboard.putNumber("pitch", RobotMap.GyroSensor.getPitch());
+    SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
+
+    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
+    SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
+    // SmartDashboard.putNumber("Curve:" , Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
+    SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
+    SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }
 
   private void setupDefaultCommands() {
@@ -137,7 +175,7 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> drivetrainSubsystem.drive(
+            () -> drivetrainSubsystem.drive( //ADDED CURVES TO Buttons, CHANGE BACK IF IT DOESNT WORK - TOMMY
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),
@@ -151,25 +189,20 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+
+    RobotMap.GyroSensor.reset();
     // if (autoChooser.getSelected() != null)
     // Log.info("Chosen Auton Command: ", autoChooser.getSelected().toString());
     // else
     // Log.info("Chosen Auton Command: None");
 
-    // return new Auton2Ball(driveTrainSubsystem, intakeSubsystem,
-    // catapultSubsystem);
-    // System.out.println(autoChooser.getSelected().toString());
     // return autoChooser.getSelected();
 
     // return new LowerIntakeArmCommand(intakeSubsystem)
     // .andThen(new WaitCommand(4))
     // .andThen(new TurnToAngleFromCameraCommand(driveTrainSubsystem))
-    // .andThen(new DriveToBallCommand(driveTrainSubsystem, intakeSubsystem,
-    // conveyorSubsystem, RobotMap.IntakePhotoEye));
-    // .andThen(new StartIntakeCommand(intakeSubsystem, () -> -1.0))
-    // .andThen(new DriveForwardDistanceCommand(driveTrainSubsystem, 20000,
-    // -Constants.AUTON_DRIVE_FORWARD_SPEED))
 
+    /*
     // Create config for trajectory
     TrajectoryConfig config = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond,
@@ -182,18 +215,29 @@ public class RobotContainer {
         // Start at the origin facing the +X direction
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
-        List.of(/* new Translation2d(1, 1), new Translation2d(2, -1) */),
+        List.of(new Translation2d(3, 0)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(1, 0, new Rotation2d(3)),
-        config);
+        new Pose2d(3, 0.5, new Rotation2d(0)),
+        config); 
+    */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
+
+    String trajectoryJSON = "Test2.wpilib.json";
+    Trajectory exampleTrajectory = new Trajectory();
+
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      exampleTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+
     var thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    CustomSwerveControllerCommand swerveControllerCommand = new CustomSwerveControllerCommand(
+    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         exampleTrajectory,
-        new Pose2d(1, 0, new Rotation2d(3)),
         drivetrainSubsystem::getPose, // Functional interface to feed supplier
         DriveConstants.kDriveKinematics,
 
@@ -207,14 +251,11 @@ public class RobotContainer {
     // Reset odometry to the starting pose of the trajectory.
     drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
 
-    var field = new Field2d();
-    SmartDashboard.putData("Field", field);
-
     // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
     // The field image for 2023 is in utils folder
-    field.getObject("traj").setTrajectory(exampleTrajectory);
+    Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.drive(0, 0, 0, false));
+    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
   }
 }

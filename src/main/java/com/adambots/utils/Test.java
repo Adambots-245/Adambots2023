@@ -5,13 +5,24 @@ import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 
+import com.adambots.Constants.ModuleConstants;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class Test {
+
     public static void main(String[] args) {
+        turn (45, Units.degreesToRadians(180));
+    }
+
+    public static void main2(String[] args) {
         // System.out.println("Class Name: " + Log.getCallerClassName());
         // Log.saveToFile("E:/test.log");
         Log.info("Test", "Waiting for input", args.length);
@@ -76,6 +87,37 @@ public class Test {
         // System.out.println("Measurement 2");
         // System.out.println(sb2.toString());
     }
+
+    private final static ProfiledPIDController m_turningPIDController =
+      new ProfiledPIDController(
+          ModuleConstants.kPModuleTurningController,
+          ModuleConstants.kIModuleTurningController,
+          ModuleConstants.kDModuleTurningController,
+          new TrapezoidProfile.Constraints(
+              ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond,
+              ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared));
+
+    public static void turn(double angle, double currentModuleAngleInRadians) {
+
+        m_turningPIDController.reset(currentModuleAngleInRadians);
+        m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+        // double currentModuleAngleInRadians = 0; 
+        var radAngle = Units.degreesToRadians(45);
+        double turnAngleError = Math.abs(radAngle - currentModuleAngleInRadians);
+        
+        var swerveModuleStates = new SwerveModuleState(0, new Rotation2d(radAngle));
+        var desiredState = SwerveModuleState.optimize(swerveModuleStates, new Rotation2d(currentModuleAngleInRadians));
+        double pidOut = m_turningPIDController.calculate(currentModuleAngleInRadians, desiredState.angle.getRadians());
+        // double pidOut = m_turningPIDController.calculate(0.785, 0.785);
+    
+        // if robot is not moving, stop the turn motor oscillating
+        // if (turnAngleError < 0.5
+        //     && Math.abs(getState().speedMetersPerSecond) <= (DriveConstants.kMaxSpeedMetersPerSecond * 0.01))
+        //   pidOut = 0;
+    
+        System.out.printf("PID Out: %f\n", pidOut);
+      }
 
     public class innerClass{
         public void logThis(){

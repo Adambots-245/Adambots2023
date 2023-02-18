@@ -57,16 +57,25 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   }
 
   public void init() {
+    /* 
     detectionCamera = CameraServer.startAutomaticCapture(0);
     detectionCamera.setVideoMode(VideoMode.PixelFormat.kYUYV, VisionConstants.kFrameWidth, VisionConstants.kFrameHeight, VisionConstants.kProcessingFramesPerSec);   
     camCvSink = CameraServer.getVideo(detectionCamera);
     processedAprilOutputStream = CameraServer.putVideo("Detected", 640, 480);    processedAprilOutputStream = CameraServer.putVideo("Detected", 640, 480);
     processedReflectedOutputStream = CameraServer.putVideo("Reflected", 640, 480);
     mat = new Mat();
+    */
     SmartDashboard.putData("April Tag Field", aprilTagField);
     visionThread = new Thread(() -> {
-      run();
+      run2();
     });
+  }
+
+  public void run2() {
+
+    while (!Thread.interrupted()) {
+      aprilTagField.setRobotPose(getPose());
+    }
   }
 
   public void run() {

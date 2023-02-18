@@ -2,13 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package com.adambots.commands.autonCommands;
+package com.adambots.commands;
 
 import java.util.List;
 
 import com.adambots.Constants;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
+import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -27,15 +28,18 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 public class DriveToAprilTagCommand extends CommandBase {
   
   private DrivetrainSubsystem driveTrainSubsystem;
-  private Field2d field;
+  private Pose2d field;
   private int index;
+  private Gyro gyro;
+  private SwerveControllerCommand swerveControllerCommand;
 
-  public DriveToAprilTagCommand(DrivetrainSubsystem driveTrainSubsystem, Field2d field, int index) {
+  public DriveToAprilTagCommand(DrivetrainSubsystem driveTrainSubsystem, Pose2d field, int index, Gyro gyro) {
     addRequirements(driveTrainSubsystem);
 
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.field = field;
     this.index = index;
+    this.gyro = gyro;
   }
 
 
@@ -47,34 +51,37 @@ public class DriveToAprilTagCommand extends CommandBase {
         AutoConstants.kMaxAccelerationMetersPerSecondSquared)
         .setKinematics(DriveConstants.kDriveKinematics);
 
+      field = new Pose2d(field.getX(), field.getY(), gyro.getRotation2d());
+
     Pose2d aprilTag = Constants.AutoConstants.aprilTags.get(index).toPose2d();
     Translation2d waypoint = new Translation2d();
     if (index <= 4) { //Check if apriltag is on left or right side of the field to get a waypoint in front of it and modify the rotation of the apriltag pose
-      waypoint = new Translation2d(aprilTag.getX()-0.75, aprilTag.getY());
-      aprilTag = new Pose2d(aprilTag.getX(), aprilTag.getY(), new Rotation2d(0));
+      waypoint = new Translation2d(aprilTag.getX()-0.85, aprilTag.getY());
+      aprilTag = new Pose2d(aprilTag.getX()-0.8, aprilTag.getY(), new Rotation2d(0));
     } else {
-      waypoint = new Translation2d(aprilTag.getX()+0.75, aprilTag.getY());
-      aprilTag = new Pose2d(aprilTag.getX(), aprilTag.getY(), new Rotation2d(Units.degreesToRadians(180)));
+      waypoint = new Translation2d(aprilTag.getX()+0.85, aprilTag.getY());
+      aprilTag = new Pose2d(aprilTag.getX()+0.8, aprilTag.getY(), new Rotation2d(Units.degreesToRadians(180)));
+      //0.6
     }
 
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-        field.getRobotPose(),
+        field,
         List.of(waypoint),
         aprilTag,
         config); 
 
     var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+        AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+    swerveControllerCommand = new SwerveControllerCommand(
       trajectory,
       driveTrainSubsystem::getPose, // Functional interface to feed supplier
       DriveConstants.kDriveKinematics,
 
       // Position controllers
-      new PIDController(AutoConstants.kPXController, 0, 0),
-      new PIDController(AutoConstants.kPYController, 0, 0),
+      new PIDController(AutoConstants.kPXController, 0, AutoConstants.kDXController),
+      new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController),
       thetaController,
       driveTrainSubsystem::setModuleStates,
       driveTrainSubsystem);

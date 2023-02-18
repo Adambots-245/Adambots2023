@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     Log.instance();
-    Log.setFilter(Level.OFF);
+    // Log.setFilter(Level.OFF);
 
     if (Robot.isReal()) {
 

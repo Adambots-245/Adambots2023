@@ -29,11 +29,7 @@ public class VisionHelpers {
     }
 
     public static double getDetectedResult() {
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tclass").getInteger(0);
-    }
-
-    public static double getPose2d() {
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tclass").getInteger(0);
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tid").getInteger(0);
     }
 
     public static Field2d getAprilTagField2d() {

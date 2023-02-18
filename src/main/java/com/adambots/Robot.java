@@ -9,6 +9,7 @@ package com.adambots;
 
 import java.util.logging.Level;
 
+import com.adambots.Vision.ReflectivePipeline;
 import com.adambots.Constants.PreferencesConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
@@ -53,14 +54,13 @@ public class Robot extends TimedRobot {
       // Vision System calculates the angle to the target and posts it to the NetworkTable
       
       // Uncomment to start Vision Processing
-      // vision = new VisionProcessorSubsystem(RobotMap.RingLight, new HubGripPipeline());
       // visionThread = vision.getVisionThread();
       // visionThread.setDaemon(true);
       // visionThread.start();
      
       // Camera Feed Only - No Image Processing
-      // visionThread = new CameraSubsystem(RobotMap.RingLight).getVisionThread();
-      // visionThread.start();
+       visionThread = new VisionProcessingSubsystem(RobotMap.RingLight, new ReflectivePipeline()).getVisionThread();
+       visionThread.start();
     }
 
     // RobotMap.YellowLight.set(true);

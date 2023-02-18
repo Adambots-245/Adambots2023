@@ -17,22 +17,26 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 public class Functions {
-    public static SwerveControllerCommand CreateTrajectoryCommand (DrivetrainSubsystem drivetrainSubsystem, String filepath) {
-        Trajectory exampleTrajectory = new Trajectory();
+    public static Trajectory getTrajectory (String filepath) {
+        Trajectory trajectory = new Trajectory();
 
         try {
-        Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filepath);
-        exampleTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(filepath);
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
         } catch (IOException ex) {
-        DriverStation.reportError("Unable to open trajectory: " + filepath, ex.getStackTrace());
+            DriverStation.reportError("Unable to open trajectory: " + filepath, ex.getStackTrace());
         }
 
+        return trajectory;
+    }
+
+    public static SwerveControllerCommand CreateSwerveControllerCommand (DrivetrainSubsystem drivetrainSubsystem, Trajectory trajectory) {
         var thetaController = new ProfiledPIDController(
             AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController, AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            exampleTrajectory,
+            trajectory,
             drivetrainSubsystem::getPose, // Functional interface to feed supplier
             DriveConstants.kDriveKinematics,
 
@@ -45,7 +49,7 @@ public class Functions {
 
         // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
         // The field image for 2023 is in utils folder
-        Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
+        Constants.DriveConstants.field.getObject("traj").setTrajectory(trajectory);
         
         return swerveControllerCommand;
     }

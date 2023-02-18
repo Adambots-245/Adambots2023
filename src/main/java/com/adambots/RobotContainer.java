@@ -21,6 +21,7 @@ import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
+import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
 import com.adambots.utils.VisionHelpers;
 
@@ -193,18 +194,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
-    RobotMap.GyroSensor.reset();
     // if (autoChooser.getSelected() != null)
     // Log.info("Chosen Auton Command: ", autoChooser.getSelected().toString());
     // else
     // Log.info("Chosen Auton Command: None");
 
     // return autoChooser.getSelected();
-
-    // return new LowerIntakeArmCommand(intakeSubsystem)
-    // .andThen(new WaitCommand(4))
-    // .andThen(new TurnToAngleFromCameraCommand(driveTrainSubsystem))
 
     /*
     // Create config for trajectory
@@ -226,42 +221,27 @@ public class RobotContainer {
     */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    String trajectoryJSON = "Testing.wpilib.json";
-    Trajectory exampleTrajectory = new Trajectory();
+    RobotMap.GyroSensor.reset();
 
-    try {
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-      exampleTrajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-    } catch (IOException ex) {
-      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-    }
+    Trajectory traj1 = Functions.getTrajectory("TopConeCubeCharge1.wpilib.json");
+    SwerveControllerCommand command1 = Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1);
 
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    Trajectory traj2 = Functions.getTrajectory("TopConeCubeCharge2.wpilib.json");
+    SwerveControllerCommand command2 = Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj2);
 
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        drivetrainSubsystem::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, AutoConstants.kDXController),
-        new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController),        
-        thetaController,
-        drivetrainSubsystem::setModuleStates,
-        drivetrainSubsystem);
-
-    // Reset odometry to the starting pose of the trajectory.
-    drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
     // The field image for 2023 is in utils folder
-    Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    // return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
-    TestDriveToAprilTagCommand jeff = new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
-    return jeff;
+    drivetrainSubsystem.resetOdometry(traj1.getInitialPose());
+    Constants.DriveConstants.field.getObject("traj").setTrajectory(traj1);
+
+    return command1
+    .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
+    .andThen(command2)
+    .andThen(() -> drivetrainSubsystem.stop());
+
+    // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
   }
 }

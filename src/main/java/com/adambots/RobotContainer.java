@@ -169,7 +169,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
     SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
     SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
-    // SmartDashboard.putNumber("Curve:" , Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
     SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
     SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }
@@ -261,8 +260,8 @@ public class RobotContainer {
     Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    // return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
-    DriveToAprilTagCommand jeff = new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
-    return jeff;
+    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
+    // DriveToAprilTagCommand jeff = new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
+    // return jeff;
   }
 }

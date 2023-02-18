@@ -325,22 +325,22 @@ public final class Constants {
         public static final double groundSecondExtenderValue = 0;
 
         // cube
-        public static final double midCubeLifterValue = 135.4;
+        public static final double midCubeLifterValue = 155.9;
         public static final double midCubeFirstExtenderValue = 38.56 * armEncoderCPR;
         public static final double midCubeSecondExtenderValue = 0;
 
-        public static final double highCubeLifterValue = 143;
+        public static final double highCubeLifterValue = 161;
         public static final double highCubeFirstExtenderValue = 60.25 * armEncoderCPR;
-        public static final double highCubeSecondExtenderValue = 3;
+        public static final double highCubeSecondExtenderValue = 57 * armEncoderCPR;
         
         // cone
         public static final double midConeLifterValue = 155.9;
         public static final double midConeFirstExtenderValue = 60.25 * armEncoderCPR;
         public static final double midConeSecondExtenderValue = 0;
 
-        public static final double highConeLifterValue = 155.9;
+        public static final double highConeLifterValue = 166;
         public static final double highConeFirstExtenderValue = 60.25 * armEncoderCPR;
-        public static final double highConeSecondExtenderValue = 3.5;
+        public static final double highConeSecondExtenderValue = 57 * armEncoderCPR;
 
         // public static class State{
         //     double armLiftTarget;
@@ -385,12 +385,12 @@ public final class Constants {
         public static final double highZoneLifterValue = 1;
         public static final double highZoneExtenderValue = 1;
 
-        public static final double lifterSpeed = 0.15;
-        public static final double extenderSpeed = 0.25;
+        public static final double lifterSpeed = 0.35;
+        public static final double extenderSpeed = 0.35;
         public static final double armStopSpeed = 0;
         public static final double extenderStopSpeed = 0;
         
-        public static double kArmKp = 0.04;
+        public static double kArmKp = 0.032;
         public static double kAngleTolerance = 2;
 
     }

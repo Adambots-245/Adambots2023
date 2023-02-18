@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -67,7 +68,7 @@ public class GrabbySubsystem extends SubsystemBase {
   public Position highConePosition = new Position("High-Cone", GrabbyConstants.highConeLifterValue,
       GrabbyConstants.highConeFirstExtenderValue, GrabbyConstants.highConeSecondExtenderValue, false);
 
-  private Position currentPosition = homePosition;
+  private Position currentPosition = null;
   private Position targetPosition = null;
 
   private double armSpeed = GrabbyConstants.armStopSpeed;
@@ -92,7 +93,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
     setNeutralMode(NeutralMode.Brake);
 
-    this.currentPosition = homePosition;
+    // this.currentPosition = homePosition;
     armDiagram = new ArmMechanism(armRotationEncoder.getAbsolutePosition());
 
   }
@@ -140,10 +141,12 @@ public class GrabbySubsystem extends SubsystemBase {
   }
 
   public void armUp() {
+    currentPosition = null;
     armSpeed = -GrabbyConstants.lifterSpeed;
   }
 
   public void armDown() {
+    currentPosition = null;
     armSpeed = GrabbyConstants.lifterSpeed;
   }
 
@@ -192,6 +195,8 @@ public class GrabbySubsystem extends SubsystemBase {
     SmartDashboard.putNumber("First Stage Encoder", firstArmExtender.getSelectedSensorPosition());
     SmartDashboard.putNumber("Second Stage Encoder", secondArmExtender.getSelectedSensorPosition());
     SmartDashboard.putNumber("Cancoder", armRotationEncoder.getAbsolutePosition());
+    SmartDashboard.putBoolean("First Extender PhotoEye", firstExtenderPhotoEye.isDetecting());
+    SmartDashboard.putBoolean("Second Extender PhotoEye", secondExtenderPhotoEye.isDetecting());
 
     // currentPosition = getCurrentPosition();
     if (targetPosition != null) {
@@ -200,13 +205,16 @@ public class GrabbySubsystem extends SubsystemBase {
 
     // Routine for hold position - once it is set to a position and it backdrives, bring it back to position
     if (currentPosition != null){
-      double error = targetPosition.armAngleLimit - armRotationEncoder.getAbsolutePosition();
+      double error = currentPosition.armAngleLimit - armRotationEncoder.getAbsolutePosition();
       double kP = GrabbyConstants.kArmKp; 
 
-      double output = kP * error; 
-      if (Math.abs(error) > GrabbyConstants.kAngleTolerance){ 
-        armSpeed = output;
-      }
+      double output = kP * error;
+      SmartDashboard.putNumber("Error:", error); 
+      // if (Math.abs(error) > GrabbyConstants.kAngleTolerance){
+      var clampOutput = MathUtil.clamp(Math.abs(output), 0.04, 0.11) * Math.signum(output); 
+      SmartDashboard.putNumber("Output:", -clampOutput); 
+      armSpeed = -clampOutput;
+      // }
     }
 
     failsafe();

@@ -22,6 +22,7 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -47,6 +48,8 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   private final static Field2d aprilTagField = new Field2d();
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   private NetworkTableEntry tx = table.getEntry("botpose");
+  private MedianFilter Filter;
+  private MedianFilter hubMinYFilter;
   // private LimelightHelpers limelightHelper = new LimelightHelpers();
 
 

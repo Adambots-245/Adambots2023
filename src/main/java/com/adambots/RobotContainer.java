@@ -216,7 +216,7 @@ public class RobotContainer {
     */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    String trajectoryJSON = "Test2.wpilib.json";
+    String trajectoryJSON = "Testing.wpilib.json";
     Trajectory exampleTrajectory = new Trajectory();
 
     try {
@@ -227,7 +227,7 @@ public class RobotContainer {
     }
 
     var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+        AutoConstants.kPThetaController, 0, 0.05, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
@@ -236,8 +236,10 @@ public class RobotContainer {
         DriveConstants.kDriveKinematics,
 
         // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
+        // new PIDController(AutoConstants.kPXController, 0, 0.3),
+        // new PIDController(AutoConstants.kPYController, 0, 0.3),        
+        new PIDController(2.7, 0, 0.12),
+        new PIDController(2.7, 0, 0.12),
         thetaController,
         drivetrainSubsystem::setModuleStates,
         drivetrainSubsystem);

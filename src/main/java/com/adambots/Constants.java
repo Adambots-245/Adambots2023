@@ -107,7 +107,7 @@ public final class Constants {
         public static final double kDriveEncoderDistancePerPulse =
                 // Assumes the encoders are directly mounted on the wheel shafts
                 (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
-        public static final double kDriveEncoderScale = 0.04957;
+        public static final double kDriveEncoderScale = 0.0470915;
  
 
         public static final double kTurningEncoderDistancePerPulse =
@@ -129,7 +129,11 @@ public final class Constants {
 
         public static final double kPXController = 2.7; // P 0 0 values for auton X, Y, and Theta controllers
         public static final double kPYController = 2.7;
-        public static final double kPThetaController = 0.4;
+        public static final double kDXController = 0.12; // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kDYController = 0.12;
+        public static final double kPThetaController = 0.53;
+        public static final double kDThetaController = 0.05;
+
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

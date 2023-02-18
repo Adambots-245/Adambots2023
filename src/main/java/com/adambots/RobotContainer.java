@@ -17,11 +17,13 @@ import java.nio.file.Path;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Gamepad.Buttons;
-import com.adambots.commands.AutoBalanceCommand;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
+import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
+import com.adambots.utils.VisionHelpers;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -164,6 +166,9 @@ public class RobotContainer {
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
     SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
+    SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
+    SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
+    SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
     // SmartDashboard.putNumber("Curve:" , Buttons.applyCurve(Buttons.forwardSupplier.getAsDouble(), curve));
     SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
     SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
@@ -233,7 +238,7 @@ public class RobotContainer {
     }
 
     var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0.05, AutoConstants.kThetaControllerConstraints);
+        AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController, AutoConstants.kThetaControllerConstraints);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
@@ -242,10 +247,8 @@ public class RobotContainer {
         DriveConstants.kDriveKinematics,
 
         // Position controllers
-        // new PIDController(AutoConstants.kPXController, 0, 0.3),
-        // new PIDController(AutoConstants.kPYController, 0, 0.3),        
-        new PIDController(2.7, 0, 0.12),
-        new PIDController(2.7, 0, 0.12),
+        new PIDController(AutoConstants.kPXController, 0, AutoConstants.kDXController),
+        new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController),        
         thetaController,
         drivetrainSubsystem::setModuleStates,
         drivetrainSubsystem);
@@ -258,6 +261,8 @@ public class RobotContainer {
     Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
+    // return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
+    DriveToAprilTagCommand jeff = new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
+    return jeff;
   }
 }

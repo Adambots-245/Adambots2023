@@ -141,8 +141,8 @@ public class Buttons {
         }
 
         // An example curve that would be default input {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1};
-        static double[] forwardCurve = {0, 0, 0.1, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1}; //Linear curve just scaled back for a smoother low end control with deadening
-        static double[] sidewaysCurve = {0, 0.0, 0.1, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1};
+        static double[] forwardCurve = {0, 0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1}; //Linear curve just scaled back for a smoother low end control with deadening
+        static double[] sidewaysCurve = {0, 0.0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1};
         static double[] rotateCurve = {0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1}; //0-0.4 is left as 0's to make up for lack of deaden (can change later)
 
         // Sigmoid Curve

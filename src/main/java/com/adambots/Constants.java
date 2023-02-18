@@ -131,9 +131,9 @@ public final class Constants {
 
         public static final double kPXController = 2.7; // P 0 0 values for auton X, Y, and Theta controllers
         public static final double kPYController = 2.7;
-        public static final double kDXController = 0.12; // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kDYController = 0.12;
-        public static final double kPThetaController = 0.53;
+        public static final double kDXController = 0.11; // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kDYController = 0.11;
+        public static final double kPThetaController = 0.8;
         public static final double kDThetaController = 0.05;
 
 

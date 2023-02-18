@@ -260,8 +260,8 @@ public class RobotContainer {
     Constants.DriveConstants.field.getObject("traj").setTrajectory(exampleTrajectory);
     
     // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
-    // DriveToAprilTagCommand jeff = new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
-    // return jeff;
+    // return swerveControllerCommand.andThen(() -> drivetrainSubsystem.stop());
+    TestDriveToAprilTagCommand jeff = new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
+    return jeff;
   }
 }

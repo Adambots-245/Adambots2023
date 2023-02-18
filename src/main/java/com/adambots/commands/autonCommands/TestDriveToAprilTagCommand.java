@@ -81,11 +81,11 @@ public class TestDriveToAprilTagCommand extends CommandBase {
 
     var dist = Math.sqrt(dX*dX + dY*dY);
 
-    var forwardCommand = Math.min(xController.calculate(dist), 0.1);
-    var sidewaysCommand = Math.min(yController.calculate(dY), 0.1);
+    var forwardCommand = Math.max(Math.min(xController.calculate(dist), 0.06), -0.06);
+    var sidewaysCommand = Math.max(Math.min(yController.calculate(dY), 0.06), -0.06);
     var thetaCommand = thetaController.calculate(robotPos.getRotation().getDegrees());
 
-    driveTrainSubsystem.drive(forwardCommand, sidewaysCommand, thetaCommand, false);
+    driveTrainSubsystem.drive(-forwardCommand, -sidewaysCommand, Math.max(Math.min(thetaCommand, 0.1), -0.1), false);
   }
 
   // Called once the command ends or is interrupted.

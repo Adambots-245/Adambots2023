@@ -12,22 +12,14 @@ import java.util.Map;
 
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
-import com.adambots.sensors.ColorSensor;
 import com.adambots.sensors.Gyro;
-import com.adambots.sensors.Lidar;
 import com.adambots.sensors.PhotoEye;
 import com.adambots.subsystems.SwerveModule;
-import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 
-import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -77,6 +69,31 @@ public class RobotMap {
         public static final int kRearLeftDriveMotorPort = 12; // 16;
         public static final int kFrontLeftTurningMotorPort = 15; // 17;
         public static final int kFrontLeftDriveMotorPort = 17; // 18;
+
+        // Arm and Grabby ports
+        public static final int armLiftPort = 22;
+        public static final int firstArmExtenderPort = 21;
+        public static final int secondArmExtenderPort = 13;
+        public static final int grabbyPort = 0;
+        public static final int ungrabbyPort = 1;
+        // public static final int rightGrabbyPort = 0;
+        public static final int leftArmLimitPort = 1;
+        public static final int rightArmLimitPort = 0;
+        public static final int armRotationEncoderPort = 6;
+
+        // Arm and Grabby Devices
+        public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
+        // public static final Solenoid rightGrabby = new Solenoida (PneumaticsModuleType.CTREPCM, rightGrabbyPort);
+        
+        public static final WPI_TalonFX firstArmExtender = new WPI_TalonFX(firstArmExtenderPort);
+        public static final WPI_TalonFX secondArmExtender = new WPI_TalonFX(secondArmExtenderPort);
+        public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
+
+        public static final WPI_CANCoder armRotationEncoder = new WPI_CANCoder(armRotationEncoderPort);        
+        public static final PhotoEye firstExtenderPhotoEye = new PhotoEye(leftArmLimitPort);
+        public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
+
+
 
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;

@@ -7,14 +7,19 @@
 
 package com.adambots;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import com.adambots.utils.ModuleMap;
 
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -32,6 +37,8 @@ public final class Constants {
     public static ShuffleboardTab debugTab;
 
     public static final class DriveConstants {
+        public static Field2d field = new Field2d();
+
         public static final boolean kFrontLeftTurningEncoderReversed = true; // false
         public static final boolean kRearLeftTurningEncoderReversed = false;
         public static final boolean kFrontRightTurningEncoderReversed = true; // false
@@ -127,6 +134,57 @@ public final class Constants {
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+
+        public static final Map<Integer, Pose3d> aprilTags =
+        Map.of(
+          1,
+          new Pose3d(
+              Units.inchesToMeters(610.77),
+              Units.inchesToMeters(42.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          2,
+          new Pose3d(
+              Units.inchesToMeters(610.77),
+              Units.inchesToMeters(108.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          3,
+          new Pose3d(
+              Units.inchesToMeters(610.77),
+              Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
+              Units.inchesToMeters(18.22),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          4,
+          new Pose3d(
+              Units.inchesToMeters(636.96),
+              Units.inchesToMeters(265.74),
+              Units.inchesToMeters(27.38),
+              new Rotation3d(0.0, 0.0, Math.PI)),
+          5,
+          new Pose3d(
+              Units.inchesToMeters(14.25),
+              Units.inchesToMeters(265.74),
+              Units.inchesToMeters(27.38),
+              new Rotation3d()),
+          6,
+          new Pose3d(
+              Units.inchesToMeters(40.45),
+              Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
+              Units.inchesToMeters(18.22),
+              new Rotation3d()),
+          7,
+          new Pose3d(
+              Units.inchesToMeters(40.45),
+              Units.inchesToMeters(108.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d()),
+          8,
+          new Pose3d(
+              Units.inchesToMeters(40.45),
+              Units.inchesToMeters(42.19),
+              Units.inchesToMeters(18.22),
+              new Rotation3d()));
     }
 
     public static final class VisionConstants {
@@ -156,6 +214,8 @@ public final class Constants {
         public static final String kPYControllerKey = "kPYControllerKey";
         public static final String kPThetaController = "kPThetaController"; 
     }
+
+    
 
     public static final class GamepadConstants {
         
@@ -249,5 +309,87 @@ public final class Constants {
         public static final int kDpadWAngle = 270;
         public static final int kDpadNWAngle = 315;
     }
+
+    public static final class GrabbyConstants {
+
+        public static final int armEncoderCPR = 2048;
+        public static final int mech2dAdjustment = +45;
+        
+        // misc.
+        public static final double initiaLifterValue = 212;
+        public static final double initialFirstExtenderValue = 0;
+        public static final double initialSecondExtenderValue = 0;
+
+        public static final double groundLifterValue = 94;
+        public static final double groundFirstExtenderValue = 0;
+        public static final double groundSecondExtenderValue = 0;
+
+        // cube
+        public static final double midCubeLifterValue = 135.4;
+        public static final double midCubeFirstExtenderValue = 38.56 * armEncoderCPR;
+        public static final double midCubeSecondExtenderValue = 0;
+
+        public static final double highCubeLifterValue = 143;
+        public static final double highCubeFirstExtenderValue = 60.25 * armEncoderCPR;
+        public static final double highCubeSecondExtenderValue = 3;
+        
+        // cone
+        public static final double midConeLifterValue = 155.9;
+        public static final double midConeFirstExtenderValue = 60.25 * armEncoderCPR;
+        public static final double midConeSecondExtenderValue = 0;
+
+        public static final double highConeLifterValue = 155.9;
+        public static final double highConeFirstExtenderValue = 60.25 * armEncoderCPR;
+        public static final double highConeSecondExtenderValue = 3.5;
+
+        public static class State{
+            double armLiftTarget;
+            double firstExtendTarget;
+            double secondExtendTarget;
+            public State(double armLiftTarget, double firstExtendTarget, double secondExtendTarget){
+                this.armLiftTarget = armLiftTarget;
+                this.firstExtendTarget = firstExtendTarget;
+                this.secondExtendTarget = secondExtendTarget;
+            }
+
+            public double getArmLiftTarget(){
+                return armLiftTarget;
+            }
+
+            public double getFirstExtendTarget(){
+                return firstExtendTarget;
+            }
+
+            public double getSecondExtendTarget(){
+                return secondExtendTarget;
+            }
+        }
+
+        public static final State initState = new State(initiaLifterValue, initialFirstExtenderValue, initialSecondExtenderValue);
+        public static final State groundState = new State(groundLifterValue, groundFirstExtenderValue, groundSecondExtenderValue);
+        public static final State midCubeState = new State(midCubeLifterValue, midCubeFirstExtenderValue, midCubeSecondExtenderValue);
+        public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
+        public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
+        public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
+
+
+        //general
+        public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR;
+        public static final double secondExtenderMaxExtend = 59.5 * armEncoderCPR;
+        public static final double rotationPerInch = 1;
+
+        // antiquated
+        public static final double midZoneLifterValue = 0.5;
+        public static final double midZoneExtenderValue = 0.5;
+
+        public static final double highZoneLifterValue = 1;
+        public static final double highZoneExtenderValue = 1;
+
+        public static final double lifterSpeed = 0.15;
+        public static final double extenderSpeed = 0.25;
+        public static final double armStopSpeed = 0.04;
+    }
+
+
     
 }

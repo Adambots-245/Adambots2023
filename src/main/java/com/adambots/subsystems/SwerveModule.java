@@ -90,6 +90,13 @@ public class SwerveModule {
     m_driveMotor.setIdleMode(IdleMode.kBrake);
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
+    //TODO: Enable this and test
+    // m_driveMotor.setSmartCurrentLimit(40);
+    // m_turningMotor.setSmartCurrentLimit(25);
+    // m_driveMotor.enableVoltageCompensation(12.6);
+    // m_turningMotor.enableVoltageCompensation(12.6);
+    // m_turningMotor.setOpenLoopRampRate(0.1);
+
     m_absoluteEncoder = new WPI_CANCoder(turningEncoderChannel);
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = m_turningMotor.getEncoder();
@@ -143,7 +150,7 @@ public class SwerveModule {
     double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());//ModuleConstants.kTurningEncoderDistancePerPulse;
     
     // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
-    SmartDashboard.putNumber("Turningdistance " + m_position.name(), m_turningEncoder.getPosition());
+    // SmartDashboard.putNumber("Turningdistance " + m_position.name(), m_turningEncoder.getPosition());
 
     return new SwerveModulePosition(
         distance, new Rotation2d(turningDistance));

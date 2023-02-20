@@ -28,9 +28,9 @@ public class SetArmHighConeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new ArmLifterHighConeCommand(grabbyLifterSubsystem);
-    new FirstExtenderHighConeCommand(firstExtenderSubsystem);
-    new SecondExtenderHighConeCommand(secondExtenderSubsystem);
+    new ArmLifterHighConeCommand(grabbyLifterSubsystem).schedule();
+    new FirstExtenderHighConeCommand(firstExtenderSubsystem).schedule();
+    new SecondExtenderHighConeCommand(secondExtenderSubsystem).schedule();
   }
 
   // Called once the command ends or is interrupted.

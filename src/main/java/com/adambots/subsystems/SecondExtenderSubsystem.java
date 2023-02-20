@@ -9,7 +9,9 @@ import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SecondExtenderSubsystem extends SubsystemBase {
@@ -23,6 +25,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
   public SecondExtenderSubsystem(TalonFX secondExtender, PhotoEye photoEye) {
     this.secondExtender = secondExtender;
+    secondExtender.setInverted(true);
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.secondExtenderP, Constants.GrabbyConstants.secondExtenderI, Constants.GrabbyConstants.secondExtenderD);
   }
@@ -43,11 +46,11 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   public void manualOut(){
-    targetPosition = secondExtender.getSelectedSensorPosition() + 2;
+    targetPosition = secondExtender.getSelectedSensorPosition() + 2000;
   }
 
   public void manualIn(){
-    targetPosition = secondExtender.getSelectedSensorPosition() - 2;
+    targetPosition = secondExtender.getSelectedSensorPosition() - 2000;
   }
 
   public void stopExtending(){
@@ -56,8 +59,11 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition());
     
     if(targetPosition > 0){
+      secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
     }else if(!photoEye.isDetecting()){
       secondExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
@@ -66,6 +72,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     failsafes();
     secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
 
+    SmartDashboard.putNumber("Second Extender Speed", secondExtenderSpeed);
   }
 
   private void failsafes() {

@@ -28,9 +28,9 @@ public class SetArmMidConeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new ArmLifterMidConeCommand(grabbyLifterSubsystem);
-    new FirstExtenderMidConeCommand(firstExtenderSubsystem);
-    new SecondExtenderMidConeCommand(secondExtenderSubsystem);
+    new ArmLifterMidConeCommand(grabbyLifterSubsystem).schedule();
+    new FirstExtenderMidConeCommand(firstExtenderSubsystem).schedule();
+    new SecondExtenderMidConeCommand(secondExtenderSubsystem).schedule();
   }
 
   // Called once the command ends or is interrupted.

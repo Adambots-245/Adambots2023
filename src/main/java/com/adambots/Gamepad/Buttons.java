@@ -173,6 +173,7 @@ public class Buttons {
         public static DoubleSupplier forwardSupplier = () -> isJoystickConnected.getAsBoolean()
                         // ? deaden(ex3dPro.getY(), GamepadConstants.kDeadZone)
                         ? applyCurve(ex3dPro.getY(), forwardCurve) //CHANGE BACK IF IT DOESNT WORK
+                        // ? deaden(smoothInput(ex3dPro.getY()), GamepadConstants.kDeadZone)
                         : deaden(primaryJoystick.getLeftY(), GamepadConstants.kDeadZone);
 
         /**
@@ -181,6 +182,7 @@ public class Buttons {
         public static DoubleSupplier sidewaysSupplier = () -> isJoystickConnected.getAsBoolean()
                         // ? deaden(ex3dPro.getX(), GamepadConstants.kDeadZone)
                         ? applyCurve(ex3dPro.getX(), sidewaysCurve) //CHANGE BACK IF IT DOESNT WORK
+                        // ? deaden(smoothInput(ex3dPro.getX()), GamepadConstants.kDeadZone)
                         : deaden(primaryJoystick.getLeftX(), GamepadConstants.kDeadZone);
 
         /**
@@ -189,5 +191,6 @@ public class Buttons {
         public static DoubleSupplier rotateSupplier = () -> isJoystickConnected.getAsBoolean()
                         // ? deaden(ex3dPro.getZ(), 0.4)
                         ? applyCurve(ex3dPro.getZ(), rotateCurve) //CHANGE BACK IF IT DOESNT WORK
+                        // ? deaden(smoothInput(ex3dPro.getZ()), 0.4)
                         : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
 }

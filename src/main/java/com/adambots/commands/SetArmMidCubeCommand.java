@@ -28,9 +28,9 @@ public class SetArmMidCubeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new ArmLifterMidCubeCommand(grabbyLifterSubsystem);
-    new FirstExtenderMidCubeCommand(firstExtenderSubsystem);
-    new SecondExtenderMidCubeCommand(secondExtenderSubsystem);
+    new ArmLifterMidCubeCommand(grabbyLifterSubsystem).schedule();
+    new FirstExtenderMidCubeCommand(firstExtenderSubsystem).schedule();
+    new SecondExtenderMidCubeCommand(secondExtenderSubsystem).schedule();
   }
 
   // Called once the command ends or is interrupted.

@@ -28,9 +28,9 @@ public class SetArmGroundCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new ArmLifterGroundCommand(grabbyLifterSubsystem);
-    new FirstExtenderGroundCommand(firstExtenderSubsystem);
-    new SecondExtenderGroundCommand(secondExtenderSubsystem);
+    new ArmLifterGroundCommand(grabbyLifterSubsystem).schedule();
+    new FirstExtenderGroundCommand(firstExtenderSubsystem).schedule();
+    new SecondExtenderGroundCommand(secondExtenderSubsystem).schedule();
   }
 
   // Called once the command ends or is interrupted.

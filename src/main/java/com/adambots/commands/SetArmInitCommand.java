@@ -28,9 +28,9 @@ public class SetArmInitCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new ArmLifterInitCommand(grabbyLifterSubsystem);
-    new FirstExtenderInitCommand(firstExtenderSubsystem);
-    new SecondExtenderInitCommand(secondExtenderSubsystem);
+    new ArmLifterInitCommand(grabbyLifterSubsystem).schedule();
+    new FirstExtenderInitCommand(firstExtenderSubsystem).schedule();
+    new SecondExtenderInitCommand(secondExtenderSubsystem).schedule();
   }
 
   // Called once the command ends or is interrupted.

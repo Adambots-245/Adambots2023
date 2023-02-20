@@ -42,6 +42,18 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     pid.reset();
   }
 
+  public void manualOut(){
+    targetPosition = firstExtender.getSelectedSensorPosition() + 2;
+  }
+
+  public void manualIn(){
+    targetPosition = firstExtender.getSelectedSensorPosition() - 2;
+  }
+
+  public void stopExtending(){
+    targetPosition = firstExtender.getSelectedSensorPosition();
+  }
+
   @Override
   public void periodic() {
 

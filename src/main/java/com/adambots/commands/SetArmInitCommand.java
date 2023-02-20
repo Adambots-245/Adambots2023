@@ -5,17 +5,20 @@
 package com.adambots.commands;
 
 
-import com.adambots.subsystems.GrabbySubsystem;
+import com.adambots.subsystems.FirstExtenderSubsystem;
+import com.adambots.subsystems.GrabbyLifterSubsystem;
+import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SetArmInitCommand extends CommandBase {
-  /** Creates a new setArmMidCubeCommand. */
-  GrabbySubsystem grabbySubsystem;
-  public SetArmInitCommand(GrabbySubsystem armAndGrabbySubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.grabbySubsystem = armAndGrabbySubsystem;
-    addRequirements(armAndGrabbySubsystem);
+  GrabbyLifterSubsystem grabbyLifterSubsystem;
+  FirstExtenderSubsystem firstExtenderSubsystem;
+  SecondExtenderSubsystem secondExtenderSubsystem;
+  public SetArmInitCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem) {
+    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
+    this.firstExtenderSubsystem = firstExtenderSubsystem;
+    this.secondExtenderSubsystem = secondExtenderSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +28,9 @@ public class SetArmInitCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbySubsystem.setPosition(grabbySubsystem.homePosition);
+    new ArmLifterInitCommand(grabbyLifterSubsystem);
+    new FirstExtenderInitCommand(firstExtenderSubsystem);
+    new SecondExtenderInitCommand(secondExtenderSubsystem);
   }
 
   // Called once the command ends or is interrupted.

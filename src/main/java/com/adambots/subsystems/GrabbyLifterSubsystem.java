@@ -42,6 +42,18 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     pid.reset();
   }
 
+  public void manualUp(){
+    targetPosition = armLifterEncoder.getAbsolutePosition() + 2;
+  }
+
+  public void manualDown(){
+    targetPosition = armLifterEncoder.getAbsolutePosition() - 2;
+  }
+
+  public void stopLifting(){
+    targetPosition = armLifterEncoder.getAbsolutePosition();
+  }
+
   @Override
   public void periodic() {
     
@@ -52,11 +64,11 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
   }
 
   private void failsafes() {
-    if(armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundState.getArmLiftTarget() && armLifterSpeed > 0){
+    if(armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundState.getArmLiftTarget() && armLifterSpeed < 0){
       armLifterSpeed = 0;
     }
 
-    if(armLifterEncoder.getAbsolutePosition() >= Constants.GrabbyConstants.initState.getArmLiftTarget() && armLifterSpeed < 0){
+    if(armLifterEncoder.getAbsolutePosition() >= Constants.GrabbyConstants.initState.getArmLiftTarget() && armLifterSpeed > 0){
       armLifterSpeed = 0;
     }
   }

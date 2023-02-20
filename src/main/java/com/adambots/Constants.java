@@ -213,6 +213,7 @@ public final class Constants {
         public static final double HOR_DEGREES_PER_PIXEL = (double) HOR_FOV_DEGREES / IMG_WIDTH;
 
         public static final double kCameraFieldOfView = 68.5;
+        public static final String Limelight1 = "limelight";
 
     }
 

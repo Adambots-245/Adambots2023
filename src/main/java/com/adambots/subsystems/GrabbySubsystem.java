@@ -152,14 +152,17 @@ public class GrabbySubsystem extends SubsystemBase {
 
   public void armUp() {
     armSpeed = -GrabbyConstants.lifterSpeed;
+    // armPIDController.reset();
   }
 
   public void armDown() {
     armSpeed = GrabbyConstants.lifterSpeed;
+    // armPIDController.reset();
   }
 
   public void stopArm(){
     armSpeed = Math.signum(armSpeed) * GrabbyConstants.armStopSpeed;
+    // armPIDController.reset();
   }
 
   public void openGrabby() {
@@ -182,6 +185,7 @@ public class GrabbySubsystem extends SubsystemBase {
 
   public void stopFirstStage(){
     firstStageExtenderSpeed = 0;
+    armPIDController.reset();
   }
 
   public void extendSecondStage() {
@@ -199,10 +203,6 @@ public class GrabbySubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    MathUtil.clamp(armPIDController.calculate(armRotationEncoder.getAbsolutePosition(), targetPosition.armAngleLimit), -Constants.GrabbyConstants.lifterSpeed, Constants.GrabbyConstants.lifterSpeed);
-    armLifter.set(ControlMode.PercentOutput, armPIDController.calculate(armRotationEncoder.getAbsolutePosition(), targetPosition.armAngleLimit));
-    armPIDController.setTolerance(1, 0);
-
     setNeutralMode(NeutralMode.Brake);
 
     SmartDashboard.putNumber("First Stage Encoder", firstArmExtender.getSelectedSensorPosition());
@@ -210,9 +210,15 @@ public class GrabbySubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Cancoder", armRotationEncoder.getAbsolutePosition());
 
     // currentPosition = getCurrentPosition();
+    try {
     if (targetPosition != null) {
       checkPosition();
+
+      MathUtil.clamp(armPIDController.calculate(armRotationEncoder.getAbsolutePosition(), targetPosition.armAngleLimit), -Constants.GrabbyConstants.lifterSpeed, Constants.GrabbyConstants.lifterSpeed);
+      armLifter.set(ControlMode.PercentOutput, armPIDController.calculate(armRotationEncoder.getAbsolutePosition(), targetPosition.armAngleLimit));
+      armPIDController.setTolerance(1, 0);
     }
+  } catch (NullPointerException e) {  }
 
     reachedLowerLimit = false;
     reachedUpperLimit = false;

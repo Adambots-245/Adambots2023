@@ -333,7 +333,7 @@ public final class Constants {
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
-        public static final double groundLifterValue = 94;
+        public static final double groundLifterValue = 89;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
@@ -398,7 +398,7 @@ public final class Constants {
         public static final double highZoneLifterValue = 1;
         public static final double highZoneExtenderValue = 1;
 
-        public static final double lifterSpeed = 0.15;
+        public static final double lifterSpeed = 0.25;
         public static final double extenderSpeed = 0.25;
         public static final double armStopSpeed = 0.04;
 

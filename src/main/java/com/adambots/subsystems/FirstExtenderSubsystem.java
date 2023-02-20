@@ -46,11 +46,11 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   public void manualOut(){
-    targetPosition = firstExtender.getSelectedSensorPosition() + 2000;
+    targetPosition = 99999999;
   }
 
   public void manualIn(){
-    targetPosition = firstExtender.getSelectedSensorPosition() - 2000;
+    targetPosition = -99999999;
   }
 
   public void stopExtending(){

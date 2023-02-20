@@ -7,7 +7,6 @@ package com.adambots.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import com.adambots.subsystems.GrabbyLifterSubsystem;
-import com.adambots.subsystems.GrabbySubsystem;
 
 public class LiftArmCommand extends CommandBase {
   /** Creates a new LiftArmCommand. */

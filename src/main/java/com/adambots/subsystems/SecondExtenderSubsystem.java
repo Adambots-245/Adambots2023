@@ -46,11 +46,11 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   public void manualOut(){
-    targetPosition = secondExtender.getSelectedSensorPosition() + 2000;
+    targetPosition = 99999999;
   }
 
   public void manualIn(){
-    targetPosition = secondExtender.getSelectedSensorPosition() - 2000;
+    targetPosition = -99999999;
   }
 
   public void stopExtending(){
@@ -63,8 +63,8 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition());
     
     if(targetPosition > 0){
-      secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
+      secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
     }else if(!photoEye.isDetecting()){
       secondExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
     }
@@ -76,7 +76,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   private void failsafes() {
-    if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.highConeState.getSecondExtendTarget() && secondExtenderSpeed > 0){
+    if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;
     }
 

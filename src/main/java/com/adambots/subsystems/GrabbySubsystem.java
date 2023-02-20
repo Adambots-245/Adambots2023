@@ -4,6 +4,7 @@
 
 package com.adambots.subsystems;
 
+import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.adambots.utils.ArmMechanism;
@@ -17,6 +18,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.*;
 
 public class GrabbySubsystem extends SubsystemBase {
 
@@ -32,6 +35,12 @@ public class GrabbySubsystem extends SubsystemBase {
 
   private boolean reachedUpperLimit = false;
   private boolean reachedLowerLimit = false;
+
+  private double kP = Constants.GrabbyConstants.kPArmLifterController;
+  private double kI = Constants.GrabbyConstants.kIArmLifterController;
+  private double kD = Constants.GrabbyConstants.kDArmLifterController;
+
+  PIDController armPIDController = new PIDController(kP, kI, kD);
 
   public class Position {
     private String name;
@@ -189,6 +198,11 @@ public class GrabbySubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    MathUtil.clamp(armPIDController.calculate(armRotationEncoder.getAbsolutePosition(), targetPosition.armAngleLimit), -Constants.GrabbyConstants.lifterSpeed, Constants.GrabbyConstants.lifterSpeed);
+    armLifter.set(ControlMode.PercentOutput, armPIDController.calculate(armRotationEncoder.getAbsolutePosition(), targetPosition.armAngleLimit));
+    armPIDController.setTolerance(1, 0);
+
     setNeutralMode(NeutralMode.Brake);
 
     SmartDashboard.putNumber("First Stage Encoder", firstArmExtender.getSelectedSensorPosition());
@@ -205,7 +219,7 @@ public class GrabbySubsystem extends SubsystemBase {
     failsafe();
 
     // if (armSpeed != 0)
-    //   System.out.println("ArmSpeed: " + armSpeed);
+      // System.out.println("ArmSpeed: " + armSpeed);
 
     armLifter.set(ControlMode.PercentOutput, armSpeed);
     // System.out.println("AP: " + armRotationEncoder.getAbsolutePosition());

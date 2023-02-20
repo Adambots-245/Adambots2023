@@ -12,7 +12,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class GrabbyLifter extends SubsystemBase {
+public class GrabbyLifterSubsystem extends SubsystemBase {
 
   private final TalonFX armLifter;
   private final WPI_CANCoder armLifterEncoder;
@@ -21,27 +21,31 @@ public class GrabbyLifter extends SubsystemBase {
   private double armLifterSpeed = 0;
   private double targetPosition = Constants.GrabbyConstants.initState.getArmLiftTarget();
 
-  public GrabbyLifter(TalonFX armLifter, WPI_CANCoder armLifterEncoder) {
+  public GrabbyLifterSubsystem(TalonFX armLifter, WPI_CANCoder armLifterEncoder) {
     this.armLifter = armLifter;
     this.armLifterEncoder = armLifterEncoder;
-    this.pid = new PIDController(0, 0, 0);
+    this.pid = new PIDController(Constants.GrabbyConstants.lifterP, Constants.GrabbyConstants.lifterI, Constants.GrabbyConstants.lifterD);
   }
 
-  public void changeTarget(int newTarget){
+  public void changeTarget(double newTarget){
     targetPosition = newTarget;
+    pid.reset();
   }
 
-  public void armFullUp(){
+  public void fullUp(){
     targetPosition = Constants.GrabbyConstants.initState.getArmLiftTarget();
+    pid.reset();
   }
 
-  public void armFullDown(){
+  public void fullDown(){
     targetPosition = Constants.GrabbyConstants.groundState.getArmLiftTarget();
+    pid.reset();
   }
 
   @Override
   public void periodic() {
     
+    armLifterSpeed = pid.calculate(armLifterEncoder.getAbsolutePosition(), targetPosition);
     failsafes();
     armLifter.set(ControlMode.PercentOutput, armLifterSpeed);
 

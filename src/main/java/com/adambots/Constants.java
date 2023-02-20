@@ -386,6 +386,19 @@ public final class Constants {
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
 
 
+        //PID values
+        public static final double lifterP = 0.02;
+        public static final double lifterI = 0.02;
+        public static final double lifterD = 0.02;
+
+        public static final double firstExtenderP = 0.02;
+        public static final double firstExtenderI = 0.02;
+        public static final double firstExtenderD = 0.02;
+
+        public static final double secondExtenderP = 0.02;
+        public static final double secondExtenderI = 0.02;
+        public static final double secondExtenderD = 0.02;
+
         //general
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR;
         public static final double secondExtenderMaxExtend = 59.5 * armEncoderCPR;

@@ -5,14 +5,15 @@
 package com.adambots.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import com.adambots.subsystems.GrabbySubsystem;
+
+import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 public class LiftArmCommand extends CommandBase {
   /** Creates a new LiftArmCommand. */
-  GrabbySubsystem grabbySubystem;
-  public LiftArmCommand(GrabbySubsystem grabbySubystem) {
-    addRequirements(grabbySubystem);
-    this.grabbySubystem = grabbySubystem;
+  GrabbyLifterSubsystem grabbyLifterSubsystem;
+  public LiftArmCommand(GrabbyLifterSubsystem grabbyLifterSubsystem) {
+    addRequirements(grabbyLifterSubsystem);
+    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -22,13 +23,13 @@ public class LiftArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbySubystem.armUp();
+    grabbyLifterSubsystem.manualUp();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    grabbySubystem.stopArm();
+    grabbyLifterSubsystem.stopLifting();
   }
 
   // Returns true when the command should end.

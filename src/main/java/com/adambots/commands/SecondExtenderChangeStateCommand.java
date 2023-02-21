@@ -4,18 +4,21 @@
 
 package com.adambots.commands;
 
-
-import com.adambots.subsystems.GrabbySubsystem;
+import com.adambots.Constants;
+import com.adambots.Constants.GrabbyConstants.State;
+import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetArmInitCommand extends CommandBase {
-  /** Creates a new setArmMidCubeCommand. */
-  GrabbySubsystem grabbySubsystem;
-  public SetArmInitCommand(GrabbySubsystem armAndGrabbySubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.grabbySubsystem = armAndGrabbySubsystem;
-    addRequirements(armAndGrabbySubsystem);
+public class SecondExtenderChangeStateCommand extends CommandBase {
+  
+  SecondExtenderSubsystem secondExtenderSubsystem;
+  State newState;
+
+  public SecondExtenderChangeStateCommand(SecondExtenderSubsystem secondExtenderSubsystem, State newState) {
+    this.secondExtenderSubsystem = secondExtenderSubsystem;
+    this.newState = newState;
+    addRequirements(secondExtenderSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +28,7 @@ public class SetArmInitCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbySubsystem.setPosition(grabbySubsystem.homePosition);
+    secondExtenderSubsystem.changeTarget(newState.getSecondExtendTarget());
   }
 
   // Called once the command ends or is interrupted.

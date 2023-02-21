@@ -330,31 +330,38 @@ public final class Constants {
         public static final int mech2dAdjustment = +45;
         
         // misc.
+        //WORKS
         public static final double initiaLifterValue = 212;
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
+<<<<<<< HEAD
         public static final double groundLifterValue = 89;
+=======
+        //WORKS
+        public static final double groundLifterValue = 84;
+>>>>>>> multipleGrabbySubsystems
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
         // cube
-        public static final double midCubeLifterValue = 135.4;
-        public static final double midCubeFirstExtenderValue = 38.56 * armEncoderCPR;
+        public static final double midCubeLifterValue = 149.7;
+        public static final double midCubeFirstExtenderValue = 32.9 * armEncoderCPR;
         public static final double midCubeSecondExtenderValue = 0;
 
-        public static final double highCubeLifterValue = 143;
-        public static final double highCubeFirstExtenderValue = 60.25 * armEncoderCPR;
-        public static final double highCubeSecondExtenderValue = 3;
+        public static final double highCubeLifterValue = 164.9;
+        public static final double highCubeFirstExtenderValue = 55.7 * armEncoderCPR;
+        public static final double highCubeSecondExtenderValue = 52.9 * armEncoderCPR;
         
         // cone
-        public static final double midConeLifterValue = 155.9;
-        public static final double midConeFirstExtenderValue = 60.25 * armEncoderCPR;
+        //WORKS
+        public static final double midConeLifterValue = 165;
+        public static final double midConeFirstExtenderValue = 43.3 * armEncoderCPR;
         public static final double midConeSecondExtenderValue = 0;
 
-        public static final double highConeLifterValue = 155.9;
-        public static final double highConeFirstExtenderValue = 60.25 * armEncoderCPR;
-        public static final double highConeSecondExtenderValue = 3.5;
+        public static final double highConeLifterValue = 173.6;
+        public static final double highConeFirstExtenderValue = 55.2 * armEncoderCPR;
+        public static final double highConeSecondExtenderValue = 68 * armEncoderCPR;
 
         public static class State{
             double armLiftTarget;
@@ -387,27 +394,25 @@ public final class Constants {
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
 
 
+        //PID values
+        public static final double lifterP = 0.015;
+        public static final double lifterI = 0;
+        public static final double lifterD = 0.0015;
+
+        public static final double firstExtenderP = 0.0001;
+        public static final double firstExtenderI = 0;
+        public static final double firstExtenderD = 0.000001;
+
+        public static final double secondExtenderP = 0.0001;
+        public static final double secondExtenderI = 0;
+        public static final double secondExtenderD = 0.000001;
+
         //general
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR;
-        public static final double secondExtenderMaxExtend = 59.5 * armEncoderCPR;
+        public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
         public static final double rotationPerInch = 1;
-
-        // antiquated
-        public static final double midZoneLifterValue = 0.5;
-        public static final double midZoneExtenderValue = 0.5;
-
-        public static final double highZoneLifterValue = 1;
-        public static final double highZoneExtenderValue = 1;
-
-        public static final double lifterSpeed = 0.25;
-        public static final double extenderSpeed = 0.25;
-        public static final double armStopSpeed = 0.04;
-
-        public static final double kPArmLifterController = 0;
-        public static final double kIArmLifterController = 0;
-        public static final double kDArmLifterController = 0;
-
-
+        public static final double lifterSpeed = 0.4;
+        public static final double extenderSpeed = 0.3;
     }
 
 

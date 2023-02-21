@@ -91,11 +91,11 @@ public class SwerveModule {
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
     //TODO: Enable this and test
-    // m_driveMotor.setSmartCurrentLimit(40);
-    // m_turningMotor.setSmartCurrentLimit(25);
-    // m_driveMotor.enableVoltageCompensation(12.6);
-    // m_turningMotor.enableVoltageCompensation(12.6);
-    // m_turningMotor.setOpenLoopRampRate(0.05);
+    m_driveMotor.setSmartCurrentLimit(40);
+    m_turningMotor.setSmartCurrentLimit(25);
+    m_driveMotor.enableVoltageCompensation(12.6);
+    m_turningMotor.enableVoltageCompensation(12.6);
+    // m_turningMotor.setOpenLoopRampRate(0.1);
 
     m_absoluteEncoder = new WPI_CANCoder(turningEncoderChannel);
     m_driveEncoder = m_driveMotor.getEncoder();

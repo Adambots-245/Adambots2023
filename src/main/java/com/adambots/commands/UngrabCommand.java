@@ -4,18 +4,15 @@
 
 package com.adambots.commands;
 
-
-import com.adambots.subsystems.GrabbySubsystem;
+import com.adambots.subsystems.GrabSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetArmHighConeCommand extends CommandBase {
-  /** Creates a new setArmMidCubeCommand. */
-  GrabbySubsystem grabbySubsystem;
-  public SetArmHighConeCommand(GrabbySubsystem armAndGrabbySubsystem) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.grabbySubsystem = armAndGrabbySubsystem;
-    addRequirements(armAndGrabbySubsystem);
+public class UngrabCommand extends CommandBase {
+    GrabSubsystem grabSubsystem;
+  public UngrabCommand(GrabSubsystem grabSubsystem) {
+    this.grabSubsystem = grabSubsystem;
+    addRequirements(grabSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +22,7 @@ public class SetArmHighConeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbySubsystem.setPosition(grabbySubsystem.highConePosition);
+    grabSubsystem.ungrab();
   }
 
   // Called once the command ends or is interrupted.

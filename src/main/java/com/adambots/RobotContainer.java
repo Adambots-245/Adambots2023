@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
@@ -35,6 +36,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -51,7 +53,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final GrabbySubsystem grabbysubsystem = new GrabbySubsystem(RobotMap.armLifter, RobotMap.firstArmExtender, RobotMap.secondArmExtender, RobotMap.armRotationEncoder, RobotMap.grabby, RobotMap.secondExtenderPhotoEye, RobotMap.firstExtenderPhotoEye);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
+  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
+  private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye);
+  private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
 
   // commands
@@ -108,26 +113,27 @@ public class RobotContainer {
     // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
     // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
-    Buttons.primaryDPadN.whileTrue(new LiftArmCommand(grabbysubsystem));
-    Buttons.primaryDPadS.whileTrue(new LowerArmCommand(grabbysubsystem));
+    Buttons.primaryDPadN.whileTrue(new LiftArmCommand(grabbyLifterSubsystem));
+    Buttons.primaryDPadS.whileTrue(new LowerArmCommand(grabbyLifterSubsystem));
 
-    Buttons.primaryRB.whileTrue(new ExtendFirstStageCommand(grabbysubsystem));
-    Buttons.primaryLB.whileTrue(new RetractFirstStageCommand(grabbysubsystem));
+    Buttons.primaryRB.whileTrue(new ExtendFirstStageCommand(firstExtenderSubsystem));
+    Buttons.primaryLB.whileTrue(new RetractFirstStageCommand(firstExtenderSubsystem));
 
-    Buttons.primaryRightStickButton.whileTrue(new ExtendSecondStageCommand(grabbysubsystem));
-    Buttons.primaryLeftStickButton.whileTrue(new RetractSecondStageCommand(grabbysubsystem));
+    Buttons.primaryRightStickButton.whileTrue(new ExtendSecondStageCommand(secondExtenderSubsystem));
+    Buttons.primaryLeftStickButton.whileTrue(new RetractSecondStageCommand(secondExtenderSubsystem));
 
-    Buttons.primaryDPadW.onTrue(new OpenGrabbyCommand(grabbysubsystem));
-    Buttons.primaryDPadE.onTrue(new CloseGrabbyCommand(grabbysubsystem));
+    Buttons.JoystickButton1.onTrue(new GrabCommand(grabSubsystem));
+    Buttons.primaryDPadE.onTrue(new UngrabCommand(grabSubsystem));
+    Buttons.primaryDPadW.onTrue(new UngrabCommand(grabSubsystem));
     
-    Buttons.primaryBButton.onTrue(new SetArmMidCubeCommand(grabbysubsystem));
-    Buttons.primaryYButton.onTrue(new SetArmHighCubeCommand(grabbysubsystem));
+    Buttons.primaryAButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midCubeState)));
+    Buttons.primaryXButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)));
 
-    Buttons.primaryXButton.onTrue(new SetArmMidConeCommand(grabbysubsystem));
-    Buttons.primaryAButton.onTrue(new SetArmHighConeCommand(grabbysubsystem));
+    Buttons.primaryBButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midConeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midConeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midConeState)));
+    Buttons.primaryYButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highConeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highConeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highConeState)));
 
-    Buttons.primaryBackButton.onTrue(new SetArmGroundCommand(grabbysubsystem));
-    Buttons.primaryStartButton.onTrue(new SetArmInitCommand(grabbysubsystem));
+    Buttons.primaryBackButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)));
+    Buttons.primaryStartButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)));
 
     Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,0.1,false)).withTimeout(1));
     Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));

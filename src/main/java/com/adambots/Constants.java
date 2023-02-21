@@ -213,6 +213,7 @@ public final class Constants {
         public static final double HOR_DEGREES_PER_PIXEL = (double) HOR_FOV_DEGREES / IMG_WIDTH;
 
         public static final double kCameraFieldOfView = 68.5;
+        public static final String Limelight1 = "limelight";
 
     }
 
@@ -333,7 +334,7 @@ public final class Constants {
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
-        public static final double groundLifterValue = 94;
+        public static final double groundLifterValue = 89;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
@@ -398,9 +399,15 @@ public final class Constants {
         public static final double highZoneLifterValue = 1;
         public static final double highZoneExtenderValue = 1;
 
-        public static final double lifterSpeed = 0.15;
+        public static final double lifterSpeed = 0.25;
         public static final double extenderSpeed = 0.25;
         public static final double armStopSpeed = 0.04;
+
+        public static final double kPArmLifterController = 0;
+        public static final double kIArmLifterController = 0;
+        public static final double kDArmLifterController = 0;
+
+
     }
 
 

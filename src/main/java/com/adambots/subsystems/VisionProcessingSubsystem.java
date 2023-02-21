@@ -22,6 +22,7 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -47,6 +48,8 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   private final static Field2d aprilTagField = new Field2d();
   private NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   private NetworkTableEntry tx = table.getEntry("botpose");
+  private MedianFilter Filter;
+  private MedianFilter hubMinYFilter;
   // private LimelightHelpers limelightHelper = new LimelightHelpers();
 
 
@@ -125,13 +128,13 @@ public class VisionProcessingSubsystem extends SubsystemBase {
     }
   }
   public Pose2d getPose() {
-    double [] def = {0,0,0,0,0};
-    double[] poseValues = tx.getDoubleArray(def);
+    // double [] def = {0,0,0,0,0};
+    // double[] poseValues = tx.getDoubleArray(def);
     //System.out.println(poseValues[0]);
   // Translation using z and x
-  Translation2d t2d = new Translation2d(-poseValues[1], poseValues[0]);
+  // Translation2d t2d = new Translation2d(-poseValues[1], poseValues[0]);
   // Rotation using ry
-  Rotation2d r2d = new Rotation2d(poseValues[4]);
+  // Rotation2d r2d = new Rotation2d(poseValues[4]);
   Pose2d pose = LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue();
   return pose; 
 }

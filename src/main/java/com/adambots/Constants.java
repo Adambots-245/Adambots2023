@@ -129,10 +129,10 @@ public final class Constants {
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //Max rotational speed of auton
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //Max rotational acceleration of auton
 
-        public static final double kPXController = 2.7; // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kPYController = 2.7;
-        public static final double kDXController = 0.11; // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kDYController = 0.11;
+        public static final double kPXController = 2.5; // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kPYController = 2.5;
+        public static final double kDXController = 0.083; // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kDYController = 0.083;
         public static final double kPThetaController = 0.55;
         public static final double kDThetaController = 0.05;
 
@@ -216,20 +216,6 @@ public final class Constants {
         public static final String Limelight1 = "limelight";
 
     }
-
-    public static final class PreferencesConstants {
-        public static final String kPModuleTurningKey = "kPModuleTurningKey";
-        public static final String kDModuleTurningKey = "kDModuleTurningKey";
-        public static final String kMaxSpeedMetersPerSecondKey = "kMaxSpeedMetersPerSecondKey";
-        public static final String kMaxAccelerationMetersPerSecondSquaredKey = "kMaxAccelerationMetersPerSecondSquaredKey";
-        public static final String kMaxAngularSpeedRadiansPerSecondKey = "kMaxAngularSpeedRadiansPerSecondKey";
-        public static final String kMaxAngularSpeedRadiansPerSecondSquaredKey = "kMaxAngularSpeedRadiansPerSecondSquaredKey";
-        public static final String kPXControllerKey = "kPXControllerKey";
-        public static final String kPYControllerKey = "kPYControllerKey";
-        public static final String kPThetaController = "kPThetaController"; 
-    }
-
-    
 
     public static final class GamepadConstants {
         
@@ -340,6 +326,10 @@ public final class Constants {
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
+        public static final double balancingLifterValue = 90;
+        public static final double balancingFirstExtenderValue = 0;
+        public static final double balancingSecondExtenderValue = 0;
+
         // cube
         public static final double midCubeLifterValue = 149.7;
         public static final double midCubeFirstExtenderValue = 32.9 * armEncoderCPR;
@@ -388,7 +378,7 @@ public final class Constants {
         public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
         public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
-
+        public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
 
         //PID values
         public static final double lifterP = 0.015;
@@ -407,10 +397,7 @@ public final class Constants {
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR;
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
         public static final double rotationPerInch = 1;
-        public static final double lifterSpeed = 0.4;
+        public static final double lifterSpeed = 0.525;
         public static final double extenderSpeed = 0.3;
-    }
-
-
-    
+    }    
 }

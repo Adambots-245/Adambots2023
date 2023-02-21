@@ -10,7 +10,6 @@ package com.adambots;
 import java.util.logging.Level;
 
 import com.adambots.Vision.ReflectivePipeline;
-import com.adambots.Constants.PreferencesConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
@@ -118,6 +117,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SmartDashboard.putString("auton selected", m_autonomousCommand.toString());
 

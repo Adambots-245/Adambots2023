@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -135,8 +136,8 @@ public class RobotContainer {
     Buttons.primaryBackButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)));
     Buttons.primaryStartButton.onTrue(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)));
 
-    Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,0.1,false)).withTimeout(1));
-    Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
+    Buttons.JoystickButton9.onTrue(new HockeyStopCommand(drivetrainSubsystem));
+    Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
   private void setupDashboard() {
@@ -243,9 +244,20 @@ public class RobotContainer {
     drivetrainSubsystem.resetOdometry(traj1.getInitialPose());
     Constants.DriveConstants.field.getObject("traj").setTrajectory(traj1);
 
-    return command1
-    .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
+    return Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState))
+    .andThen(new WaitCommand(1.7))
+    .andThen(new UngrabCommand(grabSubsystem))
+    .andThen(new WaitCommand(0.3))
+    .andThen(Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
+    .andThen(Commands.parallel(command1, new WaitCommand(1).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))))
+    .andThen(new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.8))
+    .andThen(new WaitCommand(0.2))
+
+    .andThen(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)))
+    // .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
     .andThen(command2)
+    .andThen(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor)
+    .andThen(new HockeyStopCommand(drivetrainSubsystem)))
     .andThen(() -> drivetrainSubsystem.stop());
 
     // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);

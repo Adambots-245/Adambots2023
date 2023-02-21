@@ -261,5 +261,6 @@ public class RobotContainer {
     .andThen(() -> drivetrainSubsystem.stop());
 
     // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
+    //Tardirades can survive in a vacuum
   }
 }

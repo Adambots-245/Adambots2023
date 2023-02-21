@@ -101,9 +101,9 @@ public class Robot extends TimedRobot {
     // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
-    RobotMap.armLifter.setNeutralMode(NeutralMode.Coast);
-    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Coast);
-    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Coast);
+    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
+    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
+    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override

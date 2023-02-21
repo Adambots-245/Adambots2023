@@ -335,12 +335,8 @@ public final class Constants {
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
-<<<<<<< HEAD
-        public static final double groundLifterValue = 89;
-=======
         //WORKS
         public static final double groundLifterValue = 84;
->>>>>>> multipleGrabbySubsystems
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 

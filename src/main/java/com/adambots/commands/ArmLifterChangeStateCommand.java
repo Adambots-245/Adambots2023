@@ -5,17 +5,20 @@
 package com.adambots.commands;
 
 import com.adambots.Constants;
-import com.adambots.subsystems.FirstExtenderSubsystem;
+import com.adambots.Constants.GrabbyConstants.State;
+import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class FirstExtenderHighCubeCommand extends CommandBase {
+public class ArmLifterChangeStateCommand extends CommandBase {
   
-  FirstExtenderSubsystem firstExtenderSubsystem;
+  GrabbyLifterSubsystem grabbyLifterSubsystem;
+  State newState;
 
-  public FirstExtenderHighCubeCommand(FirstExtenderSubsystem firstExtenderSubsystem) {
-    this.firstExtenderSubsystem = firstExtenderSubsystem;
-    addRequirements(firstExtenderSubsystem);
+  public ArmLifterChangeStateCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, State newState) {
+    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
+    this.newState = newState;
+    addRequirements(grabbyLifterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +28,7 @@ public class FirstExtenderHighCubeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    firstExtenderSubsystem.changeTarget(Constants.GrabbyConstants.highCubeState.getFirstExtendTarget());
+    grabbyLifterSubsystem.changeTarget(newState.getArmLiftTarget());
   }
 
   // Called once the command ends or is interrupted.

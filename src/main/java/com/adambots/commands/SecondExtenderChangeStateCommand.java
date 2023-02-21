@@ -4,21 +4,21 @@
 
 package com.adambots.commands;
 
-
-import com.adambots.subsystems.FirstExtenderSubsystem;
-import com.adambots.subsystems.GrabbyLifterSubsystem;
+import com.adambots.Constants;
+import com.adambots.Constants.GrabbyConstants.State;
 import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetArmInitCommand extends CommandBase {
-  GrabbyLifterSubsystem grabbyLifterSubsystem;
-  FirstExtenderSubsystem firstExtenderSubsystem;
+public class SecondExtenderChangeStateCommand extends CommandBase {
+  
   SecondExtenderSubsystem secondExtenderSubsystem;
-  public SetArmInitCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem) {
-    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
-    this.firstExtenderSubsystem = firstExtenderSubsystem;
+  State newState;
+
+  public SecondExtenderChangeStateCommand(SecondExtenderSubsystem secondExtenderSubsystem, State newState) {
     this.secondExtenderSubsystem = secondExtenderSubsystem;
+    this.newState = newState;
+    addRequirements(secondExtenderSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,9 +28,7 @@ public class SetArmInitCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new ArmLifterInitCommand(grabbyLifterSubsystem).schedule();
-    new FirstExtenderInitCommand(firstExtenderSubsystem).schedule();
-    new SecondExtenderInitCommand(secondExtenderSubsystem).schedule();
+    secondExtenderSubsystem.changeTarget(newState.getSecondExtendTarget());
   }
 
   // Called once the command ends or is interrupted.

@@ -16,7 +16,7 @@ Select one of the Cancoders that are aligned and then in the Config, make the fo
 
 Now, save the results and switch to Self-Snapshot tab. Here, run a self-snapshot and record the "Absolute" position.
 
-Navigate back to the Control tab and set this absolute value in the Magnet Offset. Save and perform this for all the Cancoders.
+Navigate back to the Control tab and set this absolute value in the Magnet Offset with a negative sign. Save and perform this for all the Cancoders.
 
 Test by turning the wheels to different directions and then enabling the Robot. It should return to straight position.
 

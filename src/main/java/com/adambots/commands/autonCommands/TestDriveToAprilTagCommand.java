@@ -9,9 +9,9 @@ import java.util.List;
 import com.adambots.Constants;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
+import com.adambots.Vision.VisionHelpers;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
-import com.adambots.utils.VisionHelpers;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;

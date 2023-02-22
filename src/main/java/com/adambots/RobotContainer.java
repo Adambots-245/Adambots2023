@@ -18,13 +18,13 @@ import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
+import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
-import com.adambots.utils.VisionHelpers;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;

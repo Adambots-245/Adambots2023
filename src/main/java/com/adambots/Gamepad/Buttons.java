@@ -13,6 +13,7 @@ import java.util.function.DoubleSupplier;
 import com.adambots.Constants.GamepadConstants;
 import com.adambots.RobotMap;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -129,37 +130,18 @@ public class Buttons {
                 }
         }
 
-        // Applies a custom curve to an input and returns the result
-        public static double applyCurve(double rawInput, double[] curve) {
-                int index = (int) Math.floor(Math.abs(rawInput) * 10);
-                double f = Math.abs(rawInput * 10) - index;
-                return lerp(curve[index], curve[Math.min(index + 1, curve.length - 1)], f) * Math.signum(rawInput);
-        }
-
-        // Linear interpolation - interpolates between a and b by f (needed for
-        // smoothing out applyCurve)
-        public static double lerp(double a, double b, double f) {
-                return a + f * (b - a);
-        }
+        //Applies a custom curve to an input and returns the result
+        public static double applyCurve (double rawInput, double[] curve) {
+                double scaled = Math.abs(rawInput)*10;
+                int index = (int)Math.floor(scaled);
+                return MathUtil.interpolate(curve[index], curve[Math.min(index+1, curve.length-1)], scaled-index)*Math.signum(rawInput);
+	}
 
         // An example curve that would be default input {0, 0.1, 0.2, 0.3, 0.4, 0.5,
         // 0.6, 0.7, 0.8, 0.9, 1};
-        static double[] forwardCurve = { 0, 0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1 }; // Linear
-                                                                                                              // curve
-                                                                                                              // just
-                                                                                                              // scaled
-                                                                                                              // back
-                                                                                                              // for a
-                                                                                                              // smoother
-                                                                                                              // low end
-                                                                                                              // control
-                                                                                                              // with
-                                                                                                              // deadening
+        static double[] forwardCurve = { 0, 0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1 }; //Scaled back linear curve
         static double[] sidewaysCurve = { 0, 0.0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1 };
-        static double[] rotateCurve = { 0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1 }; // 0-0.4 is left as 0's to
-                                                                                             // make up for lack of
-                                                                                             // deaden (can change
-                                                                                             // later)
+        static double[] rotateCurve = { 0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
 
         // Sigmoid Curve
         public static double smoothInput(double input) {

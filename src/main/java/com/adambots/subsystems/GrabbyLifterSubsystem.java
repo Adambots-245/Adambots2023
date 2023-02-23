@@ -65,7 +65,8 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     armLifterSpeed = pid.calculate(armLifterEncoder.getAbsolutePosition(), targetPosition);
     armLifterSpeed = MathUtil.clamp(armLifterSpeed, -Constants.GrabbyConstants.lifterSpeed, Constants.GrabbyConstants.lifterSpeed);
     failsafes();
-    armLifter.set(ControlMode.PercentOutput, armLifterSpeed);
+    // armLifter.set(ControlMode.PercentOutput, armLifterSpeed);
+    armLifter.set(ControlMode.PercentOutput, 0);
 
     SmartDashboard.putNumber("Arm Lifter Speed", armLifterSpeed);
   }

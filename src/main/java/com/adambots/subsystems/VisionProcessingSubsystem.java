@@ -91,9 +91,9 @@ public class VisionProcessingSubsystem extends SubsystemBase {
       processedCubeOutputStream.putFrame(mat);
 
       coneGrip.process(mat);
-      RotatedRect[] cubeRect = findBoundingBoxes(cubeGrip.filterContoursOutput());
-      RotatedRect largestCubeRect = findLargestRect(cubeRect);
-      draw(largestCubeRect);
+      //RotatedRect[] cubeRect = findBoundingBoxes(cubeGrip.filterContoursOutput());
+      //RotatedRect largestCubeRect = findLargestRect(cubeRect);
+      //draw(largestCubeRect);
       processedConeOutputStream.putFrame(mat);
       aprilTagField.setRobotPose(getPose());
     }

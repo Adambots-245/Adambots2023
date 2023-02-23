@@ -42,7 +42,7 @@ public class AutonLeftRedPlaceCubeGrabCharge extends SequentialCommandGroup{
     new UngrabCommand(grabSubsystem),
     new WaitCommand(0.3),
     Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)),
-    Commands.parallel(command1, new WaitCommand(1).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))),
+    Commands.parallel(command1, new WaitCommand(1.75).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))),
     new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.8),
     new WaitCommand(0.2),
     Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)),

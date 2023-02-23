@@ -120,6 +120,7 @@ public class RobotContainer {
     Buttons.primaryDPadN.whileTrue(armCommands.LiftArmCommand);
     Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
 
+
     Buttons.primaryRB.whileTrue(armCommands.ExtendFirstStageCommand);
     Buttons.primaryLB.whileTrue(armCommands.RetractFirstStageCommand);
 

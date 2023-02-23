@@ -9,6 +9,8 @@ package com.adambots;
 
 import java.util.logging.Level;
 
+import com.adambots.Vision.ConePipeline;
+import com.adambots.Vision.CubePipeline;
 import com.adambots.Vision.ReflectivePipeline;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
@@ -58,8 +60,8 @@ public class Robot extends TimedRobot {
       // visionThread.start();
      
       // Camera Feed Only - No Image Processing
-      //  visionThread = new VisionProcessingSubsystem(RobotMap.RingLight, new ReflectivePipeline()).getVisionThread();
-      //  visionThread.start();
+        visionThread = new VisionProcessingSubsystem(new ConePipeline(), new CubePipeline()).getVisionThread();
+        visionThread.start();
     }
 
     // RobotMap.YellowLight.set(true);

@@ -11,6 +11,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import com.adambots.Constants.VisionConstants;
+import com.adambots.Vision.ConePipeline;
+import com.adambots.Vision.CubePipeline;
 import com.adambots.Vision.ReflectivePipeline;
 import com.adambots.utils.AprilTagReader;
 import com.adambots.utils.LimelightHelpers;
@@ -36,13 +38,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionProcessingSubsystem extends SubsystemBase {
 
-  private Solenoid ringLight;
-  private ReflectivePipeline reflectiveGrip;
+  private ConePipeline coneGrip;
+  private CubePipeline cubeGrip;
   private static UsbCamera detectionCamera;
   private static Thread visionThread;
   private static CvSink camCvSink;
-  private static CvSource processedAprilOutputStream;
-  private static CvSource processedReflectedOutputStream;
+  private static CvSource processedCubeOutputStream;
+  private static CvSource processedConeOutputStream;
   private static Mat mat;
   private static Point[] pts = new Point[4];
   private final static Field2d aprilTagField = new Field2d();
@@ -53,21 +55,21 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   // private LimelightHelpers limelightHelper = new LimelightHelpers();
 
 
-  public VisionProcessingSubsystem(Solenoid ringLight, ReflectivePipeline reflectivePipeline) {
-    this.ringLight = ringLight;
-    this.reflectiveGrip = reflectivePipeline;
+  public VisionProcessingSubsystem(ConePipeline conePipeline, CubePipeline cubePipeline) {
+    this.coneGrip = conePipeline;
+    this.cubeGrip = cubePipeline;
     init();
   }
 
   public void init() {
-    /* 
+     
     detectionCamera = CameraServer.startAutomaticCapture(0);
     detectionCamera.setVideoMode(VideoMode.PixelFormat.kYUYV, VisionConstants.kFrameWidth, VisionConstants.kFrameHeight, VisionConstants.kProcessingFramesPerSec);   
     camCvSink = CameraServer.getVideo(detectionCamera);
-    processedAprilOutputStream = CameraServer.putVideo("Detected", 640, 480);    processedAprilOutputStream = CameraServer.putVideo("Detected", 640, 480);
-    processedReflectedOutputStream = CameraServer.putVideo("Reflected", 640, 480);
+    processedCubeOutputStream = CameraServer.putVideo("Cube", 320, 240);
+    processedConeOutputStream = CameraServer.putVideo("Cone", 320, 240);
+
     mat = new Mat();
-    */
     SmartDashboard.putData("April Tag Field", aprilTagField);
     visionThread = new Thread(() -> {
       run2();
@@ -77,53 +79,15 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   public void run2() {
 
     while (!Thread.interrupted()) {
-      aprilTagField.setRobotPose(getPose());
-    }
-  }
-
-  public void run() {
-
-    while (!Thread.interrupted()) {
       if (camCvSink.grabFrame(mat) == 0) {
-        processedAprilOutputStream.notifyError(camCvSink.getError());
+        processedCubeOutputStream.notifyError(camCvSink.getError());
         System.out.println("Can't Find the Stream reflective");
           continue;
       } 
-      try (AprilTagReader tagReader = new AprilTagReader()){
-        tagReader.detect(mat);
-        System.out.println("Number of tags detected: " + tagReader.count());
-
-        var id = tagReader.getId(0);
-       // System.out.println("Tags id: " + id);
-       // var id2 = tagReader.getId(1);
-
-        var pose = tagReader.getPose(0);
-        var rot = pose.getRotation();
-        Log.infoF("x=%d, y=%d, z=%d, rX=%d, rY=%d, rZ=%d\n", pose.getX(), pose.getY(), pose.getZ(), rot.getX(), rot.getY(), rot.getZ());
-        SmartDashboard.putNumber("X Pose", pose.getX());
-        SmartDashboard.putNumber("Y Pose", pose.getY());
-        SmartDashboard.putNumber("Z Pose", pose.getZ());
-        // ArrayList[] test = SmartDashboard.getNumberArray("botpose", [0]);
-        SmartDashboard.putNumber("test", 7);
-
-        var outlineColor = new Scalar(0, 0, 255);
-        Point[] corners = tagReader.getBoundingBox(0);
-        for (var i = 0; i <= 3; i++) {
-            var j = (i + 1) % 4; 
-            Imgproc.line(mat, corners[i], corners[j], outlineColor, 2);
-        }
-      } catch (Exception e){
-        // ignore
-      }
-      processedAprilOutputStream.putFrame(mat);
-      reflectiveGrip.process(mat);
-      RotatedRect[] rects = findBoundingBoxes();
-      //Draws Finds the largest rect and draws the rectangle
-      if (rects.length != 0) {
-          RotatedRect rect = findLargestRect(rects);
-          draw(rect);
-      }
-      processedReflectedOutputStream.putFrame(mat);
+      cubeGrip.process(mat);
+      processedCubeOutputStream.putFrame(mat);
+      coneGrip.process(mat);
+      processedConeOutputStream.putFrame(mat);
       aprilTagField.setRobotPose(getPose());
     }
   }
@@ -139,7 +103,7 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   return pose; 
 }
   public RotatedRect[] findBoundingBoxes() {
-    ArrayList<MatOfPoint> contours = reflectiveGrip.filterContoursOutput();
+    ArrayList<MatOfPoint> contours = coneGrip.filterContoursOutput();
     RotatedRect[] rects = new RotatedRect[contours.size()];
     for (int i = 0; i < contours.size(); i++)
         rects[i] = Imgproc.minAreaRect(new MatOfPoint2f(contours.get(i).toArray()));

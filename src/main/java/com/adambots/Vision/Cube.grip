@@ -1,92 +1,109 @@
 <grip:Pipeline>
   <sources>
     <grip:Camera>
-      <property name="deviceNumber" value="0"/>
+      <property name="deviceNumber" value="1"/>
     </grip:Camera>
   </sources>
   <steps>
-    <grip:Step name="HSV Threshold">
+    <grip:Step name="Resize Image">
       <grip:Input step="0" socket="0"/>
       <grip:Input step="0" socket="1">
-        <value>
-          <double>108.45323741007195</double>
-          <double>136.9965870307167</double>
-        </value>
+        <value>320.0</value>
       </grip:Input>
       <grip:Input step="0" socket="2">
-        <value>
-          <double>45.86330935251798</double>
-          <double>222.36348122866895</double>
-        </value>
+        <value>280.0</value>
       </grip:Input>
       <grip:Input step="0" socket="3">
-        <value>
-          <double>64.20863309352518</double>
-          <double>255.0</double>
-        </value>
+        <value>CUBIC</value>
       </grip:Input>
       <grip:Output step="0" socket="0" previewed="false"/>
     </grip:Step>
-    <grip:Step name="Find Contours">
+    <grip:Step name="HSV Threshold">
       <grip:Input step="1" socket="0"/>
       <grip:Input step="1" socket="1">
-        <value>false</value>
+        <value>
+          <double>115.46762615656681</double>
+          <double>127.7815699658703</double>
+        </value>
       </grip:Input>
-      <grip:Output step="1" socket="0" previewed="false"/>
+      <grip:Input step="1" socket="2">
+        <value>
+          <double>24.460433477120432</double>
+          <double>189.72697905712974</double>
+        </value>
+      </grip:Input>
+      <grip:Input step="1" socket="3">
+        <value>
+          <double>146.7626008627226</double>
+          <double>255.0</double>
+        </value>
+      </grip:Input>
+      <grip:Output step="1" socket="0" previewed="true"/>
     </grip:Step>
-    <grip:Step name="Filter Contours">
+    <grip:Step name="Find Contours">
       <grip:Input step="2" socket="0"/>
       <grip:Input step="2" socket="1">
-        <value>997.0</value>
+        <value>true</value>
       </grip:Input>
-      <grip:Input step="2" socket="2">
-        <value>750.0</value>
+      <grip:Output step="2" socket="0" previewed="true"/>
+    </grip:Step>
+    <grip:Step name="Filter Contours">
+      <grip:Input step="3" socket="0"/>
+      <grip:Input step="3" socket="1">
+        <value>650.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="3">
+      <grip:Input step="3" socket="2">
+        <value>200.0</value>
+      </grip:Input>
+      <grip:Input step="3" socket="3">
         <value>100.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="4">
+      <grip:Input step="3" socket="4">
         <value>1000.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="5">
-        <value>100.0</value>
+      <grip:Input step="3" socket="5">
+        <value>0.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="6">
+      <grip:Input step="3" socket="6">
         <value>1000.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="7">
+      <grip:Input step="3" socket="7">
         <value>
           <int>0</int>
           <int>100</int>
         </value>
       </grip:Input>
-      <grip:Input step="2" socket="8">
-        <value>1000000</value>
+      <grip:Input step="3" socket="8">
+        <value>1000000.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="9">
-        <value>0</value>
+      <grip:Input step="3" socket="9">
+        <value>0.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="10">
-        <value>0</value>
+      <grip:Input step="3" socket="10">
+        <value>0.0</value>
       </grip:Input>
-      <grip:Input step="2" socket="11">
-        <value>1000</value>
+      <grip:Input step="3" socket="11">
+        <value>1000.0</value>
       </grip:Input>
-      <grip:Output step="2" socket="0" previewed="true"/>
+      <grip:Output step="3" socket="0" previewed="true"/>
     </grip:Step>
   </steps>
   <connections>
-    <grip:Connection>
-      <grip:Output source="0" socket="0" previewed="true"/>
-      <grip:Input step="0" socket="0"/>
-    </grip:Connection>
     <grip:Connection>
       <grip:Output step="0" socket="0" previewed="false"/>
       <grip:Input step="1" socket="0"/>
     </grip:Connection>
     <grip:Connection>
-      <grip:Output step="1" socket="0" previewed="false"/>
+      <grip:Output source="0" socket="0" previewed="true"/>
+      <grip:Input step="0" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="1" socket="0" previewed="true"/>
       <grip:Input step="2" socket="0"/>
+    </grip:Connection>
+    <grip:Connection>
+      <grip:Output step="2" socket="0" previewed="true"/>
+      <grip:Input step="3" socket="0"/>
     </grip:Connection>
   </connections>
   <settings>
@@ -100,10 +117,10 @@
   </settings>
   <codeGenerationSettings>
     <language>Java</language>
-    <className>CubePipeline</className>
-    <implementWpilibPipeline>true</implementWpilibPipeline>
-    <saveDir>C:\Users\12488\GRIP</saveDir>
-    <packageName>cube</packageName>
+    <className>GripPipeline</className>
+    <implementWpilibPipeline>false</implementWpilibPipeline>
+    <saveDir>C:\Users\babym\GRIP</saveDir>
+    <packageName></packageName>
     <moduleName>grip</moduleName>
   </codeGenerationSettings>
 </grip:Pipeline>

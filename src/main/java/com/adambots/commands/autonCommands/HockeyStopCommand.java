@@ -2,39 +2,45 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package com.adambots.commands;
+package com.adambots.commands.autonCommands;
 
-
-import com.adambots.subsystems.GrabbySubsystem;
-
+import com.adambots.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetArmHighConeCommand extends CommandBase {
-  /** Creates a new setArmMidCubeCommand. */
-  GrabbySubsystem grabbySubsystem;
-  public SetArmHighConeCommand(GrabbySubsystem armAndGrabbySubsystem) {
+public class HockeyStopCommand extends CommandBase {
+  private DrivetrainSubsystem drivetrainSubsystem;
+  private int inc;
+
+  /** Creates a new AutoBalanceCommand. */
+  public HockeyStopCommand(DrivetrainSubsystem drivetrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.grabbySubsystem = armAndGrabbySubsystem;
-    addRequirements(armAndGrabbySubsystem);
+
+    addRequirements(drivetrainSubsystem);
+    this.drivetrainSubsystem = drivetrainSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    inc = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbySubsystem.setPosition(grabbySubsystem.highConePosition);
+    drivetrainSubsystem.drive(0,0,0.1,false);
+    inc++;
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    drivetrainSubsystem.stop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
-  }
+      return inc > 50;
+    }
 }

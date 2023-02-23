@@ -13,6 +13,7 @@ import java.util.function.DoubleSupplier;
 import com.adambots.Constants.GamepadConstants;
 import com.adambots.RobotMap;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -30,7 +31,8 @@ public class Buttons {
         public static final CommandXboxController secondaryJoystick = new CommandXboxController(
                         GamepadConstants.kSecondaryDriver);
         public static final CommandJoystick ex3dPro = new CommandJoystick(RobotMap.kJoystickControllerPort);
-        public static final BooleanSupplier isJoystickConnected = () -> ex3dPro.getHID().isConnected() || RobotBase.isSimulation();
+        public static final BooleanSupplier isJoystickConnected = () -> ex3dPro.getHID().isConnected()
+                        || RobotBase.isSimulation();
 
         // primary buttons
         public static final Trigger primaryBackButton = primaryJoystick.back();
@@ -130,20 +132,16 @@ public class Buttons {
 
         //Applies a custom curve to an input and returns the result
         public static double applyCurve (double rawInput, double[] curve) {
-                int index = (int)Math.floor(Math.abs(rawInput)*10);
-                double f = Math.abs(rawInput*10)-index;
-                return lerp(curve[index], curve[Math.min(index+1, curve.length-1)], f)*Math.signum(rawInput);
+                double scaled = Math.abs(rawInput)*10;
+                int index = (int)Math.floor(scaled);
+                return MathUtil.interpolate(curve[index], curve[Math.min(index+1, curve.length-1)], scaled-index)*Math.signum(rawInput);
 	}
 
-        //Linear interpolation - interpolates between a and b by f (needed for smoothing out applyCurve)
-        public static double lerp (double a, double b, double f) {
-                return a + f * (b - a);
-        }
-
-        // An example curve that would be default input {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1};
-        static double[] forwardCurve = {0, 0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1}; //Linear curve just scaled back for a smoother low end control with deadening
-        static double[] sidewaysCurve = {0, 0.0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1};
-        static double[] rotateCurve = {0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1}; //0-0.4 is left as 0's to make up for lack of deaden (can change later)
+        // An example curve that would be default input {0, 0.1, 0.2, 0.3, 0.4, 0.5,
+        // 0.6, 0.7, 0.8, 0.9, 1};
+        static double[] forwardCurve = { 0, 0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1 }; //Scaled back linear curve
+        static double[] sidewaysCurve = { 0, 0.0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1 };
+        static double[] rotateCurve = { 0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
 
         // Sigmoid Curve
         public static double smoothInput(double input) {
@@ -165,6 +163,13 @@ public class Buttons {
                 return output;
         }
 
+        public static double cubic(double input) {
+                double tuneA = 0; // try different values. However, tuneA and tuneB should add up to 1
+                double tuneB = 1;
+
+                return (tuneA * input) + (tuneB * Math.pow(input, 3));
+        }
+
         // If Flight Joystick is connected, then return Joystick Y value - else return
         // Joystick value from XBoxController
         /**
@@ -172,8 +177,8 @@ public class Buttons {
          */
         public static DoubleSupplier forwardSupplier = () -> isJoystickConnected.getAsBoolean()
                         // ? deaden(ex3dPro.getY(), GamepadConstants.kDeadZone)
-                        // ? applyCurve(ex3dPro.getY(), forwardCurve) //CHANGE BACK IF IT DOESNT WORK
-                        ? deaden(smoothInput(ex3dPro.getY()), GamepadConstants.kDeadZone)
+                        ? applyCurve(ex3dPro.getY(), forwardCurve) // CHANGE BACK IF IT DOESNT WORK
+                        // ? deaden(smoothInput(ex3dPro.getY()), GamepadConstants.kDeadZone)
                         : deaden(primaryJoystick.getLeftY(), GamepadConstants.kDeadZone);
 
         /**
@@ -181,16 +186,16 @@ public class Buttons {
          */
         public static DoubleSupplier sidewaysSupplier = () -> isJoystickConnected.getAsBoolean()
                         // ? deaden(ex3dPro.getX(), GamepadConstants.kDeadZone)
-                        // ? applyCurve(ex3dPro.getX(), sidewaysCurve) //CHANGE BACK IF IT DOESNT WORK
-                        ? deaden(smoothInput(ex3dPro.getX()), GamepadConstants.kDeadZone)
+                        ? applyCurve(ex3dPro.getX(), sidewaysCurve) // CHANGE BACK IF IT DOESNT WORK
+                        // ? deaden(smoothInput(ex3dPro.getX()), GamepadConstants.kDeadZone)
                         : deaden(primaryJoystick.getLeftX(), GamepadConstants.kDeadZone);
 
         /**
          * getZ or RightX
          */
         public static DoubleSupplier rotateSupplier = () -> isJoystickConnected.getAsBoolean()
-                        ? deaden(ex3dPro.getZ(), 0.4)
-                        // ? applyCurve(ex3dPro.getZ(), rotateCurve) //CHANGE BACK IF IT DOESNT WORK
+                        // ? deaden(ex3dPro.getZ(), 0.4)
+                        ? applyCurve(ex3dPro.getZ(), rotateCurve) // CHANGE BACK IF IT DOESNT WORK
                         // ? deaden(smoothInput(ex3dPro.getZ()), 0.4)
                         : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
 }

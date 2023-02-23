@@ -16,14 +16,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
+import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
-import com.adambots.utils.VisionHelpers;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -35,9 +36,11 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -51,7 +54,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final GrabbySubsystem grabbysubsystem = new GrabbySubsystem(RobotMap.armLifter, RobotMap.firstArmExtender, RobotMap.secondArmExtender, RobotMap.armRotationEncoder, RobotMap.grabby, RobotMap.secondExtenderPhotoEye, RobotMap.firstExtenderPhotoEye);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
+  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
+  private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye);
+  private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
 
   // commands
@@ -108,29 +114,32 @@ public class RobotContainer {
     // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
     // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
-    Buttons.primaryDPadN.whileTrue(new LiftArmCommand(grabbysubsystem));
-    Buttons.primaryDPadS.whileTrue(new LowerArmCommand(grabbysubsystem));
+    ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
 
-    Buttons.primaryRB.whileTrue(new ExtendFirstStageCommand(grabbysubsystem));
-    Buttons.primaryLB.whileTrue(new RetractFirstStageCommand(grabbysubsystem));
+    Buttons.primaryDPadN.whileTrue(armCommands.LiftArmCommand);
+    Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
 
-    Buttons.primaryRightStickButton.whileTrue(new ExtendSecondStageCommand(grabbysubsystem));
-    Buttons.primaryLeftStickButton.whileTrue(new RetractSecondStageCommand(grabbysubsystem));
+    Buttons.primaryRB.whileTrue(armCommands.ExtendFirstStageCommand);
+    Buttons.primaryLB.whileTrue(armCommands.RetractFirstStageCommand);
 
-    Buttons.primaryDPadW.onTrue(new OpenGrabbyCommand(grabbysubsystem));
-    Buttons.primaryDPadE.onTrue(new CloseGrabbyCommand(grabbysubsystem));
+    Buttons.primaryRightStickButton.whileTrue(armCommands.ExtendSecondStageCommand);
+    Buttons.primaryLeftStickButton.whileTrue(armCommands.RetractSecondStageCommand);
+
+    Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
+    Buttons.primaryDPadE.onTrue(armCommands.UngrabCommand);
+    Buttons.primaryDPadW.onTrue(armCommands.UngrabCommand);
     
-    Buttons.primaryBButton.onTrue(new SetArmMidCubeCommand(grabbysubsystem));
-    Buttons.primaryYButton.onTrue(new SetArmHighCubeCommand(grabbysubsystem));
+    Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
+    Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
 
-    Buttons.primaryXButton.onTrue(new SetArmMidConeCommand(grabbysubsystem));
-    Buttons.primaryAButton.onTrue(new SetArmHighConeCommand(grabbysubsystem));
+    Buttons.primaryBButton.onTrue(armCommands.MidConeCommand);
+    Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
 
-    Buttons.primaryBackButton.onTrue(new SetArmGroundCommand(grabbysubsystem));
-    Buttons.primaryStartButton.onTrue(new SetArmInitCommand(grabbysubsystem));
+    Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
+    Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
 
-    Buttons.JoystickButton9.onTrue(new RunCommand(() -> drivetrainSubsystem.drive(0,0,0.1,false)).withTimeout(1));
-    Buttons.JoystickButton11.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor));
+    Buttons.JoystickButton9.onTrue(new HockeyStopCommand(drivetrainSubsystem));
+    Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
   private void setupDashboard() {
@@ -237,11 +246,23 @@ public class RobotContainer {
     drivetrainSubsystem.resetOdometry(traj1.getInitialPose());
     Constants.DriveConstants.field.getObject("traj").setTrajectory(traj1);
 
-    return command1
-    .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
+    return Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState))
+    .andThen(new WaitCommand(1.7))
+    .andThen(new UngrabCommand(grabSubsystem))
+    .andThen(new WaitCommand(0.3))
+    .andThen(Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
+    .andThen(Commands.parallel(command1, new WaitCommand(1).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))))
+    .andThen(new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.8))
+    .andThen(new WaitCommand(0.2))
+
+    .andThen(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)))
+    // .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
     .andThen(command2)
+    .andThen(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor)
+    .andThen(new HockeyStopCommand(drivetrainSubsystem)))
     .andThen(() -> drivetrainSubsystem.stop());
 
     // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
+    //Tardirades can survive in a vacuum
   }
 }

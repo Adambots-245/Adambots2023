@@ -21,6 +21,7 @@ import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
+import com.adambots.commands.autonCommands.autonCommandGroups.AutonLeftRedPlaceCubeGrabCharge;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Functions;
@@ -238,29 +239,24 @@ public class RobotContainer {
     Trajectory traj2 = Functions.getTrajectory("TopConeCubeCharge2.wpilib.json");
     SwerveControllerCommand command2 = Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj2);
 
-
-    // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
-    // The field image for 2023 is in utils folder
-    
-    // Run path following command, then stop at the end.
-    drivetrainSubsystem.resetOdometry(traj1.getInitialPose());
     Constants.DriveConstants.field.getObject("traj").setTrajectory(traj1);
 
-    return Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState))
-    .andThen(new WaitCommand(1.7))
-    .andThen(new UngrabCommand(grabSubsystem))
-    .andThen(new WaitCommand(0.3))
-    .andThen(Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
-    .andThen(Commands.parallel(command1, new WaitCommand(1).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))))
-    .andThen(new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.8))
-    .andThen(new WaitCommand(0.2))
+    return new AutonLeftRedPlaceCubeGrabCharge(command1, command2, traj1, traj2, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem);
+    // return Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState))
+    // .andThen(new WaitCommand(1.7))
+    // .andThen(new UngrabCommand(grabSubsystem))
+    // .andThen(new WaitCommand(0.3))
+    // .andThen(Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
+    // .andThen(Commands.parallel(command1, new WaitCommand(1).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))))
+    // .andThen(new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.8))
+    // .andThen(new WaitCommand(0.2))
 
-    .andThen(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)))
-    // .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
-    .andThen(command2)
-    .andThen(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor)
-    .andThen(new HockeyStopCommand(drivetrainSubsystem)))
-    .andThen(() -> drivetrainSubsystem.stop());
+    // .andThen(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)))
+    // // .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
+    // .andThen(command2)
+    // .andThen(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor)
+    // .andThen(new HockeyStopCommand(drivetrainSubsystem)))
+    // .andThen(() -> drivetrainSubsystem.stop());
 
     // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
     //Tardirades can survive in a vacuum

@@ -57,6 +57,6 @@ public class TestAutoBalanceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return inc > 58;
+      return inc > 56;
     }
 }

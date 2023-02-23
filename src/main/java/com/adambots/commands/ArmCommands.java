@@ -20,44 +20,20 @@ public class ArmCommands {
     private GrabbyLifterSubsystem grabbyLifterSubsystem;
     private GrabSubsystem grabSubsystem;
 
-    public Command LiftArmCommand = new LiftArmCommand(grabbyLifterSubsystem);
-    public Command LowerArmCommand = new LowerArmCommand(grabbyLifterSubsystem);
-
-    public Command ExtendFirstStageCommand = new ExtendFirstStageCommand(firstExtenderSubsystem);
-    public Command RetractFirstStageCommand = new RetractFirstStageCommand(firstExtenderSubsystem);
-
-    public Command ExtendSecondStageCommand = new ExtendSecondStageCommand(secondExtenderSubsystem);
-    public Command RetractSecondStageCommand = new RetractSecondStageCommand(secondExtenderSubsystem);
-
-    public Command GrabCommand = new GrabCommand(grabSubsystem);
-    public Command UngrabCommand = new UngrabCommand(grabSubsystem);
-
-    public Command MidCubeCommand = Commands.parallel(
-            new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midCubeState),
-            new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midCubeState),
-            new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midCubeState));
-    public Command HighCubeCommand = Commands.parallel(
-            new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
-            new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
-            new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState));
-
-    public Command MidConeCommand = Commands.parallel(
-            new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midConeState),
-            new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midConeState),
-            new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midConeState));
-    public Command HighConeCommand = Commands.parallel(
-            new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highConeState),
-            new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highConeState),
-            new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highConeState));
-
-    public Command GroundCommand = Commands.parallel(
-            new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
-            new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState),
-            new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState));
-    public Command HomeCommand = Commands.parallel(
-            new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
-            new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
-            new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState));
+    public final Command LiftArmCommand;
+    public final Command LowerArmCommand;
+    public final Command ExtendFirstStageCommand;
+    public final Command RetractFirstStageCommand;
+    public final Command ExtendSecondStageCommand;
+    public final Command RetractSecondStageCommand;
+    public final Command GrabCommand;
+    public final Command UngrabCommand;
+    public final Command MidCubeCommand;
+    public final Command HighCubeCommand;
+    public final Command MidConeCommand;
+    public final Command HighConeCommand;
+    public final Command HomeCommand;
+    public final Command GroundCommand;
 
     public ArmCommands(FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem,
             GrabbyLifterSubsystem grabbyLifterSubsystem, GrabSubsystem grabSubsystem) {
@@ -65,5 +41,41 @@ public class ArmCommands {
         this.secondExtenderSubsystem = secondExtenderSubsystem;
         this.grabbyLifterSubsystem = grabbyLifterSubsystem;
         this.grabSubsystem = grabSubsystem;
+
+        LiftArmCommand = new LiftArmCommand(grabbyLifterSubsystem);
+        LowerArmCommand = new LowerArmCommand(grabbyLifterSubsystem);
+        ExtendFirstStageCommand = new ExtendFirstStageCommand(firstExtenderSubsystem);
+        RetractFirstStageCommand = new RetractFirstStageCommand(firstExtenderSubsystem);
+        ExtendSecondStageCommand = new ExtendSecondStageCommand(secondExtenderSubsystem);
+        RetractSecondStageCommand = new RetractSecondStageCommand(secondExtenderSubsystem);
+        GrabCommand = new GrabCommand(grabSubsystem);
+        UngrabCommand = new UngrabCommand(grabSubsystem);
+
+        MidCubeCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midCubeState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midCubeState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midCubeState));
+        HighCubeCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState));
+
+        MidConeCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midConeState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midConeState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midConeState));
+        HighConeCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highConeState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highConeState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highConeState));
+
+        GroundCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState));
+        HomeCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState));
     }
 }

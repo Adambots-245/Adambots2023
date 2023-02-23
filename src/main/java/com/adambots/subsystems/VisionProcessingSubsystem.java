@@ -85,8 +85,15 @@ public class VisionProcessingSubsystem extends SubsystemBase {
           continue;
       } 
       cubeGrip.process(mat);
+      RotatedRect[] coneRect = findBoundingBoxes(coneGrip.filterContoursOutput());
+      RotatedRect largestConeRect = findLargestRect(coneRect);
+      draw(largestConeRect);
       processedCubeOutputStream.putFrame(mat);
+
       coneGrip.process(mat);
+      RotatedRect[] cubeRect = findBoundingBoxes(cubeGrip.filterContoursOutput());
+      RotatedRect largestCubeRect = findLargestRect(cubeRect);
+      draw(largestCubeRect);
       processedConeOutputStream.putFrame(mat);
       aprilTagField.setRobotPose(getPose());
     }
@@ -102,8 +109,8 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   Pose2d pose = LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue();
   return pose; 
 }
-  public RotatedRect[] findBoundingBoxes() {
-    ArrayList<MatOfPoint> contours = coneGrip.filterContoursOutput();
+  public RotatedRect[] findBoundingBoxes(ArrayList<MatOfPoint> contours) {
+    // ArrayList<MatOfPoint> contours = coneGrip.filterContoursOutput();
     RotatedRect[] rects = new RotatedRect[contours.size()];
     for (int i = 0; i < contours.size(); i++)
         rects[i] = Imgproc.minAreaRect(new MatOfPoint2f(contours.get(i).toArray()));

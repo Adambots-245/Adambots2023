@@ -21,7 +21,8 @@ import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
-import com.adambots.commands.autonCommands.autonCommandGroups.AutonLeftRedPlaceCubeGrabCharge;
+import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
+import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Functions;
@@ -37,11 +38,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -57,8 +55,8 @@ public class RobotContainer {
 
   private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
-  private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye);
-  private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye);
+  private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
+  private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
 
   // commands
@@ -145,20 +143,21 @@ public class RobotContainer {
   }
 
   private void setupDashboard() {
-    // autoChooser.setDefaultOption("None", null);
-    // autoChooser.addOption("Auton1Ball", new Auton1Ball(catapultSubsystem,
-    // driveTrainSubsystem));
-    // autoChooser.addOption("Auton2Ball", new Auton2Ball(driveTrainSubsystem,
-    // intakeSubsystem, catapultSubsystem));
-    // autoChooser.addOption("Position1Auton3Ball", new
-    // Position1Auton3Ball(driveTrainSubsystem, intakeSubsystem,
-    // catapultSubsystem));
-    // autoChooser.addOption("Position1Auton5Ball", new
-    // Position1Auton5Ball(driveTrainSubsystem, intakeSubsystem,
-    // catapultSubsystem));
-    // autoChooser.addOption("Position2Auton4Ball", new
-    // Position2Auton4Ball(driveTrainSubsystem, intakeSubsystem,
-    // catapultSubsystem));
+    autoChooser.setDefaultOption("None", null);
+
+    autoChooser.addOption("BlueTopCubeCubeCharge",
+      new TopCubeCubeCharge(
+      Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+      Functions.getTrajectory("BlueTopCubeCubeCharge2.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+
+    autoChooser.addOption("BlueTopCubeCubeCharge",
+      new TopCubeCubeScore(
+      Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+      Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
 
     SmartDashboard.putData("Auton Mode", autoChooser);
     slewFilter  = new SlewRateLimiter(70);
@@ -205,12 +204,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // if (autoChooser.getSelected() != null)
-    // Log.info("Chosen Auton Command: ", autoChooser.getSelected().toString());
-    // else
-    // Log.info("Chosen Auton Command: None");
-
-    // return autoChooser.getSelected();
+    if (autoChooser.getSelected() != null) {
+      Log.info("Chosen Auton Command: ", autoChooser.getSelected().toString());
+    } else {
+      Log.info("Chosen Auton Command: None");
+    }
+    return autoChooser.getSelected();
 
     /*
     // Create config for trajectory
@@ -232,32 +231,10 @@ public class RobotContainer {
     */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    RobotMap.GyroSensor.reset();
-
-    Trajectory traj1 = Functions.getTrajectory("TopConeCubeCharge1.wpilib.json");
-    SwerveControllerCommand command1 = Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1);
-
-    Trajectory traj2 = Functions.getTrajectory("TopConeCubeCharge2.wpilib.json");
-    SwerveControllerCommand command2 = Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj2);
-
-    Constants.DriveConstants.field.getObject("traj").setTrajectory(traj1);
-
-    return new AutonLeftRedPlaceCubeGrabCharge(command1, command2, traj1, traj2, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem);
-    // return Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState))
-    // .andThen(new WaitCommand(1.7))
-    // .andThen(new UngrabCommand(grabSubsystem))
-    // .andThen(new WaitCommand(0.3))
-    // .andThen(Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
-    // .andThen(Commands.parallel(command1, new WaitCommand(1).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))))
-    // .andThen(new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.8))
-    // .andThen(new WaitCommand(0.2))
-
-    // .andThen(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)))
-    // // .andThen(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose()))
-    // .andThen(command2)
-    // .andThen(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor)
-    // .andThen(new HockeyStopCommand(drivetrainSubsystem)))
-    // .andThen(() -> drivetrainSubsystem.stop());
+    // return new AutonLeftRedPlaceCubeGrabCharge(
+    // Functions.getTrajectory("TopConeCubeCharge1.wpilib.json"), 
+    // Functions.getTrajectory("TopConeCubeCharge2.wpilib.json"), 
+    // drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem);
 
     // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
     //Tardirades can survive in a vacuum

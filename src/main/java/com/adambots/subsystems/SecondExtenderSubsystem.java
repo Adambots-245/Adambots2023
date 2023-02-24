@@ -8,6 +8,7 @@ import com.adambots.Constants;
 import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -19,15 +20,18 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   private final TalonFX secondExtender;
   private final PIDController pid;
   private final PhotoEye photoEye;
+  private final WPI_CANCoder armLifterEncoder;
+
 
   private double secondExtenderSpeed = 0;
   private double targetPosition = Constants.GrabbyConstants.initState.getSecondExtendTarget();
 
-  public SecondExtenderSubsystem(TalonFX secondExtender, PhotoEye photoEye) {
+  public SecondExtenderSubsystem(TalonFX secondExtender, PhotoEye photoEye, WPI_CANCoder armLifterEncoder) {
     this.secondExtender = secondExtender;
     secondExtender.setInverted(true);
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.secondExtenderP, Constants.GrabbyConstants.secondExtenderI, Constants.GrabbyConstants.secondExtenderD);
+    this.armLifterEncoder = armLifterEncoder;
   }
 
   public void changeTarget(double newTarget){
@@ -86,5 +90,8 @@ public class SecondExtenderSubsystem extends SubsystemBase {
         secondExtenderSpeed = 0;
       }
     }
+    if (armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundLifterValue + 10) {
+        targetPosition = 0;
+    } 
   }
 }

@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     
-    m_robotContainer.updateDashboard();
+    // m_robotContainer.updateDashboard();
 
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or

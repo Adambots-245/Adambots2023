@@ -79,22 +79,22 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   public void run2() {
 
     while (!Thread.interrupted()) {
-      if (camCvSink.grabFrame(mat) == 0) {
-        processedCubeOutputStream.notifyError(camCvSink.getError());
-        System.out.println("Can't Find the Stream reflective");
-          continue;
-      } 
-      cubeGrip.process(mat);
-      RotatedRect[] coneRect = findBoundingBoxes(coneGrip.filterContoursOutput());
-      RotatedRect largestConeRect = findLargestRect(coneRect);
-      draw(largestConeRect);
-      processedCubeOutputStream.putFrame(mat);
+      // if (camCvSink.grabFrame(mat) == 0) {
+      //   processedCubeOutputStream.notifyError(camCvSink.getError());
+      //   System.out.println("Can't Find the Stream reflective");
+      //     continue;
+      // } 
+      // cubeGrip.process(mat);
+      // RotatedRect[] coneRect = findBoundingBoxes(coneGrip.filterContoursOutput());
+      // RotatedRect largestConeRect = findLargestRect(coneRect);
+      // draw(largestConeRect);
+      // processedCubeOutputStream.putFrame(mat);
 
-      coneGrip.process(mat);
-      //RotatedRect[] cubeRect = findBoundingBoxes(cubeGrip.filterContoursOutput());
-      //RotatedRect largestCubeRect = findLargestRect(cubeRect);
-      //draw(largestCubeRect);
-      processedConeOutputStream.putFrame(mat);
+      // coneGrip.process(mat);
+      // //RotatedRect[] cubeRect = findBoundingBoxes(cubeGrip.filterContoursOutput());
+      // //RotatedRect largestCubeRect = findLargestRect(cubeRect);
+      // //draw(largestCubeRect);
+      // processedConeOutputStream.putFrame(mat);
       aprilTagField.setRobotPose(getPose());
     }
   }

@@ -11,6 +11,7 @@ import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.RobotMap;
@@ -39,11 +40,11 @@ public class UngrabWithRetractCommand extends CommandBase {
   public void execute() {
     grabSubsystem.ungrab();
     if (RobotMap.armRotationEncoder.getAbsolutePosition() >= GrabbyConstants.midCubeLifterValue-8 && RobotMap.armRotationEncoder.getAbsolutePosition() <= GrabbyConstants.highConeLifterValue+8) {
-      Commands.waitSeconds(0.5).andThen(Commands.parallel(
-          new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
+      Commands.waitSeconds(0.3).andThen(Commands.parallel(
           new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
-          new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)
-      )).schedule();
+          new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
+          .andThen(new WaitCommand(1)).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState))
+      ).schedule();
     }
   }
 

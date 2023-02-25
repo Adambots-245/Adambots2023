@@ -6,6 +6,7 @@ package com.adambots.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+import com.adambots.Constants;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 public class LiftArmCommand extends CommandBase {
@@ -20,7 +21,9 @@ public class LiftArmCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    grabbyLifterSubsystem.changeMaxSpeed(Constants.GrabbyConstants.manualLifterSpeed);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -31,6 +34,7 @@ public class LiftArmCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    grabbyLifterSubsystem.changeMaxSpeed(Constants.GrabbyConstants.lifterSpeed);
     grabbyLifterSubsystem.stopLifting();
   }
 

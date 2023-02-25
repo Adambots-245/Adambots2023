@@ -132,6 +132,11 @@ public class RobotContainer {
 
     Buttons.primaryDPadN.whileTrue(armCommands.LiftArmCommand);
     Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
+    Buttons.primaryDPadNE.whileTrue(armCommands.LiftArmCommand);
+    Buttons.primaryDPadSE.whileTrue(armCommands.LowerArmCommand);
+    Buttons.primaryDPadNW.whileTrue(armCommands.LiftArmCommand);
+    Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
+
 
     Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
@@ -220,9 +225,6 @@ public class RobotContainer {
                 -Buttons.rotateSupplier.getAsDouble(),
                 false),
             drivetrainSubsystem));
-
-          new LiftArmCommand(grabbyLifterSubsystem, Buttons.primaryJoystick.getRightTriggerAxis() * 10);
-          new LowerArmCommand(grabbyLifterSubsystem, Buttons.primaryJoystick.getLeftTriggerAxis() * 10);
   }
 
   /**
@@ -237,6 +239,8 @@ public class RobotContainer {
       Log.info("Chosen Auton Command: None");
     }
     return autoChooser.getSelected();
+
+    // return new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
 
     /*
     // Create config for trajectory

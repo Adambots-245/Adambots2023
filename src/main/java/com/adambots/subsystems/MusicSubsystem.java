@@ -4,11 +4,9 @@
 
 package com.adambots.subsystems;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,6 +44,7 @@ public class MusicSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
+    // if a song is already playing, let it finish before playing
     if (musicLoop > 0) {
       --musicLoop;
       if (musicLoop == 0) {

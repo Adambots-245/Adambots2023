@@ -11,6 +11,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -19,17 +20,23 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
   private final TalonFX armLifter;
   private final WPI_CANCoder armLifterEncoder;
   private final PIDController pid;
+  private final DigitalInput groundSwitch;
+  private final DigitalInput upperSwitch;
+
   private double maxSpeed = Constants.GrabbyConstants.lifterSpeed;
 
   private double armLifterSpeed = 0;
   private double targetPosition;
 
-  public GrabbyLifterSubsystem(TalonFX armLifter, WPI_CANCoder armLifterEncoder) {
+  public GrabbyLifterSubsystem(TalonFX armLifter, WPI_CANCoder armLifterEncoder, DigitalInput groundSwitch, DigitalInput upperSwitch) {
     this.armLifter = armLifter;
     armLifter.setInverted(true);
     this.armLifterEncoder = armLifterEncoder;
     targetPosition = armLifterEncoder.getAbsolutePosition();
     this.pid = new PIDController(Constants.GrabbyConstants.lifterP, Constants.GrabbyConstants.lifterI, Constants.GrabbyConstants.lifterD);
+
+    this.groundSwitch = groundSwitch;
+    this.upperSwitch = upperSwitch;
   }
 
   public void changeTarget(double newTarget){
@@ -86,6 +93,14 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     }
 
     if(armLifterEncoder.getAbsolutePosition() >= Constants.GrabbyConstants.initState.getArmLiftTarget() && armLifterSpeed > 0){
+      armLifterSpeed = 0;
+    }
+
+    if(groundSwitch.get() && armLifterSpeed < 0){
+      armLifterSpeed = 0;
+    }
+
+    if(upperSwitch.get() && armLifterSpeed > 0){
       armLifterSpeed = 0;
     }
   }

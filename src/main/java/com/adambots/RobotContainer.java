@@ -8,6 +8,8 @@
 
 package com.adambots;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.sound.sampled.SourceDataLine;
@@ -27,6 +29,7 @@ import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -58,6 +61,14 @@ public class RobotContainer {
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
+  Collection<TalonFX> alist = new ArrayList<>(){{
+    add(RobotMap.firstArmExtender);
+    add(RobotMap.secondArmExtender);
+    add(RobotMap.armLifter);
+  }};
+  String[] songs = {"song1.chrp", "song2.chrp", "song3.chrp", "song4.chrp", "song5.chrp", "song6.chrp"};
+  private final MusicSubsystem musicSubsystem = new MusicSubsystem(alist, songs);
+  private int idx = 0;
 
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
@@ -99,6 +110,15 @@ public class RobotContainer {
 
     ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
 
+    Buttons.primaryStartButton.onTrue(new RunCommand(() -> {
+      if (idx > 10){
+        idx = 0;
+      }
+      
+      musicSubsystem.playMusic(idx++);
+    }, musicSubsystem));
+
+
     Buttons.primaryDPadN.whileTrue(armCommands.LiftArmCommand);
     Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
 
@@ -123,7 +143,7 @@ public class RobotContainer {
     Buttons.primaryBackButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
 
-    Buttons.primaryStartButton.onTrue(armCommands.MidConeCommand);
+    // Buttons.primaryStartButton.onTrue(armCommands.MidConeCommand);
     Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
 
     // Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);

@@ -93,22 +93,6 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Buttons.primaryAButton.onTrue(new ChangeStream());
-    // Buttons.secondaryDPadE.onTrue(command);
-    //Buttons.secondaryDPadE.onTrue(new CloseGrabbyCommand(armAndGrabbySubystem));
-    //Buttons.secondaryDPadW.onTrue(new OpenGrabbyCommand(armAndGrabbySubystem));
-    
-    // Buttons.secondaryRB.whileTrue(new ExtendArmCommand(armAndGrabbySubystem, 50));
-    // Buttons.secondaryLB.whileTrue(new RetractArmCommand(armAndGrabbySubystem, 50));
-    // Buttons.secondaryYButton.whileTrue(new LiftArmCommand(armAndGrabbySubystem, 50));
-    // Buttons.secondaryAButton.whileTrue(new LowerArmCommand(armAndGrabbySubystem, 50));
-    //  Buttons.secondaryXButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
-    
-    // Buttons.secondaryBButton.onTrue(new SetArmMidCubeCommand(armAndGrabbySubystem));
-    // Buttons.secondaryAButton.onTrue(new SetArmHomeCommand(armAndGrabbySubystem));
-    // Buttons.secondaryYButton.onTrue(new SetArmHighCubeCommand(armAndGrabbySubystem));
-    // Buttons.secondaryDPadN.onTrue(new SetArmHighConeCommand(armAndGrabbySubystem));
-    // Buttons.secondaryDPadS.onTrue(new SetArmMidConeCommand(armAndGrabbySubystem));
-    // Buttons.secondaryStartButton.onTrue(new SetArmInitCommand(armAndGrabbySubystem));
 
     // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
     // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
@@ -119,15 +103,22 @@ public class RobotContainer {
     Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
 
 
-    Buttons.primaryRB.whileTrue(armCommands.ExtendFirstStageCommand);
-    Buttons.primaryLB.whileTrue(armCommands.RetractFirstStageCommand);
+    // Buttons.primaryRB.whileTrue(armCommands.ExtendFirstStageCommand);
+    // Buttons.primaryLB.whileTrue(armCommands.RetractFirstStageCommand);
 
-    Buttons.primaryRightStickButton.whileTrue(armCommands.ExtendSecondStageCommand);
-    Buttons.primaryLeftStickButton.whileTrue(armCommands.RetractSecondStageCommand);
+    // Buttons.primaryRightStickButton.whileTrue(armCommands.ExtendSecondStageCommand);
+    // Buttons.primaryLeftStickButton.whileTrue(armCommands.RetractSecondStageCommand);
+
+    Buttons.primaryRightStickButton.whileTrue(armCommands.SmartExtendArmCommand);
+    Buttons.primaryLeftStickButton.whileTrue(armCommands.SmartRetractArmCommand);
 
     Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
-    Buttons.primaryDPadE.onTrue(armCommands.UngrabCommand);
-    Buttons.primaryDPadW.onTrue(armCommands.UngrabCommand);
+
+    // Buttons.primaryDPadE.onTrue(armCommands.UngrabWithRetractCommand);
+    // Buttons.primaryDPadW.onTrue(armCommands.UngrabWithRetractCommand);
+
+    // Buttons.primaryDPadE.onTrue(armCommands.UngrabWithRetractCommand);
+    Buttons.primaryDPadW.onTrue(armCommands.UngrabWithRetractCommand);
     
     Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
@@ -135,11 +126,14 @@ public class RobotContainer {
     Buttons.primaryBButton.onTrue(armCommands.MidConeCommand);
     Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
 
-    Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
-    Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
+    // Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
+    // Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
+
+    Buttons.primaryAButton.onTrue(armCommands.GroundCommand);
+    Buttons.primaryBButton.onTrue(armCommands.HomeCommand);
 
     Buttons.JoystickButton9.onTrue(new HockeyStopCommand(drivetrainSubsystem));
-    Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
   private void setupDashboard() {
@@ -152,7 +146,7 @@ public class RobotContainer {
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
 
-    autoChooser.addOption("BlueTopCubeCubeCharge",
+    autoChooser.addOption("BlueTopCubeCubeScore",
       new TopCubeCubeScore(
       Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
       Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"), 
@@ -194,8 +188,11 @@ public class RobotContainer {
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),
-                false),
+                true),
             drivetrainSubsystem));
+
+          new LiftArmCommand(grabbyLifterSubsystem, Buttons.primaryJoystick.getRightTriggerAxis() * 10);
+          new LowerArmCommand(grabbyLifterSubsystem, Buttons.primaryJoystick.getLeftTriggerAxis() * 10);
   }
 
   /**

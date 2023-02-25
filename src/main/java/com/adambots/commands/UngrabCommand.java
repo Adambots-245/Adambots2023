@@ -9,7 +9,8 @@ import com.adambots.subsystems.GrabSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class UngrabCommand extends CommandBase {
-    GrabSubsystem grabSubsystem;
+  GrabSubsystem grabSubsystem;
+
   public UngrabCommand(GrabSubsystem grabSubsystem) {
     this.grabSubsystem = grabSubsystem;
     addRequirements(grabSubsystem);

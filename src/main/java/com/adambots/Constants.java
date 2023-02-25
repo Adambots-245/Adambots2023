@@ -347,7 +347,7 @@ public final class Constants {
 
         public static final double highConeLifterValue = 173.6;
         public static final double highConeFirstExtenderValue = 55.2 * armEncoderCPR;
-        public static final double highConeSecondExtenderValue = 68 * armEncoderCPR;
+        public static final double highConeSecondExtenderValue = 66 * armEncoderCPR;
 
         public static class State{
             double armLiftTarget;
@@ -397,7 +397,7 @@ public final class Constants {
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR;
         public static final double secondExtenderMaxExtend = 68.5 * armEncoderCPR;
         public static final double rotationPerInch = 1;
-        public static final double lifterSpeed = 0.525;
+        public static final double lifterSpeed = 0.65; //0.525
         public static final double extenderSpeed = 0.3;
     }    
 }

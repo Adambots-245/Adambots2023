@@ -61,6 +61,10 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     targetPosition = secondExtender.getSelectedSensorPosition();
   }
 
+  public boolean isMaxRetracted () {
+    return photoEye.isDetecting();
+  }
+
   @Override
   public void periodic() {
 
@@ -77,6 +81,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
 
     SmartDashboard.putNumber("Second Extender Speed", secondExtenderSpeed);
+    SmartDashboard.putBoolean("decond Photo Eye", photoEye.isDetecting());
   }
 
   private void failsafes() {

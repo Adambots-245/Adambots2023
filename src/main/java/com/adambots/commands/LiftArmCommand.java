@@ -10,10 +10,12 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 public class LiftArmCommand extends CommandBase {
   /** Creates a new LiftArmCommand. */
+  double increment;
   GrabbyLifterSubsystem grabbyLifterSubsystem;
-  public LiftArmCommand(GrabbyLifterSubsystem grabbyLifterSubsystem) {
+  public LiftArmCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, double increment) {
     addRequirements(grabbyLifterSubsystem);
     this.grabbyLifterSubsystem = grabbyLifterSubsystem;
+    this.increment = increment;
   }
 
   // Called when the command is initially scheduled.
@@ -23,7 +25,7 @@ public class LiftArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbyLifterSubsystem.manualUp();
+    grabbyLifterSubsystem.manualUp(increment);
   }
 
   // Called once the command ends or is interrupted.

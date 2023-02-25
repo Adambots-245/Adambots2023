@@ -34,6 +34,10 @@ public class ArmCommands {
     public final Command HighConeCommand;
     public final Command HomeCommand;
     public final Command GroundCommand;
+    public final Command UngrabWithRetractCommand;
+    public final Command SmartExtendArmCommand;
+    public final Command SmartRetractArmCommand;
+
 
     public ArmCommands(FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem,
             GrabbyLifterSubsystem grabbyLifterSubsystem, GrabSubsystem grabSubsystem) {
@@ -42,14 +46,18 @@ public class ArmCommands {
         this.grabbyLifterSubsystem = grabbyLifterSubsystem;
         this.grabSubsystem = grabSubsystem;
 
-        LiftArmCommand = new LiftArmCommand(grabbyLifterSubsystem);
-        LowerArmCommand = new LowerArmCommand(grabbyLifterSubsystem);
+        LiftArmCommand = new LiftArmCommand(grabbyLifterSubsystem, 9999);
+        LowerArmCommand = new LowerArmCommand(grabbyLifterSubsystem, 9999);
         ExtendFirstStageCommand = new ExtendFirstStageCommand(firstExtenderSubsystem);
         RetractFirstStageCommand = new RetractFirstStageCommand(firstExtenderSubsystem);
         ExtendSecondStageCommand = new ExtendSecondStageCommand(secondExtenderSubsystem);
         RetractSecondStageCommand = new RetractSecondStageCommand(secondExtenderSubsystem);
         GrabCommand = new GrabCommand(grabSubsystem);
         UngrabCommand = new UngrabCommand(grabSubsystem);
+        UngrabWithRetractCommand = new UngrabWithRetractCommand(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem);
+
+        SmartExtendArmCommand = new SmartExtendArmCommand(firstExtenderSubsystem, secondExtenderSubsystem);
+        SmartRetractArmCommand = new SmartRetractArmCommand(firstExtenderSubsystem, secondExtenderSubsystem);
 
         MidCubeCommand = Commands.parallel(
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midCubeState),

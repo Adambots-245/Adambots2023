@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 
-public class LowerArmCommand extends CommandBase {
+public class IncrementalLowerArmCommand extends CommandBase {
   /** Creates a new LiftArmCommand. */
   double increment;
   GrabbyLifterSubsystem grabbyLifterSubsystem;
-  public LowerArmCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, double increment) {
+  public IncrementalLowerArmCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, double increment) {
     addRequirements(grabbyLifterSubsystem);
     this.grabbyLifterSubsystem = grabbyLifterSubsystem;
     this.increment = increment;
@@ -25,7 +25,7 @@ public class LowerArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbyLifterSubsystem.manualDown(increment);
+    grabbyLifterSubsystem.manualDown(5);
   }
 
   // Called once the command ends or is interrupted.
@@ -36,7 +36,7 @@ public class LowerArmCommand extends CommandBase {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished() { //Only call using WhileTrue
     return false;
   }
 }

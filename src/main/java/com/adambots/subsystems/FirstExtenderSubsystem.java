@@ -61,6 +61,10 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     targetPosition = firstExtender.getSelectedSensorPosition();
   }
 
+  public boolean isMaxExtended () {
+    return firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.highConeState.getFirstExtendTarget()-100;
+  }
+
   @Override
   public void periodic() {
     
@@ -76,6 +80,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     failsafes();
     firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
     SmartDashboard.putNumber("First Extender Speed", firstExtenderSpeed);
+    SmartDashboard.putBoolean("first PhotoEye", photoEye.isDetecting());
   }
 
   private void failsafes() {

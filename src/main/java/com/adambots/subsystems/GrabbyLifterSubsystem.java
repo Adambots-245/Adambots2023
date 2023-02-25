@@ -45,12 +45,12 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     pid.reset();
   }
 
-  public void manualUp(){
-    targetPosition = armLifterEncoder.getAbsolutePosition() + 50;
+  public void manualUp(double increment){
+    targetPosition = armLifterEncoder.getAbsolutePosition() + increment;
   }
 
-  public void manualDown(){
-    targetPosition = armLifterEncoder.getAbsolutePosition() - 50;
+  public void manualDown(double increment){
+    targetPosition = armLifterEncoder.getAbsolutePosition() - increment;
   }
 
   public void stopLifting(){

@@ -39,11 +39,11 @@ public class UngrabWithRetractCommand extends CommandBase {
   public void execute() {
     grabSubsystem.ungrab();
     if (RobotMap.armRotationEncoder.getAbsolutePosition() >= GrabbyConstants.midCubeLifterValue-8 && RobotMap.armRotationEncoder.getAbsolutePosition() <= GrabbyConstants.highConeLifterValue+8) {
-      Commands.parallel(
+      Commands.waitSeconds(0.5).andThen(Commands.parallel(
           new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
           new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
           new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)
-      ).schedule();
+      )).schedule();
     }
   }
 

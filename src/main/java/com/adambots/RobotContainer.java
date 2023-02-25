@@ -120,10 +120,10 @@ public class RobotContainer {
     // Buttons.primaryDPadE.onTrue(armCommands.UngrabWithRetractCommand);
     Buttons.primaryDPadW.onTrue(armCommands.UngrabWithRetractCommand);
     
-    Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
+    Buttons.primaryBackButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
 
-    Buttons.primaryBButton.onTrue(armCommands.MidConeCommand);
+    Buttons.primaryStartButton.onTrue(armCommands.MidConeCommand);
     Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
 
     // Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
@@ -134,6 +134,7 @@ public class RobotContainer {
 
     Buttons.JoystickButton9.onTrue(new HockeyStopCommand(drivetrainSubsystem));
     // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    // Buttons.JoystickButton3.onTrue(new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor));
   }
 
   private void setupDashboard() {
@@ -188,7 +189,7 @@ public class RobotContainer {
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),
-                true),
+                false),
             drivetrainSubsystem));
 
           new LiftArmCommand(grabbyLifterSubsystem, Buttons.primaryJoystick.getRightTriggerAxis() * 10);

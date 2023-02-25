@@ -400,5 +400,8 @@ public final class Constants {
         public static final double lifterSpeed = 0.65; //0.525
         public static final double manualLifterSpeed = 0.3;
         public static final double extenderSpeed = 0.5; //0.3
+
+        public static final double horizontalMaxEncoderValue = 100000;
+        public static final double veritcalMaxEncoderValue = 100000;
     }    
 }

@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -85,6 +86,19 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   private void failsafes() {
+    //Horizontal and vertical expansion limits
+    double horizontalLimit = GrabbyConstants.horizontalMaxEncoderValue/Math.cos(armLifterEncoder.getAbsolutePosition());
+    double verticalLimit = GrabbyConstants.veritcalMaxEncoderValue/Math.sin(armLifterEncoder.getAbsolutePosition());
+
+    if(targetPosition > horizontalLimit){
+      targetPosition = horizontalLimit;
+    }
+
+    if(targetPosition > verticalLimit){
+      targetPosition = verticalLimit;
+    }
+
+    //Preventing the arm from going too far out or in
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;
     }
@@ -95,6 +109,8 @@ public class SecondExtenderSubsystem extends SubsystemBase {
         secondExtenderSpeed = 0;
       }
     }
+
+    //Preventing the arm from extending into the ground
     if (armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundLifterValue + 10) {
         targetPosition = 0;
     } 

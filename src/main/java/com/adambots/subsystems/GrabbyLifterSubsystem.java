@@ -84,15 +84,15 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
   }
 
   private void failsafes() {
-    if(armLifterEncoder.getAbsolutePosition() <= 0){
+    if(armLifterEncoder.getAbsolutePosition() <= 1){
       armLifterSpeed = 0;
     }
 
-    if(armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundState.getArmLiftTarget() && armLifterSpeed < 0){
+    if((armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundState.getArmLiftTarget() || armLifter.getSensorCollection().isRevLimitSwitchClosed() == 1) && armLifterSpeed < 0){
       armLifterSpeed = 0;
     }
 
-    if(armLifterEncoder.getAbsolutePosition() >= Constants.GrabbyConstants.initState.getArmLiftTarget() && armLifterSpeed > 0){
+    if((armLifterEncoder.getAbsolutePosition() >= Constants.GrabbyConstants.initState.getArmLiftTarget() || armLifter.getSensorCollection().isFwdLimitSwitchClosed() == 1) && armLifterSpeed > 0){
       armLifterSpeed = 0;
     }
 

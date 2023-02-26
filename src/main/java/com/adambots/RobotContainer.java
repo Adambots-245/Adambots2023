@@ -149,7 +149,6 @@ public class RobotContainer {
     Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
 
     // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
-    // Buttons.JoystickButton3.onTrue(new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor));
   }
 
   private void setupDashboard() {

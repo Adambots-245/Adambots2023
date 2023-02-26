@@ -69,6 +69,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    m_robotContainer.updateDashboard();
   }
 
   /**
@@ -82,9 +84,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    
-    // m_robotContainer.updateDashboard();
-
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
     // interrupted commands,
@@ -147,8 +146,6 @@ public class Robot extends TimedRobot {
    */
   //@Override
   public void autonomousPeriodic() {
-    // SmartDashboard.putNumber("yaw",gyroSubsystem.getYaw());
-
   }
 
   @Override
@@ -173,7 +170,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
   }
 
   @Override

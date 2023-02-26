@@ -87,16 +87,16 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
   private void failsafes() {
     //Horizontal and vertical expansion limits
-    double horizontalLimit = GrabbyConstants.horizontalMaxEncoderValue/Math.cos(armLifterEncoder.getAbsolutePosition());
-    double verticalLimit = GrabbyConstants.veritcalMaxEncoderValue/Math.sin(armLifterEncoder.getAbsolutePosition());
+    // double horizontalLimit = GrabbyConstants.horizontalMaxEncoderValue/Math.cos(armLifterEncoder.getAbsolutePosition());
+    // double verticalLimit = GrabbyConstants.veritcalMaxEncoderValue/Math.sin(armLifterEncoder.getAbsolutePosition());
 
-    if(targetPosition > horizontalLimit){
-      targetPosition = horizontalLimit;
-    }
+    // if(targetPosition > horizontalLimit){
+    //   targetPosition = horizontalLimit;
+    // }
 
-    if(targetPosition > verticalLimit){
-      targetPosition = verticalLimit;
-    }
+    // if(targetPosition > verticalLimit){
+    //   targetPosition = verticalLimit;
+    // }
 
     //Preventing the arm from going too far out or in
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){

@@ -60,14 +60,17 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
 
   public void manualUp(double increment){
     targetPosition = armLifterEncoder.getAbsolutePosition() + increment;
+    pid.reset();
   }
 
   public void manualDown(double increment){
     targetPosition = armLifterEncoder.getAbsolutePosition() - increment;
+    pid.reset();
   }
 
   public void stopLifting(){
     targetPosition = armLifterEncoder.getAbsolutePosition();
+    pid.reset();
   }
 
   @Override
@@ -81,6 +84,8 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     armLifter.set(ControlMode.PercentOutput, armLifterSpeed);
 
     SmartDashboard.putNumber("Arm Lifter Speed", armLifterSpeed);
+    SmartDashboard.putNumber("Fwd Limit Switch", armLifter.getSensorCollection().isFwdLimitSwitchClosed());
+    SmartDashboard.putNumber("Rev Limit Switch", armLifter.getSensorCollection().isRevLimitSwitchClosed());
   }
 
   private void failsafes() {
@@ -93,14 +98,6 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     }
 
     if((armLifterEncoder.getAbsolutePosition() >= Constants.GrabbyConstants.initState.getArmLiftTarget() || armLifter.getSensorCollection().isFwdLimitSwitchClosed() == 1) && armLifterSpeed > 0){
-      armLifterSpeed = 0;
-    }
-
-    if(groundSwitch.get() && armLifterSpeed < 0){
-      armLifterSpeed = 0;
-    }
-
-    if(upperSwitch.get() && armLifterSpeed > 0){
       armLifterSpeed = 0;
     }
   }

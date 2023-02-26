@@ -23,6 +23,7 @@ public class LowerArmCommand extends CommandBase {
   @Override
   public void initialize() {
     grabbyLifterSubsystem.changeMaxSpeed(Constants.GrabbyConstants.manualLifterSpeed);
+    // grabbyLifterSubsystem.changeMaxSpeed(0.1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

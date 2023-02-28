@@ -53,7 +53,7 @@ public class MidCubeCubeCharge extends SequentialCommandGroup{
     // new InstantCommand(() -> drivetrainSubsystem.resetOdometry(traj2.getInitialPose())),
     Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj2),
     new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor),
-    new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor),
+    // new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor),
     new HockeyStopCommand(drivetrainSubsystem)
     );
   }

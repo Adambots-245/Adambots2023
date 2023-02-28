@@ -38,6 +38,9 @@
         "open": true
       },
       "SmartDashboard": {
+        "Auton Mode": {
+          "open": true
+        },
         "open": true
       }
     }

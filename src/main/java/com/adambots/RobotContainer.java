@@ -168,6 +168,18 @@ public class RobotContainer {
       Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
+    autoChooser.addOption("RedTopCubeCubeCharge",
+      new TopCubeCubeCharge(
+      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+      Functions.getTrajectory("RedTopCubeCubeCharge2.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+    autoChooser.addOption("RedTopCubeCubeScore",
+      new TopCubeCubeScore(
+      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+      Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
 
     autoChooser.addOption("BlueMidCubeCubeCharge",
       new MidCubeCubeCharge(
@@ -186,6 +198,18 @@ public class RobotContainer {
       new BottomCubeCubeScore(
       Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
       Functions.getTrajectory("BlueBottomCubeCubeScore2.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+    autoChooser.addOption("RedBottomCubeCubeCharge",
+      new BottomCubeCubeCharge(
+      Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+      Functions.getTrajectory("RedBottomCubeCubeCharge2.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+    autoChooser.addOption("RedBottomCubeCubeScore",
+      new BottomCubeCubeScore(
+      Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+      Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
 

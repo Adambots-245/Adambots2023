@@ -181,12 +181,20 @@ public class RobotContainer {
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
 
+
     autoChooser.addOption("BlueMidCubeCubeCharge",
       new MidCubeCubeCharge(
       Functions.getTrajectory("BlueMidCubeCube1.wpilib.json"), 
       Functions.getTrajectory("BlueMidCubeCubeCharge2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
+    autoChooser.addOption("RedMidCubeCubeCharge",
+      new MidCubeCubeCharge(
+      Functions.getTrajectory("RedMidCubeCube1.wpilib.json"), 
+      Functions.getTrajectory("RedMidCubeCubeCharge2.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+
 
     autoChooser.addOption("BlueBottomCubeCubeCharge",
       new BottomCubeCubeCharge(

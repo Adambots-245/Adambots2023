@@ -145,8 +145,10 @@ public class RobotContainer {
     Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
     
     //Joystick Keybinds
-    Buttons.JoystickButton9.onTrue(new HockeyStopCommand(drivetrainSubsystem));
+    Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
     Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
+
+    Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
 
     // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
@@ -222,7 +224,7 @@ public class RobotContainer {
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),
-                false),
+                true),
             drivetrainSubsystem));
   }
 

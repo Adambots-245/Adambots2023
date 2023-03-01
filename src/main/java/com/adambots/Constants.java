@@ -131,8 +131,8 @@ public final class Constants {
 
         public static final double kPXController = 2.6; // P 0 0 values for auton X, Y, and Theta controllers
         public static final double kPYController = 2.6;
-        public static final double kDXController = 0.083; //0.083 // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kDYController = 0.083;
+        public static final double kDXController = 0.093; //0.083 // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kDYController = 0.093;
         public static final double kPThetaController = 0.55;
         public static final double kDThetaController = 0.05;
 
@@ -335,9 +335,9 @@ public final class Constants {
         public static final double midCubeFirstExtenderValue = 39 * armEncoderCPR;
         public static final double midCubeSecondExtenderValue = 0;
 
-        public static final double highCubeLifterValue = 173.9;
+        public static final double highCubeLifterValue = 171;
         public static final double highCubeFirstExtenderValue = 55.7 * armEncoderCPR;
-        public static final double highCubeSecondExtenderValue = 52.9 * armEncoderCPR;
+        public static final double highCubeSecondExtenderValue = 58.9 * armEncoderCPR;
 
         public static final double humanLifterValue = 175;
         public static final double humanFirstExtenderValue = 60 * armEncoderCPR;

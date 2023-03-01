@@ -65,11 +65,11 @@ public class VisionProcessingSubsystem extends SubsystemBase {
      
     detectionCamera = CameraServer.startAutomaticCapture(0);
     detectionCamera.setVideoMode(VideoMode.PixelFormat.kYUYV, VisionConstants.kFrameWidth, VisionConstants.kFrameHeight, VisionConstants.kProcessingFramesPerSec);   
-    camCvSink = CameraServer.getVideo(detectionCamera);
-    processedCubeOutputStream = CameraServer.putVideo("Cube", 320, 240);
-    processedConeOutputStream = CameraServer.putVideo("Cone", 320, 240);
+    //camCvSink = CameraServer.getVideo(detectionCamera);
+   // processedCubeOutputStream = CameraServer.putVideo("Cube", 320, 240);
+    //processedConeOutputStream = CameraServer.putVideo("Cone", 320, 240);
 
-    mat = new Mat();
+    //mat = new Mat();
     SmartDashboard.putData("April Tag Field", aprilTagField);
     visionThread = new Thread(() -> {
       run2();

@@ -78,7 +78,8 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     }
     
     failsafes();
-    firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
+    // firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
+    firstExtender.set(ControlMode.PercentOutput, 0);
     SmartDashboard.putNumber("First Extender Speed", firstExtenderSpeed);
     SmartDashboard.putBoolean("first PhotoEye", photoEye.isDetecting());
   }

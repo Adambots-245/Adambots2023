@@ -24,6 +24,7 @@ import com.adambots.commands.autonCommands.*;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeScore;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCubeCharge;
+import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickup;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
 import com.adambots.sensors.Gyro;
@@ -159,70 +160,91 @@ public class RobotContainer {
   private void setupDashboard() {
     autoChooser.setDefaultOption("None", null);
 
-    autoChooser.addOption("BlueTopCubeCubeCharge",
-      new TopCubeCubeCharge(
+    autoChooser.addOption("BlueTopSimple",
+      new ScorePickup(
       Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("BlueTopCubeCubeCharge2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
-    autoChooser.addOption("BlueTopCubeCubeScore",
-      new TopCubeCubeScore(
-      Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("RedTopCubeCubeCharge",
-      new TopCubeCubeCharge(
-      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedTopCubeCubeCharge2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("RedTopCubeCubeScore",
-      new TopCubeCubeScore(
-      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-
-
-    autoChooser.addOption("BlueMidCubeCubeCharge",
-      new MidCubeCubeCharge(
-      Functions.getTrajectory("BlueMidCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("BlueMidCubeCubeCharge2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("RedMidCubeCubeCharge",
-      new MidCubeCubeCharge(
-      Functions.getTrajectory("RedMidCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedMidCubeCubeCharge2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-
-
-    autoChooser.addOption("BlueBottomCubeCubeCharge",
-      new BottomCubeCubeCharge(
+    autoChooser.addOption("BlueBottomSimple",
+      new ScorePickup(
       Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("BlueBottomCubeCubeCharge2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
-    autoChooser.addOption("BlueBottomCubeCubeScore",
-      new BottomCubeCubeScore(
-      Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("BlueBottomCubeCubeScore2.wpilib.json"), 
+    autoChooser.addOption("RedTopSimple",
+      new ScorePickup(
+      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
-    autoChooser.addOption("RedBottomCubeCubeCharge",
-      new BottomCubeCubeCharge(
+    autoChooser.addOption("RedBottomSimple",
+      new ScorePickup(
       Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedBottomCubeCubeCharge2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
-    autoChooser.addOption("RedBottomCubeCubeScore",
-      new BottomCubeCubeScore(
-      Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+
+    // autoChooser.addOption("BlueTopCubeCubeCharge",
+    //   new TopCubeCubeCharge(
+    //   Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueTopCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("BlueTopCubeCubeScore",
+    //   new TopCubeCubeScore(
+    //   Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedTopCubeCubeCharge",
+    //   new TopCubeCubeCharge(
+    //   Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedTopCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedTopCubeCubeScore",
+    //   new TopCubeCubeScore(
+    //   Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+
+
+    // autoChooser.addOption("BlueMidCubeCubeCharge",
+    //   new MidCubeCubeCharge(a
+    //   Functions.getTrajectory("BlueMidCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueMidCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedMidCubeCubeCharge",
+    //   new MidCubeCubeCharge(
+    //   Functions.getTrajectory("RedMidCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedMidCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+
+
+    // autoChooser.addOption("BlueBottomCubeCubeCharge",
+    //   new BottomCubeCubeCharge(
+    //   Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueBottomCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("BlueBottomCubeCubeScore",
+    //   new BottomCubeCubeScore(
+    //   Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueBottomCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedBottomCubeCubeCharge",
+    //   new BottomCubeCubeCharge(
+    //   Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedBottomCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedBottomCubeCubeScore",
+    //   new BottomCubeCubeScore(
+    //   Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
 
     SmartDashboard.putData("Auton Mode", autoChooser);
     slewFilter  = new SlewRateLimiter(70);
@@ -304,3 +326,4 @@ public class RobotContainer {
     //Tardirades can survive in a vacuum
   }
 }
+// Rudy was here

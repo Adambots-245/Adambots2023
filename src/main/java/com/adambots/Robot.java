@@ -160,7 +160,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().cancelAll();
 
-    RobotMap.GyroSensor.reset();
+    // RobotMap.GyroSensor.reset();
     
     RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
     RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);

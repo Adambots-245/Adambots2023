@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -150,6 +151,8 @@ public class RobotContainer {
 
     Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
 
+    Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
+
     // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
@@ -238,12 +241,14 @@ public class RobotContainer {
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
+    // SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
     SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
     SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
     SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
-    SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
-    SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
+
+    SmartDashboard.putNumber("Gyro", RobotMap.GyroSensor.getAngle());
+    // SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
+    // SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }
 
   private void setupDefaultCommands() {
@@ -252,7 +257,7 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> drivetrainSubsystem.drive( //ADDED CURVES TO Buttons, CHANGE BACK IF IT DOESNT WORK - TOMMY
+            () -> drivetrainSubsystem.drive(
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),

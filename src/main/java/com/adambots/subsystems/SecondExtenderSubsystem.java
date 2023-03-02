@@ -63,7 +63,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   public boolean isMaxRetracted () {
-    return photoEye.isDetecting();
+    return !photoEye.isDetecting();
   }
 
   @Override
@@ -74,13 +74,13 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     if(targetPosition > 0){
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
-    }else if(!photoEye.isDetecting()){
+    }else if(!isMaxRetracted()){
       secondExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
     }
 
     failsafes();
-    // secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
-    secondExtender.set(ControlMode.PercentOutput, 0);
+    secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
+    // secondExtender.set(ControlMode.PercentOutput, 0);
 
     SmartDashboard.putNumber("Second Extender Speed", secondExtenderSpeed);
     SmartDashboard.putBoolean("decond Photo Eye", photoEye.isDetecting());
@@ -104,7 +104,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
       secondExtenderSpeed = 0;
     }
 
-    if(photoEye.isDetecting()){
+    if(isMaxRetracted()){
       secondExtender.setSelectedSensorPosition(0);
       if(secondExtenderSpeed < 0){
         secondExtenderSpeed = 0;

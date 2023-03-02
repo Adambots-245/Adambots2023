@@ -65,6 +65,10 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     return firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.highConeState.getFirstExtendTarget()-100;
   }
 
+  public boolean isMaxRetracted () {
+    return !photoEye.isDetecting();
+  }
+
   @Override
   public void periodic() {
     
@@ -73,13 +77,13 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     if(targetPosition > 0){
       firstExtenderSpeed = pid.calculate(firstExtender.getSelectedSensorPosition(), targetPosition);
       firstExtenderSpeed = MathUtil.clamp(firstExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
-    }else if(!photoEye.isDetecting()){
+    }else if(!isMaxRetracted()){
       firstExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
     }
     
     failsafes();
-    // firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
-    firstExtender.set(ControlMode.PercentOutput, 0);
+    firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
+    // firstExtender.set(ControlMode.PercentOutput, 0);
     SmartDashboard.putNumber("First Extender Speed", firstExtenderSpeed);
     SmartDashboard.putBoolean("first PhotoEye", photoEye.isDetecting());
   }
@@ -89,7 +93,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
       firstExtenderSpeed = 0;
     }
 
-    if(photoEye.isDetecting()){
+    if(isMaxRetracted()){
       firstExtender.setSelectedSensorPosition(0);
       if(firstExtenderSpeed < 0){
         firstExtenderSpeed = 0;

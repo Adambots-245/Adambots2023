@@ -314,7 +314,8 @@ public final class Constants {
 
         public static final int armEncoderCPR = 2048;
         public static final int mech2dAdjustment = +45;
-        
+        public static final double limitOffset = -137.2;
+
         // misc.
         //WORKS
         public static final double initiaLifterValue = 212;
@@ -322,7 +323,7 @@ public final class Constants {
         public static final double initialSecondExtenderValue = 0;
 
         //WORKS
-        public static final double groundLifterValue = 95;
+        public static final double groundLifterValue = 93.5;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
@@ -339,9 +340,9 @@ public final class Constants {
         public static final double highCubeFirstExtenderValue = 55.7 * armEncoderCPR;
         public static final double highCubeSecondExtenderValue = 58.9 * armEncoderCPR;
 
-        public static final double humanLifterValue = 175;
+        public static final double humanLifterValue = 173.5; //171.5
         public static final double humanFirstExtenderValue = 60 * armEncoderCPR;
-        public static final double humanSecondExtenderValue = 0;
+        public static final double humanSecondExtenderValue = 20; //0
         
         // cone
         //WORKS
@@ -350,7 +351,7 @@ public final class Constants {
         public static final double midConeSecondExtenderValue = 7;
 
         public static final double highConeLifterValue = 181.6;
-        public static final double highConeFirstExtenderValue = 55.2 * armEncoderCPR;
+        public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double highConeSecondExtenderValue = 69 * armEncoderCPR;
 
         public static class State{
@@ -406,7 +407,7 @@ public final class Constants {
         public static final double manualLifterSpeed = 0.15;
         public static final double extenderSpeed = 0.525; //0.525
 
-        public static final double horizontalMaxEncoderValue = 100000;
-        public static final double veritcalMaxEncoderValue = 100000;
+        public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;
+        public static final double veritcalMaxEncoderValue = 44.2 * armEncoderCPR;
     }    
 }

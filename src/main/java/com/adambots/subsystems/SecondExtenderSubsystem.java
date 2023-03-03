@@ -71,6 +71,17 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
     
+    //Horizontal and vertical expansion limits
+    // double horizontalLimit = Math.abs(GrabbyConstants.horizontalMaxEncoderValue/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset)));
+    // double verticalLimit = Math.abs(GrabbyConstants.veritcalMaxEncoderValue/Math.sin(Math.toRadians(armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset)));
+
+    // horizontalLimit = MathUtil.clamp(horizontalLimit, GrabbyConstants.horizontalMaxEncoderValue, GrabbyConstants.horizontalMaxEncoderValue*3);
+    // verticalLimit = MathUtil.clamp(verticalLimit, GrabbyConstants.veritcalMaxEncoderValue, GrabbyConstants.veritcalMaxEncoderValue*3);
+
+    SmartDashboard.putNumber("Arm Encoder W/ Offset", armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
+    // SmartDashboard.putNumber("horizontalLimit", horizontalLimit);
+    // SmartDashboard.putNumber("verticalLimit", verticalLimit);  
+
     if(targetPosition > 0){
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
@@ -87,19 +98,16 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   private void failsafes() {
-    //Horizontal and vertical expansion limits
-    // double horizontalLimit = GrabbyConstants.horizontalMaxEncoderValue/Math.cos(armLifterEncoder.getAbsolutePosition());
-    // double verticalLimit = GrabbyConstants.veritcalMaxEncoderValue/Math.sin(armLifterEncoder.getAbsolutePosition());
-
-    // if(targetPosition > horizontalLimit){
-    //   targetPosition = horizontalLimit;
-    // }
-
-    // if(targetPosition > verticalLimit){
-    //   targetPosition = verticalLimit;
-    // }
-
     //Preventing the arm from going too far out or in
+
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.horizontalMaxEncoderValue && armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset < 5 && secondExtenderSpeed > 0){
+      secondExtenderSpeed = 0;
+    }
+
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200 && secondExtenderSpeed > 0){
+      secondExtenderSpeed = 0;
+    }
+
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;
     }

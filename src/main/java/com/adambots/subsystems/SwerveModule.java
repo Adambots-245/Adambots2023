@@ -90,7 +90,6 @@ public class SwerveModule {
     m_driveMotor.setIdleMode(IdleMode.kBrake);
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
-    //TODO: Enable this and test
     m_driveMotor.setSmartCurrentLimit(32); //32
     m_turningMotor.setSmartCurrentLimit(21); //25 - 15
     m_driveMotor.enableVoltageCompensation(12.6);

@@ -21,10 +21,12 @@ import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
+import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeScore;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickup;
+import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupBottom;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
 import com.adambots.sensors.Gyro;
@@ -158,7 +160,10 @@ public class RobotContainer {
   }
 
   private void setupDashboard() {
-    autoChooser.setDefaultOption("None", null);
+    autoChooser.setDefaultOption("CHOOSE AN AUTON", new AutoInitAndScoreCube(
+      Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
 
     autoChooser.addOption("BlueTopSimple",
       new ScorePickup(
@@ -166,7 +171,7 @@ public class RobotContainer {
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
     autoChooser.addOption("BlueBottomSimple",
-      new ScorePickup(
+      new ScorePickupBottom(
       Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
@@ -176,7 +181,7 @@ public class RobotContainer {
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
     autoChooser.addOption("RedBottomSimple",
-      new ScorePickup(
+      new ScorePickupBottom(
       Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );

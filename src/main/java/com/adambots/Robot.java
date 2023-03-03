@@ -60,8 +60,8 @@ public class Robot extends TimedRobot {
       // visionThread.start();
      
       // Camera Feed Only - No Image Processing
-        visionThread = new VisionProcessingSubsystem(new ConePipeline(), new CubePipeline()).getVisionThread();
-        visionThread.start();
+        // visionThread = new VisionProcessingSubsystem(new ConePipeline(), new CubePipeline()).getVisionThread();
+        // visionThread.start();
     }
 
     // RobotMap.YellowLight.set(true);

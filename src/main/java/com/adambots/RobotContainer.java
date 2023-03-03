@@ -264,9 +264,9 @@ public class RobotContainer {
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
     // SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
-    SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
-    SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
-    SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
+    // SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
+    // SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
+    // SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
 
     SmartDashboard.putNumber("Gyro", RobotMap.GyroSensor.getAngle());
     // SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));

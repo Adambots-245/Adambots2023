@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -72,7 +73,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     
-    SmartDashboard.putNumber("First Extender Encoder", firstExtender.getSelectedSensorPosition());
+    SmartDashboard.putNumber("First Extender Encoder", firstExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
 
     if(targetPosition > 0){
       firstExtenderSpeed = pid.calculate(firstExtender.getSelectedSensorPosition(), targetPosition);

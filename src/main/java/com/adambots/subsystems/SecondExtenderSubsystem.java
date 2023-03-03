@@ -69,7 +69,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
     
     if(targetPosition > 0){
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);

@@ -106,8 +106,8 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   // Translation2d t2d = new Translation2d(-poseValues[1], poseValues[0]);
   // Rotation using ry
   // Rotation2d r2d = new Rotation2d(poseValues[4]);
-  Pose2d pose = LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue();
-  return pose; 
+  //Pose2d pose = LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue();
+  return null; 
 }
   public RotatedRect[] findBoundingBoxes(ArrayList<MatOfPoint> contours) {
     // ArrayList<MatOfPoint> contours = coneGrip.filterContoursOutput();

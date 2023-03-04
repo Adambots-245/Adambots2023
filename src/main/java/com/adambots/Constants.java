@@ -386,6 +386,8 @@ public final class Constants {
         public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
         public static final State humanStationState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
 
+        public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
+
         //PID values
         public static final double lifterP = 0.015;
         public static final double lifterI = 0.0015;

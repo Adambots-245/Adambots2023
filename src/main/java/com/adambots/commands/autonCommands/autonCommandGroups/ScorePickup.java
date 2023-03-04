@@ -36,8 +36,11 @@ public class ScorePickup extends SequentialCommandGroup{
     super(
     new AutoInitAndScoreCube(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
     Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)),
-    Commands.parallel(Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1).andThen(new InstantCommand(() -> drivetrainSubsystem.stop())), new WaitCommand(1.75).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))),
-    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 3),
+    // Commands.parallel(Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1).andThen(new InstantCommand(() -> drivetrainSubsystem.stop())), new WaitCommand(1.75).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))),
+    Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1).andThen(new InstantCommand(() -> drivetrainSubsystem.stop()), 
+    new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState)),
+    new WaitCommand(2.5),
+    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 2.5),
     new WaitCommand(0.75),
     Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
     );

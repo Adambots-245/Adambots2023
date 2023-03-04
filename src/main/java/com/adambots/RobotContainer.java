@@ -24,6 +24,7 @@ import com.adambots.commands.autonCommands.*;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeScore;
+import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickup;
 import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupBottom;
@@ -126,6 +127,7 @@ public class RobotContainer {
 
     //Enable for XBoxx controller code
     Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
+    Buttons.primaryBackButton.onFalse(armCommands.HomeCommand);
     Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
 
     Buttons.primaryRB.whileTrue(armCommands.SmartExtendArmCommand);
@@ -163,6 +165,12 @@ public class RobotContainer {
     autoChooser.setDefaultOption("CHOOSE AN AUTON", new AutoInitAndScoreCube(
       Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+
+    autoChooser.addOption("MidChargeStation",
+      new MidCubeCharge(
+      Functions.getTrajectory("BlueCharge.wpilib.json"), 
+      RobotMap.GyroSensor, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
 
     autoChooser.addOption("BlueTopSimple",

@@ -38,13 +38,13 @@ public class TestAutoBalanceCommand extends CommandBase {
     double pitchAngleDegrees = m_gyro.getPitch();
 
     if (Math.abs(pitchAngleDegrees) < 3 && !toggle) {
-      m_drivetrainSubsystem.drive(1, 0, 0, false);
+      m_drivetrainSubsystem.drive(-1, 0, 0, false);
     } else {
       toggle = true;
     }
 
     if (toggle) {
-      m_drivetrainSubsystem.drive(0.5, 0, 0, false);
+      m_drivetrainSubsystem.drive(-0.3, 0, 0, false);
       inc++;
     }
   }
@@ -57,6 +57,6 @@ public class TestAutoBalanceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return inc > 56;
+      return inc > 120 || (Math.abs(m_gyro.getPitch()) < 3 && toggle);
     }
 }

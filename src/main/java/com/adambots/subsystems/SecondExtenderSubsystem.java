@@ -33,6 +33,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.secondExtenderP, Constants.GrabbyConstants.secondExtenderI, Constants.GrabbyConstants.secondExtenderD);
     this.armLifterEncoder = armLifterEncoder;
+    // secondExtender.configOpenloopRamp(0.2);
   }
 
   public void changeTarget(double newTarget){

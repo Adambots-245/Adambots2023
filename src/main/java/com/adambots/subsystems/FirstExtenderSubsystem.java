@@ -70,6 +70,10 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     return photoEye.isDetecting();
   }
 
+  public double getEncoder () {
+    return firstExtender.getSelectedSensorPosition();
+  }
+
   @Override
   public void periodic() {
     

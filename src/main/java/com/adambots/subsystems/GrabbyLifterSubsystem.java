@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants;
+import com.adambots.Constants.GrabbyConstants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -42,6 +43,18 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
   public void changeTarget(double newTarget){
     targetPosition = newTarget;
     pid.reset();
+  }
+
+  public String getState() {
+    if (targetPosition == GrabbyConstants.humanLifterValue) {
+      return "human";
+    }
+    if (targetPosition == GrabbyConstants.groundLifterValue) {
+      return "ground";
+    }
+    else {
+      return "idk";
+    }
   }
 
   public void fullUp(){

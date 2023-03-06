@@ -5,6 +5,7 @@
 package com.adambots.sensors;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.RobotController;
 
 /** Add your docs here. */
 public class UltrasonicSensor {
@@ -12,7 +13,8 @@ public class UltrasonicSensor {
     private final AnalogInput rangefinder;
     
     // The scaling factor:  distance in inches = volts returned / SCALING_FACTOR
-    private final int SCALING_FACTOR = 512/5*24/23;
+    // private final int SCALING_FACTOR = 512/5*24/23;
+    private final double SCALING_FACTOR = 5 / RobotController.getVoltage5V();
     
     /** Creates a new ultrasonic sensor hooked up to <code>portNumber</code> on the analog breakout.
      * @params portNumber The port number on the breakout.
@@ -26,7 +28,13 @@ public class UltrasonicSensor {
     /** Returns the distance measured in inches.  */
     public double getInches(){
         double volts = rangefinder.getAverageVoltage();
-        return (double) (volts * SCALING_FACTOR);
+        return (double) (volts * SCALING_FACTOR * 0.0492);
+    }
+    
+    /** Returns the distance measured in inches.  */
+    public double getCentimeters(){
+        double volts = rangefinder.getAverageVoltage();
+        return (double) (volts * SCALING_FACTOR * 0.125);
     }
     
     /** Returns the distance measured in feet.  */

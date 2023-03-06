@@ -28,6 +28,7 @@ import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickup;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
 import com.adambots.sensors.Gyro;
+import com.adambots.sensors.UltrasonicSensor;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Dash;
 import com.adambots.utils.Functions;
@@ -41,6 +42,7 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -262,6 +264,8 @@ public class RobotContainer {
     Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
     Dash.add("Vision Index:" , () -> VisionHelpers.getDetectedResult());
 
+    UltrasonicSensor ultra = new UltrasonicSensor(0);
+    Dash.add("Ultrasonic Distance", () -> ultra.getInches());
   }
 
   /**

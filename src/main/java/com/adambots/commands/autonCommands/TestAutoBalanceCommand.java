@@ -45,27 +45,27 @@ public class TestAutoBalanceCommand extends CommandBase {
     double pitchAngleDegrees = m_gyro.getPitch();
     inc++;
 
-    if (state == 0) {
-      m_drivetrainSubsystem.drive(-0.6, 0, 0, false);
+    if (state == 0) { //Initial getting onto drivestation at higher speed
+      m_drivetrainSubsystem.drive(-0.5, 0, 0, false);
       if (Math.abs(pitchAngleDegrees) > 11) {
         firstInc++;
       }
-      if (firstInc > 30) {
+      if (firstInc > 30) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }
 
-    if (state == 1) {
+    if (state == 1) { //Drive at slower speed until platform tips
       m_drivetrainSubsystem.drive(-0.125, 0, 0, false);
       if (Math.abs(m_gyro.getPitch()) < 5) {
         state = 2;
       }
     }
 
-    if (state == 2) {
+    if (state == 2) { //Drive in reverse for a set time
       m_drivetrainSubsystem.drive(0.125, 0, 0, false);
       revInc++;
-      if (revInc > 80) { //Need to tune this value
+      if (revInc > 80) { //TUNE THIS FOR REVERSE TIME
         state = 3;
       }
     }

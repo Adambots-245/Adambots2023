@@ -45,16 +45,8 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     pid.reset();
   }
 
-  public String getState() {
-    if (targetPosition == GrabbyConstants.humanLifterValue) {
-      return "human";
-    }
-    if (targetPosition == GrabbyConstants.groundLifterValue) {
-      return "ground";
-    }
-    else {
-      return "idk";
-    }
+  public double getState() {
+    return targetPosition;
   }
 
   public void fullUp(){

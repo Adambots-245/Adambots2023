@@ -334,9 +334,7 @@ public final class Constants {
         // cube
         public static final double midCubeLifterValue = 155.7;
         public static final double midCubeFirstExtenderValue = 39 * armEncoderCPR;
-        // public static final double midCubeFirstExtenderValue = 25 * armEncoderCPR;
-        public static final double midCubeSecondExtenderValue = 0;
-        // public static final double midCubeSecondExtenderValue = 14 * armEncoderCPR;
+        public static final double midCubeSecondExtenderValue = 0 * armEncoderCPR;
 
         public static final double highCubeLifterValue = 171;
         public static final double highCubeFirstExtenderValue = 55.7 * armEncoderCPR;
@@ -344,17 +342,13 @@ public final class Constants {
 
         public static final double humanLifterValue = 173.5; //171.5
         public static final double humanFirstExtenderValue = 60 * armEncoderCPR;
-        // public static final double humanFirstExtenderValue = 25 * armEncoderCPR;
-        public static final double humanSecondExtenderValue = 20; //0
-        // public static final double humanSecondExtenderValue = 35; //0
+        public static final double humanSecondExtenderValue = 0 * armEncoderCPR;
         
         // cone
         //WORKS
         public static final double midConeLifterValue = 177;
         public static final double midConeFirstExtenderValue = 60 * armEncoderCPR;
-        // public static final double midConeFirstExtenderValue = 25 * armEncoderCPR;
-        public static final double midConeSecondExtenderValue = 7;
-        // public static final double midConeSecondExtenderValue = 35;
+        public static final double midConeSecondExtenderValue = 0 * armEncoderCPR;
 
         public static final double highConeLifterValue = 181.6;
         public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
@@ -409,7 +403,6 @@ public final class Constants {
 
         //general
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR; //60.25
-        // public static final double firstExtenderMaxExtend = 25 * armEncoderCPR; //60.25
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
         public static final double rotationPerInch = 1;
         public static final double lifterSpeed = 0.65; //0.525

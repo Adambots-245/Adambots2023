@@ -29,9 +29,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScorePickup extends SequentialCommandGroup{
+public class ScorePickupTop extends SequentialCommandGroup{
   /** Creates a new AutonLeftRedPlaceCubeGrabCharge. */
-  public ScorePickup(Trajectory traj1, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
+  public ScorePickupTop(Trajectory traj1, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
     
     super(
     new AutoInitAndScoreCube(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
@@ -40,7 +40,7 @@ public class ScorePickup extends SequentialCommandGroup{
     Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1), 
     new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
     new WaitCommand(2.5),
-    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 2.5),
+    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 1.75),
     new WaitCommand(0.75),
     Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
     );

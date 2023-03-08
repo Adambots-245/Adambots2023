@@ -40,7 +40,7 @@ public class ScorePickupBottom extends SequentialCommandGroup{
     new InstantCommand(() -> drivetrainSubsystem.stop()),
     Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState), new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState)),
     new WaitCommand(3),
-    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 3),
+    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 2.5),
     new WaitCommand(0.75),
     Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
     );

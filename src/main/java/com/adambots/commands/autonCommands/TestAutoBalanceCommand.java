@@ -8,7 +8,6 @@ import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class TestAutoBalanceCommand extends CommandBase {
   private DrivetrainSubsystem m_drivetrainSubsystem;

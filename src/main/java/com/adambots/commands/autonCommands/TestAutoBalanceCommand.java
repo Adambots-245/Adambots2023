@@ -12,8 +12,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class TestAutoBalanceCommand extends CommandBase {
   private DrivetrainSubsystem m_drivetrainSubsystem;
   private Gyro m_gyro;
-  private boolean toggle;
+  private int state;
   private int inc;
+  private int revInc;
+  private int finalInc;
+  private int firstInc;
+  private int debounce;
 
   /** Creates a new AutoBalanceCommand. */
   public TestAutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro) {
@@ -27,35 +31,80 @@ public class TestAutoBalanceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    toggle = false;
+    state = 0;
     inc = 0;
+    revInc = 0;
+    finalInc = 0;
+    firstInc = 0;
+    debounce = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double pitchAngleDegrees = m_gyro.getPitch();
+    inc++;
 
-    if (Math.abs(pitchAngleDegrees) < 3 && !toggle) {
-      m_drivetrainSubsystem.drive(-1, 0, 0, false);
-    } else {
-      toggle = true;
+    if (state == 0) {
+      m_drivetrainSubsystem.drive(-0.6, 0, 0, false);
+      if (Math.abs(pitchAngleDegrees) > 11) {
+        firstInc++;
+      }
+      if (firstInc > 30) {
+        state = 1;
+      }
     }
 
-    if (toggle) {
-      m_drivetrainSubsystem.drive(-0.3, 0, 0, false);
-      inc++;
+    if (state == 1) {
+      m_drivetrainSubsystem.drive(-0.125, 0, 0, false);
+      if (Math.abs(m_gyro.getPitch()) < 5) {
+        state = 2;
+      }
     }
+
+    if (state == 2) {
+      m_drivetrainSubsystem.drive(0.125, 0, 0, false);
+      revInc++;
+      if (revInc > 80) { //Need to tune this value
+        state = 3;
+      }
+    }
+
+    // if (state == 3) {
+    //   if (finalInc > 0) {
+    //     if (m_gyro.getPitch() < 7) {
+    //       m_drivetrainSubsystem.drive(0.075, 0, 0, false);
+    //     }
+    //     else if (m_gyro.getPitch() > 7) {
+    //       m_drivetrainSubsystem.drive(-0.075, 0, 0, false);
+    //     }
+    //     else {
+    //       debounce++;
+    //       if (debounce > 20) {
+    //         state = 4;
+    //       }
+    //       else {
+    //         debounce = Math.max(debounce-1, 0);
+    //       }
+    //     }
+    //   } else {
+    //     m_drivetrainSubsystem.drive(0, 0, 0, false);
+    //   }
+    //   finalInc++;
+    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drivetrainSubsystem.stop();
+    new HockeyStopCommand(m_drivetrainSubsystem).schedule();;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      return inc > 120 || (Math.abs(m_gyro.getPitch()) < 3 && toggle);
-    }
+    // return inc > 600 || state == 4;
+    return state == 3;
+  }
 }

@@ -43,8 +43,7 @@ public class MidCubeCharge extends SequentialCommandGroup{
       new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
       // Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
       // new WaitCommand(2),
-      new TestAutoBalanceCommand(drivetrainSubsystem, gyro),
-      new HockeyStopCommand(drivetrainSubsystem)
-    );
+      new TestAutoBalanceCommand(drivetrainSubsystem, gyro)
+      );
   }
 }

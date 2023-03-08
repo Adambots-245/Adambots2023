@@ -29,6 +29,7 @@ public class SmartExtendArmCommand extends CommandBase {
   @Override
   public void execute() {
     if (firstExtenderSubsystem.isMaxExtended()) {
+      firstExtenderSubsystem.stopExtending();
       secondExtenderSubsystem.manualOut();
     } else {
       firstExtenderSubsystem.manualOut();

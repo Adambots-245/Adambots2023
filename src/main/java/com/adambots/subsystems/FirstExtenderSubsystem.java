@@ -63,7 +63,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   public boolean isMaxExtended () {
-    return firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.highConeState.getFirstExtendTarget()-100;
+    return firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100;
   }
 
   public boolean isMaxRetracted () {
@@ -94,7 +94,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   private void failsafes() {
-    if(firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.highConeState.getFirstExtendTarget() && firstExtenderSpeed > 0){
+    if(firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100 && firstExtenderSpeed > 0){
       firstExtenderSpeed = 0;
     }
 

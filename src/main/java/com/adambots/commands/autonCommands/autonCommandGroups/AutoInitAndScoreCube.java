@@ -31,6 +31,7 @@ public class AutoInitAndScoreCube extends SequentialCommandGroup{
     new InstantCommand(() -> DriveConstants.field.getObject("traj").setTrajectory(traj1)),
     new InstantCommand(() -> drivetrainSubsystem.resetOdometry(traj1.getInitialPose())),
     Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
+    // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midCubeState)),
     new WaitCommand(1.7),
     new UngrabCommand(grabSubsystem),
     new WaitCommand(0.3)

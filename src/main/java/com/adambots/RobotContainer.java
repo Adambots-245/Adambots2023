@@ -26,7 +26,7 @@ import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeChar
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeScore;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCubeCharge;
-import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickup;
+import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupTop;
 import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupBottom;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
@@ -107,24 +107,6 @@ public class RobotContainer {
 
     ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
 
-    //Funny Gamepad Controls
-    // Buttons.primaryDPadN.whileTrue(armCommands.LiftArmCommand);
-    // Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
-
-    // Buttons.primaryRightStickButton.whileTrue(armCommands.SmartExtendArmCommand);
-    // Buttons.primaryLeftStickButton.whileTrue(armCommands.SmartRetractArmCommand);
-
-    // Buttons.primaryDPadW.onTrue(armCommands.UngrabWithRetractCommand);
-    
-    // Buttons.primaryBackButton.onTrue(armCommands.MidCubeCommand);
-    // Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
-
-    // Buttons.primaryStartButton.onTrue(armCommands.MidConeCommand);
-    // Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
-
-    // Buttons.primaryAButton.onTrue(armCommands.GroundCommand);
-    // Buttons.primaryBButton.onTrue(armCommands.HomeCommand);
-
     //Enable for XBoxx controller code
     Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
     Buttons.primaryBackButton.onFalse(armCommands.HomeCommand);
@@ -174,7 +156,7 @@ public class RobotContainer {
     );
 
     autoChooser.addOption("BlueTopSimple",
-      new ScorePickup(
+      new ScorePickupTop(
       Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
@@ -184,7 +166,7 @@ public class RobotContainer {
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
     autoChooser.addOption("RedTopSimple",
-      new ScorePickup(
+      new ScorePickupTop(
       Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );

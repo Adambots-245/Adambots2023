@@ -32,6 +32,7 @@ import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
+import com.adambots.utils.Dash;
 import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
 
@@ -244,6 +245,19 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auton Mode", autoChooser);
     slewFilter  = new SlewRateLimiter(70);
+    Dash.add("getY", Buttons.forwardSupplier);
+    Dash.add("getX", Buttons.sidewaysSupplier);
+    Dash.add("getZ", Buttons.rotateSupplier);
+    Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
+    Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
+    Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
+
+    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
+    Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
+    Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
+    Dash.add("Vision Index:" , () -> VisionHelpers.getDetectedResult());
+
   }
 
   /**
@@ -251,20 +265,20 @@ public class RobotContainer {
    * Call from Robot.java robotPeriodic
    */
   public void updateDashboard() {
-    SmartDashboard.putNumber("getY", Buttons.forwardSupplier.getAsDouble());
-    SmartDashboard.putNumber("getX", Buttons.sidewaysSupplier.getAsDouble());
-    SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
-    SmartDashboard.putNumber("pitch", RobotMap.GyroSensor.getPitch());
-    SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
+    // SmartDashboard.putNumber("getY", Buttons.forwardSupplier.getAsDouble());
+    // SmartDashboard.putNumber("getX", Buttons.sidewaysSupplier.getAsDouble());
+    // SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
+    // SmartDashboard.putNumber("pitch", RobotMap.GyroSensor.getPitch());
+    // SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
 
-    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+    // SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    // SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
-    // SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
-    // SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
-    // SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
+    // // SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
+    // // SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
+    // // SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
+    // // SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
 
-    SmartDashboard.putNumber("Gyro", RobotMap.GyroSensor.getAngle());
+    // SmartDashboard.putNumber("Gyro", RobotMap.GyroSensor.getAngle());
     // SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
     // SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }

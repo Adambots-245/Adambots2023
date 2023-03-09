@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public final class Constants {
 
+    public static final int LEDS_IN_STRIP = 30;
     public static ShuffleboardTab debugTab;
 
     public static final class DriveConstants {

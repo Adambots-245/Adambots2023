@@ -198,4 +198,5 @@ public class Buttons {
                         ? applyCurve(ex3dPro.getZ(), rotateCurve) // CHANGE BACK IF IT DOESNT WORK
                         // ? deaden(smoothInput(ex3dPro.getZ()), 0.4)
                         : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
+
 }

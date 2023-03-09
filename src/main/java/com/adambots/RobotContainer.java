@@ -67,6 +67,7 @@ public class RobotContainer {
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
+  private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs);
 
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;

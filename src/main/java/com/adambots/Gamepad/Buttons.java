@@ -16,6 +16,7 @@ import com.adambots.RobotMap;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -199,4 +200,30 @@ public class Buttons {
                         // ? deaden(smoothInput(ex3dPro.getZ()), 0.4)
                         : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
 
+        /** Rumble the XBox Controller 
+         * @param controller pass the primary or secondary controller to rumble
+         * @param timeInMillis how many milliseconds to rumble the controller - max value is 5000
+         * @param intensity0to1 how intense should the rumble be
+         * 
+         * Example: Buttons.rumble(Buttons.primaryJoystick, 2000, 1)
+        */
+        public static void rumble(CommandXboxController controller, int timeInMillis, int intensity0to1){
+
+                var joy = controller.getHID();
+                final int time = MathUtil.clamp(timeInMillis, 0, 5000);
+
+                // Perform an async operation to avoid scheduler overruns
+                Thread rumbleThread = new Thread(() -> {
+
+                        long rumbleStartTime = System.currentTimeMillis();
+                        
+                        while (System.currentTimeMillis() - rumbleStartTime <= time) {
+                                joy.setRumble(RumbleType.kBothRumble, intensity0to1); // Rumble both sides of the controller
+                        }
+                        
+                        joy.setRumble(RumbleType.kBothRumble, 0);
+                });
+
+                rumbleThread.start();
+        }
 }

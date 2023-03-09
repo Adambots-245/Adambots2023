@@ -34,6 +34,8 @@ import com.adambots.subsystems.*;
 import com.adambots.utils.Dash;
 import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
+import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.RgbFadeAnimation;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -49,6 +51,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -159,6 +162,16 @@ public class RobotContainer {
 
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
+    final Trigger trigger = new Trigger(() -> {
+      double distance = RobotMap.ultrasonic.getInches();
+
+      return distance > 30 && distance < 55;
+    });
+
+    trigger.onTrue(new InstantCommand(() -> {
+      Buttons.rumble(Buttons.secondaryJoystick, 2000, 1);
+      RobotMap.candleLEDs.animate(new RgbFadeAnimation());
+    }));
     // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 

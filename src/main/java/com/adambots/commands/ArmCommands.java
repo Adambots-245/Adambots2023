@@ -38,6 +38,7 @@ public class ArmCommands {
     public final Command SmartExtendArmCommand;
     public final Command SmartRetractArmCommand;
     public final Command HumanStationCommand;
+    public final Command ChargeCommand;
 
 
     public ArmCommands(FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem,
@@ -90,5 +91,10 @@ public class ArmCommands {
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationState),
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationState));
+
+        ChargeCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState));
     }
 }

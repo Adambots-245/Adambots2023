@@ -141,7 +141,7 @@ public class RobotContainer {
 
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
-    Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    // Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
@@ -254,9 +254,9 @@ public class RobotContainer {
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
-    Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
-    Dash.add("Vision Index:" , () -> VisionHelpers.getDetectedResult());
+    // Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
+    // Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
+    // Dash.add("Vision Index:" , () -> VisionHelpers.getDetectedResult());
 
   }
 
@@ -293,7 +293,7 @@ public class RobotContainer {
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),
-                false),
+                true),
             drivetrainSubsystem));
   }
 

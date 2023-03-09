@@ -4,8 +4,11 @@
 
 package com.adambots.commands.autonCommands;
 
+import com.adambots.Constants.GrabbyConstants;
+import com.adambots.commands.ArmLifterChangeStateCommand;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
+import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -18,14 +21,16 @@ public class TestAutoBalanceCommand extends CommandBase {
   private int finalInc;
   private int firstInc;
   private int debounce;
+  private GrabbyLifterSubsystem grabbyLifterSubsystem;
 
   /** Creates a new AutoBalanceCommand. */
-  public TestAutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro) {
+  public TestAutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro, GrabbyLifterSubsystem grabbyLifterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     addRequirements(drivetrainSubsystem);
     m_drivetrainSubsystem = drivetrainSubsystem;
     m_gyro = gyro;
+    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -48,6 +53,9 @@ public class TestAutoBalanceCommand extends CommandBase {
     if (state == 0) { //Initial getting onto drivestation at higher speed
       m_drivetrainSubsystem.drive(-0.5, 0, 0, false);
       if (Math.abs(pitchAngleDegrees) > 11) {
+        if (firstInc == 0) {
+          grabbyLifterSubsystem.changeTarget(GrabbyConstants.balancingState.getArmLiftTarget());
+        }
         firstInc++;
       }
       if (firstInc > 30) { //Drive for 30 ticks after front wheels get up to get back wheels up
@@ -56,16 +64,16 @@ public class TestAutoBalanceCommand extends CommandBase {
     }
 
     if (state == 1) { //Drive at slower speed until platform tips
-      m_drivetrainSubsystem.drive(-0.125, 0, 0, false);
+      m_drivetrainSubsystem.drive(-0.1, 0, 0, false);
       if (Math.abs(m_gyro.getPitch()) < 5) {
         state = 2;
       }
     }
 
     if (state == 2) { //Drive in reverse for a set time
-      m_drivetrainSubsystem.drive(0.125, 0, 0, false);
+      m_drivetrainSubsystem.drive(0.1, 0, 0, false);
       revInc++;
-      if (revInc > 80) { //TUNE THIS FOR REVERSE TIME
+      if (revInc > 32) { //TUNE THIS FOR REVERSE TIME
         state = 3;
       }
     }

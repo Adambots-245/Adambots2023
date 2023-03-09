@@ -38,11 +38,12 @@ public class ScorePickupTop extends SequentialCommandGroup{
     Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)),
     // Commands.parallel(Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1).andThen(new InstantCommand(() -> drivetrainSubsystem.stop())), new WaitCommand(1.75).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))),
     Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1), 
+    new InstantCommand(() -> drivetrainSubsystem.stop()),
     new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
-    new WaitCommand(2.5),
-    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 1.75),
-    new WaitCommand(0.75),
-    Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
+    // new WaitCommand(2.5),
+    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 1.75)
+    // new WaitCommand(0.75)
+    // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
     );
   }
 }

@@ -7,8 +7,6 @@
 
 package com.adambots.sensors;
 
-import com.adambots.RobotMap;
-
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,17 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Lidar extends BaseSensor {
     public double LIDAR_TOLERANCE = 0; // tune
     private Counter counter;
-    private static Lidar _instance = null;
-    private static DigitalInput _source = null;
+    private DigitalInput _source = null;
 	
-	private Lidar() {
+	public Lidar(int dioPortNumber) {
 		super();
 
-        if (_source == null){
-            
-            System.out.println("Initializing Lidar");
-            _source = new DigitalInput(RobotMap.kLidarDio); // although this brings in depency, using setDevice this can be overwritten before calling getInstance
-        }
+        _source = new DigitalInput(dioPortNumber);
 
 		System.out.println("Source: " + _source);
 		counter = new Counter(_source);
@@ -41,22 +34,6 @@ public class Lidar extends BaseSensor {
 		System.out.println("Counter: " + counter);
     }
     
-    // for dependency injection - use this to inject a different device
-    public static void setDevice(DigitalInput source){
-        
-        if (_source == null)
-            _source = source; // It should only be set once.
-    }
-
-    public static Lidar getInstance(){
-        
-        if (_instance == null){
-            _instance = new Lidar();
-        }
-
-        return _instance;
-    }
-
 	/**
 	 * Take a measurement and return the distance in cm
 	 * 

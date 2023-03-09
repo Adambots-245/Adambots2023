@@ -28,6 +28,7 @@ import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickup;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
 import com.adambots.sensors.Gyro;
+import com.adambots.sensors.Lidar;
 import com.adambots.sensors.UltrasonicSensor;
 import com.adambots.subsystems.*;
 import com.adambots.utils.Dash;
@@ -260,12 +261,13 @@ public class RobotContainer {
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
-    Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
-    Dash.add("Vision Index:" , () -> VisionHelpers.getDetectedResult());
+    // Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
+    // Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
+    // Dash.add("Vision Index:" , () -> VisionHelpers.getDetectedResult());
 
-    UltrasonicSensor ultra = new UltrasonicSensor(0);
-    Dash.add("Ultrasonic Distance", () -> ultra.getInches());
+    Dash.add("Ultrasonic Distance", () -> RobotMap.ultrasonic.getInches());
+
+    Dash.add("Lidar", () -> RobotMap.lidar.getInches());
   }
 
   /**

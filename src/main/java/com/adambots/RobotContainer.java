@@ -31,10 +31,12 @@ import com.adambots.sensors.Gyro;
 import com.adambots.sensors.Lidar;
 import com.adambots.sensors.UltrasonicSensor;
 import com.adambots.subsystems.*;
+import com.adambots.subsystems.CANdleSubsystem.AnimationTypes;
 import com.adambots.utils.Dash;
 import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
 import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.RgbFadeAnimation;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -51,6 +53,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -161,17 +164,31 @@ public class RobotContainer {
     Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
 
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
+    // RobotMap.candleLEDs.animate(new RainbowAnimation());
+    ledSubsystem.clearAllAnims();
+    ledSubsystem.setColor(0, 255, 0);
 
-    final Trigger trigger = new Trigger(() -> {
+    Trigger trigger = new Trigger(() -> {
       double distance = RobotMap.ultrasonic.getInches();
-
-      return distance > 30 && distance < 55;
+      // System.out.println("distance ..." + distance);
+      // System.out.println("trigger ..." + (distance < 30 && distance > 11));
+      return (distance < 30 && distance > 11);
     });
 
     trigger.onTrue(new InstantCommand(() -> {
-      Buttons.rumble(Buttons.secondaryJoystick, 2000, 1);
-      RobotMap.candleLEDs.animate(new RgbFadeAnimation());
+      // Buttons.rumble(Buttons.secondaryJoystick, 2000, 1);
+      System.out.println("********* Fading...");
+      ledSubsystem.setColor(255, 0, 0);
+      // ledSubsystem.changeAnimation(AnimationTypes.Rainbow);
+      RobotMap.grabbyMotor.set(0.1);
     }));
+
+    trigger.onFalse(new WaitCommand(1).andThen(new InstantCommand(() -> {
+      // ledSubsystem.changeAnimation(AnimationTypes.Empty);
+      ledSubsystem.clearAllAnims();
+      RobotMap.grabbyMotor.set(0);
+      ledSubsystem.setColor(0, 255, 0);
+    })));
     // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 

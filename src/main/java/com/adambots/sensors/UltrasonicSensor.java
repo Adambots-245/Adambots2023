@@ -16,6 +16,7 @@ public class UltrasonicSensor {
     private final AnalogInput rangefinder;
     
     // The scaling factor:  distance in inches = volts returned / SCALING_FACTOR
+    // 5120 mm per 5V or 512 cm per 5V. The 24/23 is a correction factor to adjust the reading
     private final int SCALING_FACTOR = 512/5*24/23;
     // private final double SCALING_FACTOR = 5 / RobotController.getVoltage5V();
     

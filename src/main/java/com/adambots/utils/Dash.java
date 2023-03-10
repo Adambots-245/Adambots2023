@@ -10,7 +10,10 @@ import java.util.function.IntSupplier;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
+import com.adambots.Constants;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 
 /** Dashboard utility to add values to Shuffleboard and automatically update.
  * 
@@ -19,20 +22,22 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
  * });
  */
 public class Dash {
+    private static ShuffleboardTab debugTab = Shuffleboard.getTab(Constants.kDefaultShuffleboardTab);
+
 
     private Dash(){
         throw new UnsupportedOperationException("Not meant to be instantiated. Utility class");
     }
 
     public static void add(String name, DoubleSupplier dval){
-        Shuffleboard.getTab("debug").addDouble(name, dval);
+        debugTab.addDouble(name, dval);
     }
 
     public static void add(String name, LongSupplier ival){
-        Shuffleboard.getTab("debug").addInteger(name, ival);
+        debugTab.addInteger(name, ival);
     }
     
     public static void add(String name, BooleanSupplier bval){
-        Shuffleboard.getTab("debug").addBoolean(name, bval);
+        debugTab.addBoolean(name, bval);
     }
 }

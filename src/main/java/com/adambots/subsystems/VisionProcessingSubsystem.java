@@ -63,7 +63,7 @@ public class VisionProcessingSubsystem extends SubsystemBase {
 
   public void init() {
      
-    detectionCamera = CameraServer.startAutomaticCapture(0);
+    detectionCamera = CameraServer.startAutomaticCapture(30);
     detectionCamera.setVideoMode(VideoMode.PixelFormat.kYUYV, VisionConstants.kFrameWidth, VisionConstants.kFrameHeight, VisionConstants.kProcessingFramesPerSec);   
     //camCvSink = CameraServer.getVideo(detectionCamera);
    // processedCubeOutputStream = CameraServer.putVideo("Cube", 320, 240);
@@ -106,8 +106,8 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   // Translation2d t2d = new Translation2d(-poseValues[1], poseValues[0]);
   // Rotation using ry
   // Rotation2d r2d = new Rotation2d(poseValues[4]);
-  //Pose2d pose = LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue();
-  return null; 
+  Pose2d pose = LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue();
+  return pose; 
 }
   public RotatedRect[] findBoundingBoxes(ArrayList<MatOfPoint> contours) {
     // ArrayList<MatOfPoint> contours = coneGrip.filterContoursOutput();

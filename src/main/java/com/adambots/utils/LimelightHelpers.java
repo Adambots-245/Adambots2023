@@ -727,27 +727,27 @@ public class LimelightHelpers {
     /**
      * Parses Limelight's JSON results dump into a LimelightResults Object
      */
-    // public static LimelightResults getLatestResults(String limelightName) {
+    public static LimelightResults getLatestResults(String limelightName) {
 
-    //     long start = System.nanoTime();
-    //     LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
-    //     if (mapper == null) {
-    //         mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    //     }
+        long start = System.nanoTime();
+        LimelightHelpers.LimelightResults results = new LimelightHelpers.LimelightResults();
+        if (mapper == null) {
+            mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        }
 
-    //     try {
-    //         results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
-    //     } catch (JsonProcessingException e) {
-    //         System.err.println("lljson error: " + e.getMessage());
-    //     }
+        try {
+            results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
+        } catch (JsonProcessingException e) {
+            System.err.println("lljson error: " + e.getMessage());
+        }
 
-    //     long end = System.nanoTime();
-    //     double millis = (end - start) * .000001;
-    //     results.targetingResults.latency_jsonParse = millis;
-    //     if (profileJSON) {
-    //         System.out.printf("lljson: %.2f\r\n", millis);
-    //     }
+        long end = System.nanoTime();
+        double millis = (end - start) * .000001;
+        results.targetingResults.latency_jsonParse = millis;
+        if (profileJSON) {
+            System.out.printf("lljson: %.2f\r\n", millis);
+        }
 
-    //     return results;
-    // }
+        return results;
+    }
 }

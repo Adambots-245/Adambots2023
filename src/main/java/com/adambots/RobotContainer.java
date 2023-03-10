@@ -168,6 +168,11 @@ public class RobotContainer {
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);
 
+    Buttons.secondaryAButton.onTrue(new InstantCommand(() -> {
+      Buttons.rumble(Buttons.secondaryJoystick, 2000, 1);
+    }));
+    
+
     Trigger trigger = new Trigger(() -> {
       double distance = RobotMap.ultrasonic.getInches();
       // System.out.println("distance ..." + distance);

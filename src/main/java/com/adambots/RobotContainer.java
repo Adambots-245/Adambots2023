@@ -159,19 +159,20 @@ public class RobotContainer {
 
     autoChooser.addOption("BlueTopSimple",
       new ScorePickupTop(
-      Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+        Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+        Functions.getTrajectory("Testing.wpilib.json"), 
+        drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
     autoChooser.addOption("BlueBottomSimple",
       new ScorePickupBottom(
       Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
-    autoChooser.addOption("RedTopSimple",
-      new ScorePickupTop(
-      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    // autoChooser.addOption("RedTopSimple",
+    //   new ScorePickupTop(
+    //   Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
     autoChooser.addOption("RedBottomSimple",
       new ScorePickupBottom(
       Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 

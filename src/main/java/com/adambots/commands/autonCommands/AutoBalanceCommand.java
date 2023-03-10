@@ -79,7 +79,6 @@ public class AutoBalanceCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    (new RunCommand(() -> m_drivetrainSubsystem.drive(0,0,0.2,false)).withTimeout(1)).schedule();
   }
 
   // Returns true when the command should end.

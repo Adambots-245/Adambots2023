@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -32,6 +33,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.secondExtenderP, Constants.GrabbyConstants.secondExtenderI, Constants.GrabbyConstants.secondExtenderD);
     this.armLifterEncoder = armLifterEncoder;
+    // secondExtender.configOpenloopRamp(0.2);
   }
 
   public void changeTarget(double newTarget){
@@ -68,33 +70,57 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition());
+    SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
     
+    //Horizontal and vertical expansion limits
+    // double horizontalLimit = Math.abs(GrabbyConstants.horizontalMaxEncoderValue/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset)));
+    // double verticalLimit = Math.abs(GrabbyConstants.veritcalMaxEncoderValue/Math.sin(Math.toRadians(armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset)));
+
+    // horizontalLimit = MathUtil.clamp(horizontalLimit, GrabbyConstants.horizontalMaxEncoderValue, GrabbyConstants.horizontalMaxEncoderValue*3);
+    // verticalLimit = MathUtil.clamp(verticalLimit, GrabbyConstants.veritcalMaxEncoderValue, GrabbyConstants.veritcalMaxEncoderValue*3);
+
+    SmartDashboard.putNumber("Arm Encoder W/ Offset", armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
+    // SmartDashboard.putNumber("horizontalLimit", horizontalLimit);
+    // SmartDashboard.putNumber("verticalLimit", verticalLimit);  
+
     if(targetPosition > 0){
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
-    }else if(!photoEye.isDetecting()){
+    }else if(!isMaxRetracted()){
       secondExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
     }
 
     failsafes();
     secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
+    // secondExtender.set(ControlMode.PercentOutput, 0);
 
     SmartDashboard.putNumber("Second Extender Speed", secondExtenderSpeed);
     SmartDashboard.putBoolean("decond Photo Eye", photoEye.isDetecting());
   }
 
   private void failsafes() {
+    //Preventing the arm from going too far out or in
+
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.horizontalMaxEncoderValue && armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset < 5 && secondExtenderSpeed > 0){
+      secondExtenderSpeed = 0;
+    }
+
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200 && secondExtenderSpeed > 0){
+      secondExtenderSpeed = 0;
+    }
+
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;
     }
 
-    if(photoEye.isDetecting()){
+    if(isMaxRetracted()){
       secondExtender.setSelectedSensorPosition(0);
       if(secondExtenderSpeed < 0){
         secondExtenderSpeed = 0;
       }
     }
+
+    //Preventing the arm from extending into the ground
     if (armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundLifterValue + 10) {
         targetPosition = 0;
     } 

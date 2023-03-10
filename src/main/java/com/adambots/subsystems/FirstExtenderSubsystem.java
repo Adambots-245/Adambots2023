@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -62,33 +63,42 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   public boolean isMaxExtended () {
-    return firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.highConeState.getFirstExtendTarget()-100;
+    return firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100;
+  }
+
+  public boolean isMaxRetracted () {
+    return photoEye.isDetecting();
+  }
+
+  public double getEncoder () {
+    return firstExtender.getSelectedSensorPosition();
   }
 
   @Override
   public void periodic() {
     
-    SmartDashboard.putNumber("First Extender Encoder", firstExtender.getSelectedSensorPosition());
+    SmartDashboard.putNumber("First Extender Encoder", firstExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
 
     if(targetPosition > 0){
       firstExtenderSpeed = pid.calculate(firstExtender.getSelectedSensorPosition(), targetPosition);
       firstExtenderSpeed = MathUtil.clamp(firstExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
-    }else if(!photoEye.isDetecting()){
+    }else if(!isMaxRetracted()){
       firstExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
     }
     
     failsafes();
     firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
+    // firstExtender.set(ControlMode.PercentOutput, 0);
     SmartDashboard.putNumber("First Extender Speed", firstExtenderSpeed);
     SmartDashboard.putBoolean("first PhotoEye", photoEye.isDetecting());
   }
 
   private void failsafes() {
-    if(firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.highConeState.getFirstExtendTarget() && firstExtenderSpeed > 0){
+    if(firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100 && firstExtenderSpeed > 0){
       firstExtenderSpeed = 0;
     }
 
-    if(photoEye.isDetecting()){
+    if(isMaxRetracted()){
       firstExtender.setSelectedSensorPosition(0);
       if(firstExtenderSpeed < 0){
         firstExtenderSpeed = 0;

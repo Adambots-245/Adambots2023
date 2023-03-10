@@ -99,7 +99,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // }
     );
 
-    updateDashboard();
+    // updateDashboard();
 
     m_field.setRobotPose(getPose());
   }
@@ -198,7 +198,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(-xSpeed, -ySpeed, rot, m_gyro.getRotation2d())
 
             : new ChassisSpeeds(xSpeed, ySpeed, rot));
     SwerveDriveKinematics.desaturateWheelSpeeds(

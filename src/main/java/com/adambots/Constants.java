@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 public final class Constants {
 
-    public static ShuffleboardTab debugTab;
+    public static final String kDefaultShuffleboardTab = "debug";
 
     public static final class DriveConstants {
         public static Field2d field = new Field2d();
@@ -131,8 +131,8 @@ public final class Constants {
 
         public static final double kPXController = 2.6; // P 0 0 values for auton X, Y, and Theta controllers
         public static final double kPYController = 2.6;
-        public static final double kDXController = 0.083; //0.083 // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kDYController = 0.083;
+        public static final double kDXController = 0.093; //0.083 // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kDYController = 0.093;
         public static final double kPThetaController = 0.55;
         public static final double kDThetaController = 0.05;
 
@@ -314,7 +314,8 @@ public final class Constants {
 
         public static final int armEncoderCPR = 2048;
         public static final int mech2dAdjustment = +45;
-        
+        public static final double limitOffset = -137.2;
+
         // misc.
         //WORKS
         public static final double initiaLifterValue = 212;
@@ -322,32 +323,36 @@ public final class Constants {
         public static final double initialSecondExtenderValue = 0;
 
         //WORKS
-        public static final double groundLifterValue = 85;
+        public static final double groundLifterValue = 93.5;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
-        public static final double balancingLifterValue = 110;
+        public static final double balancingLifterValue = 122;
         public static final double balancingFirstExtenderValue = 0;
         public static final double balancingSecondExtenderValue = 0;
 
         // cube
-        public static final double midCubeLifterValue = 143.7;
+        public static final double midCubeLifterValue = 155.7;
         public static final double midCubeFirstExtenderValue = 39 * armEncoderCPR;
-        public static final double midCubeSecondExtenderValue = 0;
+        public static final double midCubeSecondExtenderValue = 0 * armEncoderCPR;
 
-        public static final double highCubeLifterValue = 164.9;
+        public static final double highCubeLifterValue = 171;
         public static final double highCubeFirstExtenderValue = 55.7 * armEncoderCPR;
-        public static final double highCubeSecondExtenderValue = 52.9 * armEncoderCPR;
+        public static final double highCubeSecondExtenderValue = 58.9 * armEncoderCPR;
+
+        public static final double humanLifterValue = 173.5; //171.5
+        public static final double humanFirstExtenderValue = 60 * armEncoderCPR;
+        public static final double humanSecondExtenderValue = 0 * armEncoderCPR;
         
         // cone
         //WORKS
-        public static final double midConeLifterValue = 165;
-        public static final double midConeFirstExtenderValue = 43.3 * armEncoderCPR;
-        public static final double midConeSecondExtenderValue = 0;
+        public static final double midConeLifterValue = 177;
+        public static final double midConeFirstExtenderValue = 60 * armEncoderCPR;
+        public static final double midConeSecondExtenderValue = 0 * armEncoderCPR;
 
-        public static final double highConeLifterValue = 169.6;
-        public static final double highConeFirstExtenderValue = 55.2 * armEncoderCPR;
-        public static final double highConeSecondExtenderValue = 66 * armEncoderCPR;
+        public static final double highConeLifterValue = 181.6;
+        public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
+        public static final double highConeSecondExtenderValue = 69 * armEncoderCPR;
 
         public static class State{
             double armLiftTarget;
@@ -379,11 +384,14 @@ public final class Constants {
         public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
         public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
+        public static final State humanStationState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
+
+        public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
 
         //PID values
         public static final double lifterP = 0.015;
-        public static final double lifterI = 0;
-        public static final double lifterD = 0.0015;
+        public static final double lifterI = 0.0015;
+        public static final double lifterD = 0.002;
 
         public static final double firstExtenderP = 0.0001;
         public static final double firstExtenderI = 0;
@@ -394,10 +402,14 @@ public final class Constants {
         public static final double secondExtenderD = 0.000001;
 
         //general
-        public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR;
-        public static final double secondExtenderMaxExtend = 68.5 * armEncoderCPR;
+        public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR; //60.25
+        public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
         public static final double rotationPerInch = 1;
         public static final double lifterSpeed = 0.65; //0.525
-        public static final double extenderSpeed = 0.3;
+        public static final double manualLifterSpeed = 0.15;
+        public static final double extenderSpeed = 0.525; //0.525
+
+        public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;
+        public static final double veritcalMaxEncoderValue = 44.2 * armEncoderCPR;
     }    
 }

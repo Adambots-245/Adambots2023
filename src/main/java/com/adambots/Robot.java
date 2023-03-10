@@ -60,8 +60,8 @@ public class Robot extends TimedRobot {
       // visionThread.start();
      
       // Camera Feed Only - No Image Processing
-        visionThread = new VisionProcessingSubsystem(new ConePipeline(), new CubePipeline()).getVisionThread();
-        visionThread.start();
+        // visionThread = new VisionProcessingSubsystem(new ConePipeline(), new CubePipeline()).getVisionThread();
+        // visionThread.start();
     }
 
     // RobotMap.YellowLight.set(true);
@@ -82,7 +82,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    
     m_robotContainer.updateDashboard();
 
     // newly-scheduled
@@ -147,8 +146,6 @@ public class Robot extends TimedRobot {
    */
   //@Override
   public void autonomousPeriodic() {
-    // SmartDashboard.putNumber("yaw",gyroSubsystem.getYaw());
-
   }
 
   @Override
@@ -162,6 +159,8 @@ public class Robot extends TimedRobot {
     }
 
     CommandScheduler.getInstance().cancelAll();
+
+    // RobotMap.GyroSensor.reset();
     
     RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
     RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
@@ -173,7 +172,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
   }
 
   @Override

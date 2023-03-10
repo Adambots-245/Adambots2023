@@ -63,13 +63,13 @@ public class VisionProcessingSubsystem extends SubsystemBase {
 
   public void init() {
      
-    detectionCamera = CameraServer.startAutomaticCapture(0);
+    detectionCamera = CameraServer.startAutomaticCapture(30);
     detectionCamera.setVideoMode(VideoMode.PixelFormat.kYUYV, VisionConstants.kFrameWidth, VisionConstants.kFrameHeight, VisionConstants.kProcessingFramesPerSec);   
-    camCvSink = CameraServer.getVideo(detectionCamera);
-    processedCubeOutputStream = CameraServer.putVideo("Cube", 320, 240);
-    processedConeOutputStream = CameraServer.putVideo("Cone", 320, 240);
+    //camCvSink = CameraServer.getVideo(detectionCamera);
+   // processedCubeOutputStream = CameraServer.putVideo("Cube", 320, 240);
+    //processedConeOutputStream = CameraServer.putVideo("Cone", 320, 240);
 
-    mat = new Mat();
+    //mat = new Mat();
     SmartDashboard.putData("April Tag Field", aprilTagField);
     visionThread = new Thread(() -> {
       run2();
@@ -79,22 +79,22 @@ public class VisionProcessingSubsystem extends SubsystemBase {
   public void run2() {
 
     while (!Thread.interrupted()) {
-      if (camCvSink.grabFrame(mat) == 0) {
-        processedCubeOutputStream.notifyError(camCvSink.getError());
-        System.out.println("Can't Find the Stream reflective");
-          continue;
-      } 
-      cubeGrip.process(mat);
-      RotatedRect[] coneRect = findBoundingBoxes(coneGrip.filterContoursOutput());
-      RotatedRect largestConeRect = findLargestRect(coneRect);
-      draw(largestConeRect);
-      processedCubeOutputStream.putFrame(mat);
+      // if (camCvSink.grabFrame(mat) == 0) {
+      //   processedCubeOutputStream.notifyError(camCvSink.getError());
+      //   System.out.println("Can't Find the Stream reflective");
+      //     continue;
+      // } 
+      // cubeGrip.process(mat);
+      // RotatedRect[] coneRect = findBoundingBoxes(coneGrip.filterContoursOutput());
+      // RotatedRect largestConeRect = findLargestRect(coneRect);
+      // draw(largestConeRect);
+      // processedCubeOutputStream.putFrame(mat);
 
-      coneGrip.process(mat);
-      //RotatedRect[] cubeRect = findBoundingBoxes(cubeGrip.filterContoursOutput());
-      //RotatedRect largestCubeRect = findLargestRect(cubeRect);
-      //draw(largestCubeRect);
-      processedConeOutputStream.putFrame(mat);
+      // coneGrip.process(mat);
+      // //RotatedRect[] cubeRect = findBoundingBoxes(cubeGrip.filterContoursOutput());
+      // //RotatedRect largestCubeRect = findLargestRect(cubeRect);
+      // //draw(largestCubeRect);
+      // processedConeOutputStream.putFrame(mat);
       aprilTagField.setRobotPose(getPose());
     }
   }

@@ -140,7 +140,7 @@ public class Buttons {
         // An example curve that would be default input {0, 0.1, 0.2, 0.3, 0.4, 0.5,
         // 0.6, 0.7, 0.8, 0.9, 1};
         static double[] forwardCurve = { 0, 0, 0.15, 0.2125, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1 }; //Scaled back linear curve
-        static double[] sidewaysCurve = { 0, 0.0, 0.0, 0.15, 0.325, 0.4375, 0.55, 0.6625, 0.775, 0.8875, 1 };
+        static double[] sidewaysCurve = { 0, 0.0, 0.0, 0, 0.1, 0.2, 0.55, 0.6625, 0.775, 0.8875, 1 };
         static double[] rotateCurve = { 0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.2, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
 
         // Sigmoid Curve

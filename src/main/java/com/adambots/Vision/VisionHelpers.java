@@ -23,8 +23,9 @@ public class VisionHelpers {
     }
 
     public static double getTurnAngle() {
-        return LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue().getRotation()
-                .getDegrees();
+        // return LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue().getRotation()
+        //         .getDegrees();
+        return 0.0;
     }
 
     public static double getLeftRightDistance() {
@@ -43,13 +44,17 @@ public class VisionHelpers {
         // return VisionProcessingSubsystem.getAprilField2d();
         Field2d field = new Field2d();
 
-        field.setRobotPose(
-                LimelightHelpers.getLatestResults(VisionConstants.Limelight1).targetingResults.getBotPose2d_wpiBlue());
-        return field;
+        // field.setRobotPose(
+        //         LimelightHelpers.getLatestResults(VisionConstants.Limelight1).targetingResults.getBotPose2d_wpiBlue());
+        // return field;
+        return null;
+
     }
 
     public static Pose2d getAprilTagPose2d() {
         return LimelightHelpers.getLatestResults(VisionConstants.Limelight1).targetingResults.getBotPose2d_wpiBlue();
+        // return null;
+
     }
 
     public static double[] getAprilTagArrayPos() {

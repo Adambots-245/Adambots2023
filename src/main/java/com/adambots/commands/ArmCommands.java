@@ -37,6 +37,7 @@ public class ArmCommands {
     public final Command UngrabWithRetractCommand;
     public final Command SmartExtendArmCommand;
     public final Command SmartRetractArmCommand;
+    public final Command HumanStationCommand;
 
 
     public ArmCommands(FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem,
@@ -85,5 +86,9 @@ public class ArmCommands {
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState));
+        HumanStationCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationState));
     }
 }

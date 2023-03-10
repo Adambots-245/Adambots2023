@@ -23,10 +23,18 @@ import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
+import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
+import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeCharge;
+import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeScore;
+import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
+import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCubeCharge;
+import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupTop;
+import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupBottom;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.TopCubeCubeScore;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.*;
+import com.adambots.utils.Dash;
 import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -41,6 +49,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -57,7 +66,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
-  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
+  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder, RobotMap.groundSwitch, RobotMap.upperSwitch);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
@@ -118,64 +127,156 @@ public class RobotContainer {
       musicSubsystem.playMusic(idx++);
     }, musicSubsystem));
 
+    //Enable for XBoxx controller code
+    Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
+    Buttons.primaryBackButton.onFalse(armCommands.HomeCommand);
+    Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
+
+    Buttons.primaryRB.whileTrue(armCommands.SmartExtendArmCommand);
+    Buttons.primaryLB.whileTrue(armCommands.SmartRetractArmCommand);
+
+    Buttons.primaryLeftStickButton.whileTrue(armCommands.UngrabWithRetractCommand);
+    Buttons.primaryRightStickButton.whileTrue(armCommands.UngrabWithRetractCommand);
 
     Buttons.primaryDPadN.whileTrue(armCommands.LiftArmCommand);
     Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
+    Buttons.primaryDPadNE.whileTrue(armCommands.LiftArmCommand);
+    Buttons.primaryDPadSE.whileTrue(armCommands.LowerArmCommand);
+    Buttons.primaryDPadNW.whileTrue(armCommands.LiftArmCommand);
+    Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
 
 
-    // Buttons.primaryRB.whileTrue(armCommands.ExtendFirstStageCommand);
-    // Buttons.primaryLB.whileTrue(armCommands.RetractFirstStageCommand);
-
-    // Buttons.primaryRightStickButton.whileTrue(armCommands.ExtendSecondStageCommand);
-    // Buttons.primaryLeftStickButton.whileTrue(armCommands.RetractSecondStageCommand);
-
-    Buttons.primaryRightStickButton.whileTrue(armCommands.SmartExtendArmCommand);
-    Buttons.primaryLeftStickButton.whileTrue(armCommands.SmartRetractArmCommand);
-
-    Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
-
-    // Buttons.primaryDPadE.onTrue(armCommands.UngrabWithRetractCommand);
-    // Buttons.primaryDPadW.onTrue(armCommands.UngrabWithRetractCommand);
-
-    // Buttons.primaryDPadE.onTrue(armCommands.UngrabWithRetractCommand);
-    Buttons.primaryDPadW.onTrue(armCommands.UngrabWithRetractCommand);
-    
-    Buttons.primaryBackButton.onTrue(armCommands.MidCubeCommand);
+    Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
 
     // Buttons.primaryStartButton.onTrue(armCommands.MidConeCommand);
     Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
+    
+    //Joystick Keybinds
+    Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
+    Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
 
-    // Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
-    // Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
+    Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
 
-    Buttons.primaryAButton.onTrue(armCommands.GroundCommand);
-    Buttons.primaryBButton.onTrue(armCommands.HomeCommand);
+    Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
-    Buttons.JoystickButton9.onTrue(new HockeyStopCommand(drivetrainSubsystem));
-    // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
-    // Buttons.JoystickButton3.onTrue(new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor));
+    Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
   private void setupDashboard() {
-    autoChooser.setDefaultOption("None", null);
-
-    autoChooser.addOption("BlueTopCubeCubeCharge",
-      new TopCubeCubeCharge(
+    autoChooser.setDefaultOption("CHOOSE AN AUTON", new AutoInitAndScoreCube(
       Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("BlueTopCubeCubeCharge2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
 
-    autoChooser.addOption("BlueTopCubeCubeScore",
-      new TopCubeCubeScore(
+    autoChooser.addOption("MidChargeStation",
+      new MidCubeCharge(
+      Functions.getTrajectory("BlueCharge.wpilib.json"), 
+      RobotMap.GyroSensor, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+
+    autoChooser.addOption("BlueTopSimple",
+      new ScorePickupTop(
       Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
+    autoChooser.addOption("BlueBottomSimple",
+      new ScorePickupBottom(
+      Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+    autoChooser.addOption("RedTopSimple",
+      new ScorePickupTop(
+      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+    autoChooser.addOption("RedBottomSimple",
+      new ScorePickupBottom(
+      Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    );
+
+    // autoChooser.addOption("BlueTopCubeCubeCharge",
+    //   new TopCubeCubeCharge(
+    //   Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueTopCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("BlueTopCubeCubeScore",
+    //   new TopCubeCubeScore(
+    //   Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedTopCubeCubeCharge",
+    //   new TopCubeCubeCharge(
+    //   Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedTopCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedTopCubeCubeScore",
+    //   new TopCubeCubeScore(
+    //   Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+
+
+    // autoChooser.addOption("BlueMidCubeCubeCharge",
+    //   new MidCubeCubeCharge(a
+    //   Functions.getTrajectory("BlueMidCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueMidCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedMidCubeCubeCharge",
+    //   new MidCubeCubeCharge(
+    //   Functions.getTrajectory("RedMidCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedMidCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+
+
+    // autoChooser.addOption("BlueBottomCubeCubeCharge",
+    //   new BottomCubeCubeCharge(
+    //   Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueBottomCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("BlueBottomCubeCubeScore",
+    //   new BottomCubeCubeScore(
+    //   Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("BlueBottomCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedBottomCubeCubeCharge",
+    //   new BottomCubeCubeCharge(
+    //   Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedBottomCubeCubeCharge2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedBottomCubeCubeScore",
+    //   new BottomCubeCubeScore(
+    //   Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
 
     SmartDashboard.putData("Auton Mode", autoChooser);
     slewFilter  = new SlewRateLimiter(70);
+    Dash.add("getY", Buttons.forwardSupplier);
+    Dash.add("getX", Buttons.sidewaysSupplier);
+    Dash.add("getZ", Buttons.rotateSupplier);
+    Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
+    Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
+    Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
+
+    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
+    Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
+    Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
+    Dash.add("Vision Index:" , () -> VisionHelpers.getDetectedResult());
+
   }
 
   /**
@@ -183,20 +284,22 @@ public class RobotContainer {
    * Call from Robot.java robotPeriodic
    */
   public void updateDashboard() {
-    SmartDashboard.putNumber("getY", Buttons.forwardSupplier.getAsDouble());
-    SmartDashboard.putNumber("getX", Buttons.sidewaysSupplier.getAsDouble());
-    SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
-    SmartDashboard.putNumber("pitch", RobotMap.GyroSensor.getPitch());
-    SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
+    // SmartDashboard.putNumber("getY", Buttons.forwardSupplier.getAsDouble());
+    // SmartDashboard.putNumber("getX", Buttons.sidewaysSupplier.getAsDouble());
+    // SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
+    // SmartDashboard.putNumber("pitch", RobotMap.GyroSensor.getPitch());
+    // SmartDashboard.putNumber("roll", RobotMap.GyroSensor.getRoll());
 
-    SmartDashboard.putData("Field", Constants.DriveConstants.field);
+    // SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
-    SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
-    SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
-    SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
-    SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
-    SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
+    // // SmartDashboard.putNumber("Normal:" , Buttons.forwardSupplier.getAsDouble());
+    // // SmartDashboard.putNumber("Vision X:" , VisionHelpers.getAprilTagPose2d().getX());
+    // // SmartDashboard.putNumber("Vision Y:" , VisionHelpers.getAprilTagPose2d().getY());
+    // // SmartDashboard.putNumber("Vision Index:" , VisionHelpers.getDetectedResult());
+
+    // SmartDashboard.putNumber("Gyro", RobotMap.GyroSensor.getAngle());
+    // SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
+    // SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
   }
 
   private void setupDefaultCommands() {
@@ -205,15 +308,12 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> drivetrainSubsystem.drive( //ADDED CURVES TO Buttons, CHANGE BACK IF IT DOESNT WORK - TOMMY
+            () -> drivetrainSubsystem.drive(
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),
                 false),
             drivetrainSubsystem));
-
-          new LiftArmCommand(grabbyLifterSubsystem, Buttons.primaryJoystick.getRightTriggerAxis() * 10);
-          new LowerArmCommand(grabbyLifterSubsystem, Buttons.primaryJoystick.getLeftTriggerAxis() * 10);
   }
 
   /**
@@ -228,6 +328,8 @@ public class RobotContainer {
       Log.info("Chosen Auton Command: None");
     }
     return autoChooser.getSelected();
+
+    // return new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
 
     /*
     // Create config for trajectory
@@ -249,12 +351,8 @@ public class RobotContainer {
     */
     // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
 
-    // return new AutonLeftRedPlaceCubeGrabCharge(
-    // Functions.getTrajectory("TopConeCubeCharge1.wpilib.json"), 
-    // Functions.getTrajectory("TopConeCubeCharge2.wpilib.json"), 
-    // drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem);
-
     // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
     //Tardirades can survive in a vacuum
   }
 }
+// Rudy was here

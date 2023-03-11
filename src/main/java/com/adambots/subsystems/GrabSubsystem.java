@@ -4,14 +4,24 @@
 
 package com.adambots.subsystems;
 
+import com.adambots.actuators.StepperMotor;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GrabSubsystem extends SubsystemBase {
-    DoubleSolenoid grabby;
-  public GrabSubsystem(DoubleSolenoid grabby) {
+    private DoubleSolenoid grabby;
+    private StepperMotor grabbyStepper;
+
+  public GrabSubsystem(DoubleSolenoid grabby, StepperMotor grabbyStepper) {
     this.grabby = grabby;
+    this.grabbyStepper = grabbyStepper;
   }
 
   public void grab(){
@@ -20,6 +30,14 @@ public class GrabSubsystem extends SubsystemBase {
 
   public void ungrab(){
     grabby.set(Value.kReverse);
+  }
+
+  public void stepUp(){
+    grabbyStepper.stepUp(20);
+  }
+  
+  public void stepDown(){
+    grabbyStepper.stepDown(20);
   }
 
   @Override

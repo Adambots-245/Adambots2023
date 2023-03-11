@@ -19,6 +19,7 @@ import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
+import com.adambots.actuators.StepperMotor;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
@@ -71,7 +72,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, new StepperMotor(RobotMap.grabbyMotor, 90, false));
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder, RobotMap.groundSwitch, RobotMap.upperSwitch);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
@@ -137,7 +138,7 @@ public class RobotContainer {
     Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
 
 
-    Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
+    // Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
 
     Buttons.primaryBButton.onTrue(armCommands.MidConeCommand);
@@ -153,6 +154,13 @@ public class RobotContainer {
     // RobotMap.candleLEDs.animate(new RainbowAnimation());
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);
+
+    Buttons.primaryYButton.onTrue(new InstantCommand(() -> {
+      grabSubsystem.stepUp();
+    }));
+    Buttons.primaryAButton.onTrue(new InstantCommand(() -> {
+      grabSubsystem.stepDown();
+    }));
 
     // Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
@@ -347,7 +355,6 @@ public class RobotContainer {
       Log.info("Chosen Auton Command: None");
     }
     return autoChooser.getSelected();
-
     // return new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
 
     /*

@@ -91,8 +91,8 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     }
 
     failsafes();
-    // secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
-    secondExtender.set(ControlMode.PercentOutput, 0);
+    secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
+    // secondExtender.set(ControlMode.PercentOutput, 0);
 
     SmartDashboard.putNumber("Second Extender Speed", secondExtenderSpeed);
     SmartDashboard.putBoolean("decond Photo Eye", photoEye.isDetecting());

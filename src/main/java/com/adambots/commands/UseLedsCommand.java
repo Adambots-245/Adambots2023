@@ -4,24 +4,19 @@
 
 package com.adambots.commands;
 
-import com.adambots.Constants;
-import com.adambots.RobotMap;
-import com.adambots.Constants.GrabbyConstants;
-import com.adambots.Constants.GrabbyConstants.State;
 import com.adambots.subsystems.CANdleSubsystem;
-import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ArmLifterChangeStateCommand extends CommandBase {
-  
-  GrabbyLifterSubsystem grabbyLifterSubsystem;
-  State newState;
-
-  public ArmLifterChangeStateCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, State newState) {
-    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
-    this.newState = newState;
-    addRequirements(grabbyLifterSubsystem);
+public class UseLedsCommand extends CommandBase {
+  /** Creates a new UseLedsCommand. */
+  CANdleSubsystem candle;
+  boolean use;
+  public UseLedsCommand(CANdleSubsystem candle, boolean use) {
+    this.candle = candle;
+    addRequirements(candle);
+    this.use = use;
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -31,7 +26,11 @@ public class ArmLifterChangeStateCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    grabbyLifterSubsystem.changeTarget(newState.getArmLiftTarget());
+    if(use){
+      candle.useLEDs();
+    }else{
+      candle.stopUsingLEDs();
+    }
   }
 
   // Called once the command ends or is interrupted.

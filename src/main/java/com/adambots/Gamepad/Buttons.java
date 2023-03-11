@@ -107,6 +107,10 @@ public class Buttons {
         public static final Trigger JoystickButton10 = ex3dPro.button(10);
         public static final Trigger JoystickButton11 = ex3dPro.button(11);
         public static final Trigger JoystickButton12 = ex3dPro.button(12);
+        public static final Trigger JoystickButton13 = ex3dPro.button(13);
+        public static final Trigger JoystickButton14 = ex3dPro.button(14);
+        public static final Trigger JoystickButton15 = ex3dPro.button(15);
+        public static final Trigger JoystickButton16 = ex3dPro.button(16);
 
         public static final Trigger JoystickThumbUp = ex3dPro.povUp();
         public static final Trigger JoystickThumbDown = ex3dPro.povDown();

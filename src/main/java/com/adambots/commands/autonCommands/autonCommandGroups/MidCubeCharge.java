@@ -41,8 +41,10 @@ public class MidCubeCharge extends SequentialCommandGroup{
       Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)),
       // new InstantCommand(() -> drivetrainSubsystem.drive(-0.1, 0, 0, false)),
       new WaitCommand(1),
+      Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
       new TestAutoBalanceCommand(drivetrainSubsystem, gyro, grabbyLifterSubsystem),
-      new AutoBalanceCommand(drivetrainSubsystem, gyro)
+      // new AutoBalanceCommand(drivetrainSubsystem, gyro)
+      new HockeyStopCommand(drivetrainSubsystem)
       );
   }
 }

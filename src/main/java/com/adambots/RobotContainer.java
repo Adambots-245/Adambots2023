@@ -169,7 +169,7 @@ public class RobotContainer {
     ledSubsystem.setColor(0, 255, 0);
 
     Buttons.secondaryAButton.onTrue(new InstantCommand(() -> {
-      Buttons.rumble(Buttons.secondaryJoystick, 2000, 1);
+      Buttons.rumble(Buttons.secondaryJoystick, 1000, 1);
     }));
     
 

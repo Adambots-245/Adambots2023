@@ -13,10 +13,15 @@ import java.util.Map;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.sensors.Gyro;
+import com.adambots.sensors.Lidar;
 import com.adambots.sensors.PhotoEye;
+import com.adambots.sensors.UltrasonicSensor;
 import com.adambots.subsystems.SwerveModule;
+import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -54,8 +59,11 @@ public class RobotMap {
 
         // PORTS Definition - This should be the only place to define all ports
         public final static I2C.Port I2C_PORT = I2C.Port.kOnboard;
-        public static final int kLidarDio = 5; // Not used
+        public static final int kLidarDio = 4;
         public static final int kRingLightPort = 4;
+        public static final int kUltrasonicAnalogPort = 0;
+        public static final int kGrabbyMotorPort = 30;
+        public static final int kCANdleCANPort = 31;
 
         // CAN bus ports
         public static final int kRearLeftEncoderPort = 2;
@@ -97,6 +105,10 @@ public class RobotMap {
         public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
         public static final DigitalInput groundSwitch = new DigitalInput(groundSwitchPort);
         public static final DigitalInput upperSwitch = new DigitalInput(upperSwitchPort);
+        public static final UltrasonicSensor ultrasonic = new UltrasonicSensor(kUltrasonicAnalogPort);
+        public static final Lidar lidar = new Lidar(kLidarDio);
+        public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
+        public static final CANdle candleLEDs = new CANdle(kCANdleCANPort);
 
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;

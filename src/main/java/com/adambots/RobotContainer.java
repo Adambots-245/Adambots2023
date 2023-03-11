@@ -119,18 +119,18 @@ public class RobotContainer {
 
     ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
 
-    Buttons.primaryStartButton.onTrue(new RunCommand(() -> {
+    Buttons.primaryAButton.onTrue(new InstantCommand(() -> {
       if (idx > 10){
         idx = 0;
       }
-      
+      System.out.println("Test...");
       musicSubsystem.playMusic(idx++);
     }, musicSubsystem));
 
     //Enable for XBoxx controller code
     Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
     Buttons.primaryBackButton.onFalse(armCommands.HomeCommand);
-    Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
+    // Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
 
     Buttons.primaryRB.whileTrue(armCommands.SmartExtendArmCommand);
     Buttons.primaryLB.whileTrue(armCommands.SmartRetractArmCommand);
@@ -146,7 +146,7 @@ public class RobotContainer {
     Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
 
 
-    Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
+    // Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
 
     // Buttons.primaryStartButton.onTrue(armCommands.MidConeCommand);

@@ -389,9 +389,9 @@ public final class Constants {
         public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
 
         //PID values
-        public static final double lifterP = 0.015;
+        public static final double lifterP = 0.019;
         public static final double lifterI = 0.0015;
-        public static final double lifterD = 0.002;
+        public static final double lifterD = 0.0032;
 
         public static final double firstExtenderP = 0.0001;
         public static final double firstExtenderI = 0;

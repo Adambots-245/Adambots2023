@@ -154,7 +154,7 @@ public class RobotContainer {
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);
 
-    Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    // Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
 
     Trigger trigger = new Trigger(() -> {
@@ -192,24 +192,26 @@ public class RobotContainer {
 
     autoChooser.addOption("BlueTopSimple",
       new ScorePickupTop(
-      Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+        Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+        Functions.getTrajectory("Testing.wpilib.json"), 
+        drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
     autoChooser.addOption("BlueBottomSimple",
       new ScorePickupBottom(
+      Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"),
       Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"), 
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
-    autoChooser.addOption("RedTopSimple",
-      new ScorePickupTop(
-      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("RedBottomSimple",
-      new ScorePickupBottom(
-      Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    // autoChooser.addOption("RedTopSimple",
+    //   new ScorePickupTop(
+    //   Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedBottomSimple",
+    //   new ScorePickupBottom(
+    //   Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
 
     // autoChooser.addOption("BlueTopCubeCubeCharge",
     //   new TopCubeCubeCharge(
@@ -329,7 +331,7 @@ public class RobotContainer {
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),
-                false),
+                true),
             drivetrainSubsystem));
   }
 

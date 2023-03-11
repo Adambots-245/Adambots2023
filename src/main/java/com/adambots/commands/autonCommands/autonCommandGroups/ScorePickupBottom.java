@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ScorePickupBottom extends SequentialCommandGroup{
   /** Creates a new AutonLeftRedPlaceCubeGrabCharge. */
-  public ScorePickupBottom(Trajectory traj1, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
+  public ScorePickupBottom(Trajectory traj1, Trajectory traj2, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
     
     super(
     new AutoInitAndScoreCube(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
@@ -42,7 +42,8 @@ public class ScorePickupBottom extends SequentialCommandGroup{
     new WaitCommand(3),
     new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 2.5),
     new WaitCommand(0.75),
-    Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
+    Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)),
+    Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj2)
     );
   }
 }

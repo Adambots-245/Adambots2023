@@ -87,6 +87,7 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     armLifterSpeed = MathUtil.clamp(armLifterSpeed, -maxSpeed, maxSpeed);
     failsafes();
     armLifter.set(ControlMode.PercentOutput, armLifterSpeed);
+    // armLifter.set(ControlMode.PercentOutput, 0);
 
     SmartDashboard.putNumber("Arm Lifter Speed", armLifterSpeed);
     SmartDashboard.putNumber("Fwd Limit Switch", armLifter.getSensorCollection().isFwdLimitSwitchClosed());

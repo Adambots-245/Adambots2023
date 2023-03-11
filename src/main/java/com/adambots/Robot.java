@@ -82,8 +82,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    m_robotContainer.updateDashboard();
-
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
     // interrupted commands,
@@ -121,6 +119,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    CommandScheduler.getInstance().cancelAll();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SmartDashboard.putString("auton selected", m_autonomousCommand.toString());

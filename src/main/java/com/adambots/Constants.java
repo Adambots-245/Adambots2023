@@ -126,16 +126,16 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 2.3; //Max speed of auton
+        public static final double kMaxSpeedMetersPerSecond = 1.625; //Max speed of auton - 2.3
         public static final double kMaxAccelerationMetersPerSecondSquared = 1.5; //Max acceleration of auton
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //Max rotational speed of auton
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //Max rotational acceleration of auton
 
-        public static final double kPXController = 2.6; // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kPYController = 2.6;
+        public static final double kPXController = 3.05; // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kPYController = 3.05;
         public static final double kDXController = 0.093; //0.083 // P 0 0 values for auton X, Y, and Theta controllers
         public static final double kDYController = 0.093;
-        public static final double kPThetaController = 0.55;
+        public static final double kPThetaController = 0.78;
         public static final double kDThetaController = 0.05;
 
 
@@ -329,7 +329,7 @@ public final class Constants {
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
-        public static final double balancingLifterValue = 122;
+        public static final double balancingLifterValue = 115;
         public static final double balancingFirstExtenderValue = 0;
         public static final double balancingSecondExtenderValue = 0;
 

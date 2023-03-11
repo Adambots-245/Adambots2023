@@ -38,12 +38,11 @@ public class MidCubeCharge extends SequentialCommandGroup{
     
     super(
       new AutoInitAndScoreCube(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
-      Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)),
-      new WaitCommand(2),
-      new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
-      // Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
-      // new WaitCommand(2),
-      new TestAutoBalanceCommand(drivetrainSubsystem, gyro)
+      Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)),
+      // new InstantCommand(() -> drivetrainSubsystem.drive(-0.1, 0, 0, false)),
+      new WaitCommand(1),
+      new TestAutoBalanceCommand(drivetrainSubsystem, gyro, grabbyLifterSubsystem),
+      new AutoBalanceCommand(drivetrainSubsystem, gyro)
       );
   }
 }

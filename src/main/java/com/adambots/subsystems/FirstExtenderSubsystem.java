@@ -8,6 +8,8 @@ import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
@@ -30,6 +32,8 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   public FirstExtenderSubsystem(TalonFX firstExtender, PhotoEye photoEye, WPI_CANCoder armLifterEncoder) {
     this.firstExtender = firstExtender;
     firstExtender.setInverted(true);
+    firstExtender.setNeutralMode(NeutralMode.Brake);
+    // firstExtender.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 25, 0.1));
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.firstExtenderP, Constants.GrabbyConstants.firstExtenderI, Constants.GrabbyConstants.firstExtenderD);
     this.armLifterEncoder = armLifterEncoder;

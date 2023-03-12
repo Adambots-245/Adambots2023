@@ -100,6 +100,8 @@ public final class Constants {
         public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
         public static int kOffBalanceAngleThresholdDegrees = 3;
         public static int kOonBalanceAngleThresholdDegrees = 3;
+
+
     }
 
     public static final class ModuleConstants {
@@ -111,7 +113,7 @@ public final class Constants {
         public static final double kDriveEncoderDistancePerPulse =
                 // Assumes the encoders are directly mounted on the wheel shafts
                 (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
-        public static final double kDriveEncoderScale = 0.0470915;
+        public static final double kDriveEncoderScale = 0.0470915; //0.0470915
  
 
         public static final double kTurningEncoderDistancePerPulse =
@@ -391,9 +393,9 @@ public final class Constants {
         public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
 
         //PID values
-        public static final double lifterP = 0.015;
-        public static final double lifterI = 0.0015;
-        public static final double lifterD = 0.002;
+        public static final double lifterP = 0.015; //0.015
+        public static final double lifterI = 0.0015; //0.0015
+        public static final double lifterD = 0.0014; //0.002
 
         public static final double firstExtenderP = 0.0001;
         public static final double firstExtenderI = 0;

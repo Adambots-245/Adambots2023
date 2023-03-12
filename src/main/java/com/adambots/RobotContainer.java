@@ -22,6 +22,7 @@ import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
+import com.adambots.commands.autonCommands.autonCommandGroups.BasicTop;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeScore;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
@@ -149,7 +150,7 @@ public class RobotContainer {
     Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
-    Buttons.JoystickButton13.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic));
+    Buttons.JoystickButton13.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic, RobotMap.GyroSensor));
     // RobotMap.candleLEDs.animate(new RainbowAnimation());
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);
@@ -198,6 +199,10 @@ public class RobotContainer {
         Functions.getTrajectory("Testing.wpilib.json"), 
         drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
+    // autoChooser.addOption("BlueTopSimple",
+    //   new BasicTop(
+    //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
     autoChooser.addOption("BlueBottomSimple",
       new ScorePickupBottom(
       Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"),
@@ -288,6 +293,9 @@ public class RobotContainer {
     Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
     Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
     Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
+
+    Dash.add("Sonic Dist", () -> RobotMap.ultrasonic.getInches());
+    Dash.add("LIDAR Dist", () -> RobotMap.lidar.getInches());
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 

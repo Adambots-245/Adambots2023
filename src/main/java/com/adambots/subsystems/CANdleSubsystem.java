@@ -339,23 +339,23 @@ public class CANdleSubsystem extends SubsystemBase {
       return;
     }
 
-    if(useLEDs){
-      if(ultrasonic.getInches() > 60){
+    // if(useLEDs){
+      if(ultrasonic.getInches() > 70){
         setColor(0, 255, 0);
-      }else if(ultrasonic.getInches() < 19){
+      }else if(ultrasonic.getInches() < 27){
         setColor(0, 0, 255);
-      }else if(ultrasonic.getInches() < 25){
-        setColor(255, 0, 0);
+      }else if(ultrasonic.getInches() < 31.5){
+        setColor(255, 255, 255);
       }else{
-        double scale = (ultrasonic.getInches()-25)/35;
+        double scale = (ultrasonic.getInches()-35)/35;
         setColor(
           (int)MathUtil.interpolate(255, 0, scale),
-          (int)MathUtil.interpolate(216, 255, scale), 
+          (int)MathUtil.interpolate(0, 255, scale), 
         0);
       };
-    }else{
-      setColor(255, 216, 0);
-    }
+    // }else{
+    //   setColor(255, 216, 0);
+    // }
 
     // This method will be called once per scheduler run
     if (toAnimate == null) {

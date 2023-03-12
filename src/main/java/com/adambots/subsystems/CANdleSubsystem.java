@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants;
+import com.adambots.sensors.UltrasonicSensor;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -24,6 +25,7 @@ import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
 import com.ctre.phoenix.led.TwinkleOffAnimation;
 import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // import frc.robot.utils.Log;
@@ -32,6 +34,7 @@ public class CANdleSubsystem extends SubsystemBase {
   private static final int LEDS_PER_ANIMATION = 30;
   private static final int LEDS_IN_STRIP = Constants.LEDS_IN_STRIP;
   private CANdle candle; //= new CANdle(Constants.CANDLE_CAN_PORT, "rio");
+  private UltrasonicSensor ultrasonic;
   private Animation toAnimate = null;
 
   public enum AnimationTypes {
@@ -59,8 +62,11 @@ public class CANdleSubsystem extends SubsystemBase {
   private double animateSpeed = 0.5;
   private boolean clearAllAnims = false;
 
-  public CANdleSubsystem(CANdle candleDevice) {
+  private boolean useLEDs = false;
+
+  public CANdleSubsystem(CANdle candleDevice, UltrasonicSensor ultrasonic) {
     this.candle = candleDevice;
+    this.ultrasonic = ultrasonic;
     changeAnimation(AnimationTypes.SetAll);
     CANdleConfiguration configAll = new CANdleConfiguration();
     configAll.statusLedOffWhenActive = true;
@@ -316,6 +322,14 @@ public class CANdleSubsystem extends SubsystemBase {
     animateSpeed = speed;
   }
 
+  public void useLEDs(){
+    useLEDs = true;
+  }
+
+  public void stopUsingLEDs(){
+    useLEDs = false;
+  }
+
   @Override
   public void periodic() {
 
@@ -324,6 +338,24 @@ public class CANdleSubsystem extends SubsystemBase {
       // Log.info("No Candle Device Set");
       return;
     }
+
+    // if(useLEDs){
+      if(ultrasonic.getInches() > 70){
+        setColor(0, 255, 0);
+      }else if(ultrasonic.getInches() < 27){
+        setColor(0, 0, 255);
+      }else if(ultrasonic.getInches() < 31.5){
+        setColor(255, 255, 255);
+      }else{
+        double scale = (ultrasonic.getInches()-35)/35;
+        setColor(
+          (int)MathUtil.interpolate(255, 0, scale),
+          (int)MathUtil.interpolate(0, 255, scale), 
+        0);
+      };
+    // }else{
+    //   setColor(255, 216, 0);
+    // }
 
     // This method will be called once per scheduler run
     if (toAnimate == null) {

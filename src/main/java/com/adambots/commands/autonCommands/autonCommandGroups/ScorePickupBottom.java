@@ -36,6 +36,7 @@ public class ScorePickupBottom extends SequentialCommandGroup{
     super(
     new AutoInitAndScoreCube(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
     Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState), new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState)),
+    new WaitCommand(3),
     Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
     new InstantCommand(() -> drivetrainSubsystem.stop()),
     Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState), new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState)),

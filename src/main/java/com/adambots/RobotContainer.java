@@ -23,6 +23,7 @@ import com.adambots.actuators.StepperMotor;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
+import com.adambots.commands.autonCommands.autonCommandGroups.BasicTop;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.BottomCubeCubeScore;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
@@ -77,7 +78,7 @@ public class RobotContainer {
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
-  private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs);
+  private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);
 
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
@@ -117,7 +118,7 @@ public class RobotContainer {
     // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
     // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
-    ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
+    ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem, ledSubsystem);
 
     //Enable for XBoxx controller code
     Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
@@ -147,10 +148,10 @@ public class RobotContainer {
     //Joystick Keybinds
     Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
     Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
-
     Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
-
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
+
+    Buttons.JoystickButton13.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic, RobotMap.GyroSensor));
     // RobotMap.candleLEDs.animate(new RainbowAnimation());
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);
@@ -165,24 +166,26 @@ public class RobotContainer {
     // Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
 
-    Trigger trigger = new Trigger(() -> {
-      double distance = RobotMap.ultrasonic.getInches();
-      return (distance < 34 && distance > 12);
-    });
 
-    trigger.onTrue(new InstantCommand(() -> {
-      Buttons.rumble(Buttons.primaryJoystick, 1000, 1);
-      ledSubsystem.setColor(255, 0, 0);
-      // ledSubsystem.changeAnimation(AnimationTypes.Rainbow);
-      RobotMap.grabbyMotor.set(0.1);
-    }));
 
-    trigger.onFalse(new WaitCommand(1).andThen(new InstantCommand(() -> {
-      // ledSubsystem.changeAnimation(AnimationTypes.Empty);
-      ledSubsystem.clearAllAnims();
-      RobotMap.grabbyMotor.set(0);
-      ledSubsystem.setColor(0, 255, 0);
-    })));
+    // Trigger trigger = new Trigger(() -> {
+    //   double distance = RobotMap.ultrasonic.getInches();
+    //   return (distance < 34 && distance > 12);
+    // });
+
+    // trigger.onTrue(new InstantCommand(() -> {
+    //   Buttons.rumble(Buttons.primaryJoystick, 1000, 1);
+    //   ledSubsystem.setColor(255, 0, 0);
+    //   // ledSubsystem.changeAnimation(AnimationTypes.Rainbow);
+    //   RobotMap.grabbyMotor.set(0.1);
+    // }));
+
+    // trigger.onFalse(new WaitCommand(1).andThen(new InstantCommand(() -> {
+    //   // ledSubsystem.changeAnimation(AnimationTypes.Empty);
+    //   ledSubsystem.clearAllAnims();
+    //   RobotMap.grabbyMotor.set(0);
+    //   ledSubsystem.setColor(255, 216, 0);
+    // })));
     // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
@@ -204,6 +207,10 @@ public class RobotContainer {
         Functions.getTrajectory("Testing.wpilib.json"), 
         drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
+    // autoChooser.addOption("BlueTopSimple",
+    //   new BasicTop(
+    //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
     autoChooser.addOption("BlueBottomSimple",
       new ScorePickupBottom(
       Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"),
@@ -294,6 +301,9 @@ public class RobotContainer {
     Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
     Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
     Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
+
+    Dash.add("Sonic Dist", () -> RobotMap.ultrasonic.getInches());
+    Dash.add("LIDAR Dist", () -> RobotMap.lidar.getInches());
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 

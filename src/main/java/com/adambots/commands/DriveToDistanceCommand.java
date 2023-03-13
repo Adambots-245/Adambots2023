@@ -41,7 +41,7 @@ public class DriveToDistanceCommand extends CommandBase {
     double y = gyro.getYaw()/360;
     double rot = ((x-y) - Math.floor(x-y + 0.5)) * 0.15;
 
-    if (ultrasonic.getInches() > 31.5+3) {
+    if (ultrasonic.getInches() > 35.5+3) {
       double speed = (ultrasonic.getInches()-minDist)/(maxDist-minDist);
       drivetrainSubsystem.drive(MathUtil.interpolate(0.1, 0.4, speed), 0, rot, true);
     } else if (ultrasonic.getInches() < 27) {
@@ -61,6 +61,6 @@ public class DriveToDistanceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ultrasonic.getInches() <= 31.5 && ultrasonic.getInches() >= 27;
+    return ultrasonic.getInches() <= 35.5 && ultrasonic.getInches() >= 27;
   }
 }

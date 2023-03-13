@@ -120,6 +120,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    CommandScheduler.getInstance().cancelAll();
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SmartDashboard.putString("auton selected", m_autonomousCommand.toString());
 

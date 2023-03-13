@@ -23,6 +23,8 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   private final PhotoEye photoEye;
   private final WPI_CANCoder armLifterEncoder;
 
+  private double movingOutSlew = 0;
+  private boolean slewInitialized = false;
 
   private double secondExtenderSpeed = 0;
   private double targetPosition = Constants.GrabbyConstants.initState.getSecondExtendTarget();
@@ -37,22 +39,29 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   public void changeTarget(double newTarget){
+    if(newTarget > targetPosition){
+      movingOutSlew = 0.4;
+    }
+
     targetPosition = newTarget;
     pid.reset();
   }
 
   public void fullOut(){
-    targetPosition = Constants.GrabbyConstants.highConeState.getSecondExtendTarget();
+    changeTarget(Constants.GrabbyConstants.highConeState.getSecondExtendTarget());
     pid.reset();
   }
 
   public void fullIn(){
-    targetPosition = 0;
+    changeTarget(0);
     pid.reset();
   }
 
   public void manualOut(){
     targetPosition = 99999999;
+    if(!slewInitialized){
+      movingOutSlew = 0.4;
+    }
   }
 
   public void manualIn(){
@@ -61,6 +70,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
   public void stopExtending(){
     targetPosition = secondExtender.getSelectedSensorPosition();
+    slewInitialized = false;
   }
 
   public boolean isMaxRetracted () {
@@ -88,6 +98,19 @@ public class SecondExtenderSubsystem extends SubsystemBase {
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
     }else if(!isMaxRetracted()){
       secondExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
+    }
+
+    if(secondExtenderSpeed > 0){
+      if(movingOutSlew >= secondExtenderSpeed){
+        movingOutSlew = secondExtenderSpeed - 0.1;
+      }
+
+      secondExtenderSpeed -= movingOutSlew;
+      if(movingOutSlew <= 0){
+        movingOutSlew = 0;
+      }else{
+        movingOutSlew -= 0.002;
+      }
     }
 
     failsafes();

@@ -23,6 +23,8 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   private final PhotoEye photoEye;
   private final WPI_CANCoder armLifterEncoder;
 
+  private double movingOutSlew = 0;
+  private boolean slewInitialized = false;
 
   private double firstExtenderSpeed = 0;
   private double targetPosition = Constants.GrabbyConstants.initState.getFirstExtendTarget();
@@ -36,22 +38,29 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   public void changeTarget(double newTarget){
+    if(newTarget > targetPosition){
+      movingOutSlew = 0.4;
+    }
+
     targetPosition = newTarget;
     pid.reset();
   }
 
   public void fullOut(){
-    targetPosition = Constants.GrabbyConstants.highConeState.getFirstExtendTarget();
+    changeTarget(Constants.GrabbyConstants.highConeState.getFirstExtendTarget());
     pid.reset();
   }
 
   public void fullIn(){
-    targetPosition = 0;
+    changeTarget(0);
     pid.reset();
   }
 
   public void manualOut(){
     targetPosition = 99999999;
+    if(!slewInitialized){
+     movingOutSlew = 0.4;
+    }
   }
 
   public void manualIn(){
@@ -60,6 +69,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
 
   public void stopExtending(){
     targetPosition = firstExtender.getSelectedSensorPosition();
+    slewInitialized = false;
   }
 
   public boolean isMaxExtended () {
@@ -86,6 +96,20 @@ public class FirstExtenderSubsystem extends SubsystemBase {
       firstExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
     }
     
+    if(firstExtenderSpeed > 0){
+
+      if(movingOutSlew >= firstExtenderSpeed){
+        movingOutSlew = firstExtenderSpeed - 0.1;
+      }
+
+      firstExtenderSpeed -= movingOutSlew;
+      if(movingOutSlew <= 0){
+        movingOutSlew = 0;
+      }else{
+        movingOutSlew -= 0.002;
+      }
+    }
+
     failsafes();
     firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
     // firstExtender.set(ControlMode.PercentOutput, 0);
@@ -105,6 +129,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
       }
     }
 
+    //Preventing the arm from extending into the ground
     if (armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundLifterValue + 10) {
       targetPosition = 0;
   } 

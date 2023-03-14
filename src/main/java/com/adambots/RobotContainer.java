@@ -148,9 +148,11 @@ public class RobotContainer {
     Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
     Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
     Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
+    Buttons.JoystickButton7.onTrue(armCommands.SideStationCommand);
+
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
-    Buttons.JoystickButton13.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic, RobotMap.GyroSensor));
+    Buttons.JoystickButton2.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic, RobotMap.GyroSensor));
     // RobotMap.candleLEDs.animate(new RainbowAnimation());
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);

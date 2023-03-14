@@ -41,7 +41,7 @@ public class ArmCommands {
     public final Command SmartRetractArmCommand;
     public final Command HumanStationCommand;
     public final Command ChargeCommand;
-
+    public final Command SideStationCommand;
 
     public ArmCommands(FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem,
             GrabbyLifterSubsystem grabbyLifterSubsystem, GrabSubsystem grabSubsystem, CANdleSubsystem candle) {
@@ -100,7 +100,11 @@ public class ArmCommands {
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationState),
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationState),
                 new UseLedsCommand(candle, !false));
-
+        SideStationCommand = Commands.parallel(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.sideStationState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.sideStationState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.sideStationState),
+                new UseLedsCommand(candle, !false));
         ChargeCommand = Commands.parallel(
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.balancingState),
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState),

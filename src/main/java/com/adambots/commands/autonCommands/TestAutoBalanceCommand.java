@@ -5,7 +5,6 @@
 package com.adambots.commands.autonCommands;
 
 import com.adambots.Constants.GrabbyConstants;
-import com.adambots.commands.ArmLifterChangeStateCommand;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
@@ -18,7 +17,7 @@ public class TestAutoBalanceCommand extends CommandBase {
   private int state;
   private int inc;
   private int revInc;
-  private int finalInc;
+  // private int finalInc;
   private int firstInc;
   private int debounce;
   private GrabbyLifterSubsystem grabbyLifterSubsystem;
@@ -51,7 +50,7 @@ public class TestAutoBalanceCommand extends CommandBase {
     inc++;
 
     if (state == 0) { //Initial getting onto drivestation at higher speed
-      m_drivetrainSubsystem.drive(-0.5, 0, 0, false);
+      m_drivetrainSubsystem.drive(-0.5, 0, 0, true);
       if (Math.abs(pitchAngleDegrees) > 11) {
         if (firstInc == 0) {
           grabbyLifterSubsystem.changeTarget(GrabbyConstants.balancingState.getArmLiftTarget());
@@ -64,14 +63,14 @@ public class TestAutoBalanceCommand extends CommandBase {
     }
 
     if (state == 1) { //Drive at slower speed until platform tips
-      m_drivetrainSubsystem.drive(-0.1, 0, 0, false);
+      m_drivetrainSubsystem.drive(-0.1, 0, 0, true);
       if (Math.abs(m_gyro.getPitch()) < 5) {
         state = 2;
       }
     }
 
     if (state == 2) { //Drive in reverse for a set time
-      m_drivetrainSubsystem.drive(0.1, 0, 0, false);
+      m_drivetrainSubsystem.drive(0.1, 0, 0, true);
       revInc++;
       if (revInc > 32) { //TUNE THIS FOR REVERSE TIME
         state = 3;
@@ -81,17 +80,18 @@ public class TestAutoBalanceCommand extends CommandBase {
     if (state == 3) {
       // if (finalInc > 0) {
         if (m_gyro.getPitch() < 7) {
-          m_drivetrainSubsystem.drive(0.075, 0, 0, false);
+          m_drivetrainSubsystem.drive(0.075, 0, 0, true);
+          debounce = Math.max(debounce-1, 0);
         }
         else if (m_gyro.getPitch() > 7) {
-          m_drivetrainSubsystem.drive(-0.075, 0, 0, false);
+          m_drivetrainSubsystem.drive(-0.075, 0, 0, true);
+          debounce = Math.max(debounce-1, 0);
         }
         else {
+          m_drivetrainSubsystem.stop();
           debounce++;
           if (debounce > 20) {
             state = 4;
-          } else {
-            debounce = Math.max(debounce-1, 0);
           }
         }
       } 

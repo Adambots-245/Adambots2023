@@ -16,8 +16,10 @@ public class DriveToDistanceCommand extends CommandBase {
   private UltrasonicSensor ultrasonic;
   private Gyro gyro;
 
-  private int minDist = 37;
-  private int maxDist = 75;
+  private int revDist = 30; //will drive backwards until it hits this distance in rev mode
+  private int minDist = 37; //will drive forward until it hits this distance
+  
+  private int maxDist = 75; //dont need to change maxDist, just affects interpolation 
 
   /** Creates a new DriveToDistanceCommand. */
   public DriveToDistanceCommand(DrivetrainSubsystem drivetrainSubsystem, UltrasonicSensor ultrasonic, Gyro gyro) {
@@ -39,12 +41,12 @@ public class DriveToDistanceCommand extends CommandBase {
   public void execute() {
     double x = 180/360;
     double y = gyro.getYaw()/360;
-    double rot = ((x-y) - Math.floor(x-y + 0.5)) * 0.15;
+    double rot = ((x-y) - Math.floor(x-y + 0.5)) * 0.15; //0.15 is speed of rotation
 
-    if (ultrasonic.getInches() > 35.5+3) {
+    if (ultrasonic.getInches() > minDist) {
       double speed = (ultrasonic.getInches()-minDist)/(maxDist-minDist);
       drivetrainSubsystem.drive(MathUtil.interpolate(0.1, 0.4, speed), 0, rot, true);
-    } else if (ultrasonic.getInches() < 27) {
+    } else if (ultrasonic.getInches() < revDist) {
       drivetrainSubsystem.drive(-0.1, 0, 0, true);
     }
   }
@@ -61,6 +63,6 @@ public class DriveToDistanceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ultrasonic.getInches() <= 35.5 && ultrasonic.getInches() >= 27;
+    return ultrasonic.getInches() <= minDist && ultrasonic.getInches() >= revDist;
   }
 }

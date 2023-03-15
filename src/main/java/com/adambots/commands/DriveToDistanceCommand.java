@@ -4,17 +4,20 @@
 
 package com.adambots.commands;
 
+import com.adambots.Constants.AutoConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.sensors.UltrasonicSensor;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveToDistanceCommand extends CommandBase {
   private DrivetrainSubsystem drivetrainSubsystem;
   private UltrasonicSensor ultrasonic;
   private Gyro gyro;
+  private PIDController thetaController;
 
   private double revDist = 27; //will drive backwards until it hits this distance in rev mode
   private double minDist = 31.5; //will drive forward until it hits this distance
@@ -28,6 +31,10 @@ public class DriveToDistanceCommand extends CommandBase {
     this.ultrasonic = ultrasonic;
     this.gyro = gyro;
 
+    thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    thetaController.setSetpoint(Math.PI);
+
     addRequirements(drivetrainSubsystem);
   }
 
@@ -39,9 +46,11 @@ public class DriveToDistanceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x = 180/360;
-    double y = gyro.getYaw()/360;
-    double rot = ((x-y) - Math.floor(x-y + 0.5)) * 0.15; //0.15 is speed of rotation
+    // double x = 180/360;
+    // double y = gyro.getYaw()/360;
+    // double rot = ((x-y) - Math.floor(x-y + 0.5)) * 0.15; //0.15 is speed of rotation
+
+    double rot = thetaController.calculate(Math.toRadians(gyro.getYaw())); //NEED TO VALIDATE
 
     if (ultrasonic.getInches() > minDist) {
       double speed = (ultrasonic.getInches()-minDist)/(maxDist-minDist);

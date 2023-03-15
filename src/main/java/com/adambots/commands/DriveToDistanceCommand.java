@@ -16,8 +16,8 @@ public class DriveToDistanceCommand extends CommandBase {
   private UltrasonicSensor ultrasonic;
   private Gyro gyro;
 
-  private int revDist = 30; //will drive backwards until it hits this distance in rev mode
-  private int minDist = 37; //will drive forward until it hits this distance
+  private double revDist = 27; //will drive backwards until it hits this distance in rev mode
+  private double minDist = 31.5; //will drive forward until it hits this distance
   
   private int maxDist = 75; //dont need to change maxDist, just affects interpolation 
 

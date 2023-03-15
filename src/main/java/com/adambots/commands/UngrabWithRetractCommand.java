@@ -40,12 +40,18 @@ public class UngrabWithRetractCommand extends CommandBase {
   public void execute() {
     grabSubsystem.ungrab();
     if (RobotMap.armRotationEncoder.getAbsolutePosition() >= GrabbyConstants.midCubeLifterValue-3 && RobotMap.armRotationEncoder.getAbsolutePosition() <= GrabbyConstants.highConeLifterValue+3
-     && grabbyLifterSubsystem.getState() != GrabbyConstants.humanLifterValue && grabbyLifterSubsystem.getState() != GrabbyConstants.groundLifterValue && grabbyLifterSubsystem.getState() != GrabbyConstants.sideStationLifterValue) {
+     && grabbyLifterSubsystem.getState() != GrabbyConstants.humanLifterValue
+     && grabbyLifterSubsystem.getState() != GrabbyConstants.groundLifterValue 
+     && grabbyLifterSubsystem.getState() != GrabbyConstants.sideStationLifterValue) {
       Commands.waitSeconds(0.3).andThen(Commands.parallel(
+        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midCubeState),
+        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midCubeState))
+        .andThen(new WaitCommand(1)).andThen(
+        Commands.parallel(
+          new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
           new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
           new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
-          .andThen(new WaitCommand(1)).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState))
-      ).schedule();
+      )).schedule();
     }
   }
 

@@ -358,8 +358,8 @@ public final class Constants {
         public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double highConeSecondExtenderValue = 69 * armEncoderCPR;
 
-        public static final double sideStationLifterValue = 171.9;
-        public static final double sideStationFirstExtenderValue = 14.3 * armEncoderCPR;
+        public static final double sideStationLifterValue = 167.9;
+        public static final double sideStationFirstExtenderValue = 12 * armEncoderCPR;
         public static final double sideStationSecondExtenderValue = 0 * armEncoderCPR;
 
         public static class State{

@@ -46,11 +46,11 @@ public class DriveToDistanceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // double x = 180/360;
-    // double y = gyro.getYaw()/360;
-    // double rot = ((x-y) - Math.floor(x-y + 0.5)) * 0.15; //0.15 is speed of rotation
+    double x = 180/360;
+    double y = gyro.getYaw()/360;
+    double rot = ((x-y) - Math.floor(x-y + 0.5)) * 0.15; //0.15 is speed of rotation
 
-    double rot = thetaController.calculate(Math.toRadians(gyro.getYaw())); //NEED TO VALIDATE
+    // double rot = thetaController.calculate(Math.toRadians(gyro.getYaw())); //NEED TO VALIDATE
 
     if (ultrasonic.getInches() > minDist) {
       double speed = (ultrasonic.getInches()-minDist)/(maxDist-minDist);

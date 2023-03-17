@@ -63,7 +63,7 @@ public class TestAutoBalanceCommand extends CommandBase {
     }
 
     if (state == 1) { //Drive at slower speed until platform tips
-      m_drivetrainSubsystem.drive(0.2, 0, 0, true);
+      m_drivetrainSubsystem.drive(0.1, 0, 0, true);
       if (Math.abs(m_gyro.getPitch()) < 5) {
         state = 2;
       }
@@ -72,7 +72,7 @@ public class TestAutoBalanceCommand extends CommandBase {
     if (state == 2) { //Drive in reverse for a set time
       m_drivetrainSubsystem.drive(-0.1, 0, 0, true);
       revInc++;
-      if (revInc > 35) { //TUNE THIS FOR REVERSE TIME
+      if (revInc > 50) { //TUNE THIS FOR REVERSE TIME
         state = 3;
       }
     }

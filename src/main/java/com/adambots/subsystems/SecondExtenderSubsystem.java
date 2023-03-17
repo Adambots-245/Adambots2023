@@ -106,12 +106,12 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   private void failsafes() {
     //Preventing the arm from going too far out or in
 
-    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.horizontalMaxEncoderValue && armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset < 5 && secondExtenderSpeed > 0){
-      secondExtenderSpeed = 0;
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.horizontalMaxEncoderValue && armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset < 5){
+      secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     }
 
-    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200 && secondExtenderSpeed > 0){
-      secondExtenderSpeed = 0;
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){
+      secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     }
 
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){

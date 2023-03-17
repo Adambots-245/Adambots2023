@@ -337,7 +337,9 @@ public class CANdleSubsystem extends SubsystemBase {
       return;
     }
 
-    if(ultrasonic.getInches() > 70){
+    if(ultrasonic.getInches() > 200){
+      setColor(255, 216, 0);
+    }else if(ultrasonic.getInches() > 70){
       setColor(0, 255, 0);
     }else if(ultrasonic.getInches() < 27){
       setColor(0, 0, 255);

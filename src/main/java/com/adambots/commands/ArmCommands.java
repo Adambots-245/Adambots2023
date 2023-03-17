@@ -13,6 +13,7 @@ import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /** Add your docs here. */
 public class ArmCommands {
@@ -91,9 +92,9 @@ public class ArmCommands {
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState));
                 // new UseLedsCommand(candle, false));
         HomeCommand = Commands.parallel(
-                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
-                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState));
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)).andThen(
+                        new WaitCommand(1.5).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState)));
                 // new UseLedsCommand(candle, false));
         HumanStationCommand = Commands.parallel(
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),

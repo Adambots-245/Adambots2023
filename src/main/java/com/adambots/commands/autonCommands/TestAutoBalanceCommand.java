@@ -57,7 +57,7 @@ public class TestAutoBalanceCommand extends CommandBase {
         }
         firstInc++;
       }
-      if (firstInc > 40) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (firstInc > 45) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }

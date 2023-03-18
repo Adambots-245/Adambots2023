@@ -93,8 +93,8 @@ public class ArmCommands {
                 // new UseLedsCommand(candle, false));
         HomeCommand = Commands.parallel(
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
-                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)).andThen(
-                        new WaitCommand(1.5).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState)));
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState));
                 // new UseLedsCommand(candle, false));
         HumanStationCommand = Commands.parallel(
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),

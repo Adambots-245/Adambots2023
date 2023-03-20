@@ -13,6 +13,8 @@ import com.adambots.commands.ArmCommands;
 import com.adambots.commands.DriveToDistanceCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
+import com.adambots.commands.autonCommands.autonCommandGroups.AutonCommands;
+import com.adambots.commands.autonCommands.autonCommandGroups.BasicTop;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
 import com.adambots.commands.autonCommands.autonCommandGroups.NoTrajInitAndScore;
 import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupBottom;
@@ -155,45 +157,39 @@ public class RobotContainer {
   }
 
   private void setupDashboard() {
-    autoChooser.setDefaultOption("CHOOSE AN AUTON", 
-      new NoTrajInitAndScore(
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    AutonCommands autonCommands = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, ledSubsystem);
+    
+    Command defaultCommand = autonCommands.autoInitAndScoreCube();
 
-    autoChooser.addOption("MidChargeStation",
-      new MidCubeCharge(
-      RobotMap.GyroSensor, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
+    autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());
 
-    // autoChooser.addOption("BlueTopSimple", //drive for time and distance
+    // Will automatically call blue or red
+    autoChooser.addOption("TopSimple", autonCommands.scorePickupTop());
+    // autoChooser.addOption("BlueTopSimple",
     //   new BasicTop(
     //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     // );
-    autoChooser.addOption("BlueTopSimple",
-      new ScorePickupTop(
-        Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-        Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"),
-        drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("BlueBottomSimple",
-      new ScorePickupBottom(
-      Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"),
-      Functions.getTrajectory("BlueBottomCubeCubeScore2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    // autoChooser.addOption("BlueTopSimple",
+    //   new ScorePickupTop(
+    //     Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+    //     Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"),
+    //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    autoChooser.addOption("BottomSimple", autonCommands.scorePickupBottom());
 
-    autoChooser.addOption("RedTopSimple",
-      new ScorePickupTop(
-      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"),
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("RedBottomSimple",
-      new ScorePickupBottom(
-      Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"),
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    // autoChooser.addOption("RedTopSimple",
+    //   new ScorePickupTop(
+    //   Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"),
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedBottomSimple",
+    //   new ScorePickupBottom(
+    //   Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"),
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
 
     SmartDashboard.putData("Auton Mode", autoChooser);
     Dash.add("getY", Buttons.forwardSupplier);

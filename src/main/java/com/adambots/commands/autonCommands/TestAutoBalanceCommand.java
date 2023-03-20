@@ -51,19 +51,19 @@ public class TestAutoBalanceCommand extends CommandBase {
 
     if (state == 0) { //Initial getting onto drivestation at higher speed
       m_drivetrainSubsystem.drive(1, 0, 0, true);
-      if (Math.abs(pitchAngleDegrees) > 11) {
+      if (Math.abs(pitchAngleDegrees) > 5) {
         if (firstInc == 0) {
           grabbyLifterSubsystem.changeTarget(GrabbyConstants.balancingState.getArmLiftTarget());
         }
         firstInc++;
       }
-      if (firstInc > 45) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (firstInc > 55) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }
 
     if (state == 1) { //Drive at slower speed until platform tips
-      m_drivetrainSubsystem.drive(0.1, 0, 0, true);
+      m_drivetrainSubsystem.drive(0.12, 0, 0, true);
       if (Math.abs(m_gyro.getPitch()) < 5) {
         state = 2;
       }
@@ -72,31 +72,31 @@ public class TestAutoBalanceCommand extends CommandBase {
     if (state == 2) { //Drive in reverse for a set time
       m_drivetrainSubsystem.drive(-0.1, 0, 0, true);
       revInc++;
-      if (revInc > 50) { //TUNE THIS FOR REVERSE TIME
+      if (revInc > 34) { //TUNE THIS FOR REVERSE TIME
         state = 3;
       }
     }
 
-    // if (state == 3) {
-    //   // if (finalInc > 0) {
-    //     if (m_gyro.getPitch() < 7) {
-    //       m_drivetrainSubsystem.drive(-0.075, 0, 0, true);
-    //       debounce = Math.max(debounce-1, 0);
-    //     }
-    //     else if (m_gyro.getPitch() > 7) {
-    //       m_drivetrainSubsystem.drive(0.075, 0, 0, true);
-    //       debounce = Math.max(debounce-1, 0);
-    //     }
-    //     else {
-    //       m_drivetrainSubsystem.stop();
-    //       debounce++;
-    //       if (debounce > 20) {
-    //         state = 4;
-    //       }
-    //     }
+    if (state == 3) {
+      // if (finalInc > 0) {
+        if (m_gyro.getPitch() < 7) {
+          m_drivetrainSubsystem.drive(-0.075, 0, 0, true);
+          debounce = Math.max(debounce-1, 0);
+        }
+        else if (m_gyro.getPitch() > 7) {
+          m_drivetrainSubsystem.drive(0.075, 0, 0, true);
+          debounce = Math.max(debounce-1, 0);
+        }
+        else {
+          m_drivetrainSubsystem.stop();
+          debounce++;
+          if (debounce > 10) {
+            state = 4;
+          }
+        }
       // } 
-    //   finalInc++;
-    // }
+      // finalInc++;
+    }
   }
 
   // Called once the command ends or is interrupted.

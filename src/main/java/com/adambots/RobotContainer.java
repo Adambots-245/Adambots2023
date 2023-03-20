@@ -12,6 +12,7 @@ import com.adambots.Gamepad.Buttons;
 import com.adambots.commands.ArmCommands;
 import com.adambots.commands.DriveToDistanceCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
+import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutonCommands;
 import com.adambots.commands.autonCommands.autonCommandGroups.BasicTop;
@@ -130,7 +131,7 @@ public class RobotContainer {
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);
 
-    // Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
 
 

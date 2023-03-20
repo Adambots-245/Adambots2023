@@ -391,12 +391,19 @@ public final class Constants {
         public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
         public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
+        // public static final State midCubeState = new State(midCubeLifterValue, 0, midCubeFirstExtenderValue);
+        // public static final State midConeState = new State(midConeLifterValue, 0, midConeFirstExtenderValue);
+        // public static final State highCubeState = new State(highCubeLifterValue, 0, 0);
+        // public static final State highConeState = new State(highConeLifterValue, 0, 0);
         public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
         public static final State humanStationState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
         public static final State sideStationState = new State(sideStationLifterValue, sideStationFirstExtenderValue, sideStationSecondExtenderValue);
+        // public static final State humanStationState = new State(humanLifterValue, 0, humanFirstExtenderValue);
+        // public static final State sideStationState = new State(sideStationLifterValue, 0, sideStationFirstExtenderValue);
 
 
         public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
+        // public static final State extendState = new State(humanLifterValue, 0, humanFirstExtenderValue);
 
         //PID values
         public static final double lifterP = 0.015; //0.015
@@ -407,14 +414,13 @@ public final class Constants {
         public static final double firstExtenderI = 0;
         public static final double firstExtenderD = 0.000001;
 
-        public static final double secondExtenderP = 0.0001;
+        public static final double secondExtenderP = 0.00008;
         public static final double secondExtenderI = 0;
-        public static final double secondExtenderD = 0.000001;
+        public static final double secondExtenderD = 0.0000016;
 
         //general
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR; //60.25
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
-        public static final double rotationPerInch = 1;
         public static final double lifterSpeed = 0.65; //0.525
         public static final double manualLifterSpeed = 0.15;
         public static final double extenderSpeed = 0.525; //0.525

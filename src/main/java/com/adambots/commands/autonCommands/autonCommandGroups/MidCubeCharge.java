@@ -9,6 +9,7 @@ import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.SecondExtenderChangeStateCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
+import com.adambots.commands.autonCommands.TimedCommand;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
@@ -17,6 +18,9 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -26,16 +30,16 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class MidCubeCharge extends SequentialCommandGroup{
   /** Creates a new AutonLeftRedPlaceCubeGrabCharge. */
   public MidCubeCharge(Gyro gyro, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
-    
     super(
+    new ParallelDeadlineGroup(new WaitCommand(14.6),
+    new SequentialCommandGroup(
       new NoTrajInitAndScore(drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
       Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)),
       // new InstantCommand(() -> drivetrainSubsystem.drive(-0.1, 0, 0, false)),
       new WaitCommand(1),
       // Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
       new TestAutoBalanceCommand(drivetrainSubsystem, gyro, grabbyLifterSubsystem),
-      // new AutoBalanceCommand(drivetrainSubsystem, gyro)
       new HockeyStopCommand(drivetrainSubsystem)
-      );
+    )).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 }

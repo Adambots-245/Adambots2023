@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.*;
 
-/** Add your docs here. */
+/** Main class for all Auton Commands.
+ * Uses new WPILib approach to chain commands.
+ */
 public class AutonCommands {
     private GrabSubsystem grabSubsystem;
     private GrabbyLifterSubsystem grabbyLifterSubsystem;
@@ -60,7 +62,8 @@ public class AutonCommands {
                         new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
                 new WaitCommand(1.7),
                 new UngrabCommand(grabSubsystem),
-                new WaitCommand(0.3));
+                new WaitCommand(0.3)
+                );
     }
 
     private final String midCubeChargePath = "Charge.wpilib.json";
@@ -77,11 +80,12 @@ public class AutonCommands {
                 // Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
                 new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem),
                 // new AutoBalanceCommand(drivetrainSubsystem, gyro)
-                new HockeyStopCommand(drivetrainSubsystem));
+                new HockeyStopCommand(drivetrainSubsystem)
+                );
     }
 
     private final String topCubePath1 = "TopCubeCube1.wpilib.json";
-    private final String topCubePath2 = "Testing.wpilib.json";
+    private final String topCubePath2 = "Testing.wpilib.json"; // TODO: Change name so that there's one for Blue and Red
 
     public Command scorePickupTop() {
         Trajectory trajectory1 = getTrajectory(topCubePath1);
@@ -105,7 +109,8 @@ public class AutonCommands {
                 Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
                         new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
                         new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)),
-                CreateSwerveControllerCommand(drivetrainSubsystem, trajectory2));
+                CreateSwerveControllerCommand(drivetrainSubsystem, trajectory2)
+                );
     }
 
     private final String bottomCubePath1 = "BottomCubeCube1.wpilib.json";
@@ -134,7 +139,8 @@ public class AutonCommands {
                         new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
                         new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
                         new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)),
-                CreateSwerveControllerCommand(drivetrainSubsystem, trajectory2));
+                CreateSwerveControllerCommand(drivetrainSubsystem, trajectory2)
+                );
     }
 
     // Common Functions

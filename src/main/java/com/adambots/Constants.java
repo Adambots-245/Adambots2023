@@ -128,7 +128,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 1.625; //Max speed of auton - 2.3
+        public static final double kMaxSpeedMetersPerSecond = 10; //Max speed of auton - 2.3 - 1.625
         public static final double kMaxAccelerationMetersPerSecondSquared = 1.5; //Max acceleration of auton
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //Max rotational speed of auton
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //Max rotational acceleration of auton
@@ -317,7 +317,7 @@ public final class Constants {
     public static final class GrabbyConstants {
 
         public static final int armEncoderCPR = 2048;
-        public static final int mech2dAdjustment = +45;
+        public static final int mech2dAdjustment = 45;
         public static final double limitOffset = -137.2;
 
         // misc.
@@ -414,16 +414,16 @@ public final class Constants {
         public static final double firstExtenderI = 0;
         public static final double firstExtenderD = 0.000001;
 
-        public static final double secondExtenderP = 0.00008;
+        public static final double secondExtenderP = 0.00004;
         public static final double secondExtenderI = 0;
-        public static final double secondExtenderD = 0.0000016;
+        public static final double secondExtenderD = 0.0000027;
 
         //general
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR; //60.25
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
-        public static final double lifterSpeed = 0.65; //0.525
-        public static final double manualLifterSpeed = 0.15;
-        public static final double extenderSpeed = 0.525; //0.525
+        public static final double lifterSpeed = 1; //0.65
+        public static final double manualLifterSpeed = 0.18;
+        public static final double extenderSpeed = 0.8; //0.525
 
         public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;
         public static final double veritcalMaxEncoderValue = 44.2 * armEncoderCPR;

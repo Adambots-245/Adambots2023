@@ -49,7 +49,7 @@ public class Functions {
 
         // Run the "Glass" program and then choose NetworkTables -> SmartDashboard -> Field2d to view the Field.
         // The field image for 2023 is in utils folder
-        Constants.DriveConstants.field.getObject("traj").setTrajectory(trajectory);
+        // Constants.DriveConstants.field.getObject("traj").setTrajectory(trajectory);
         
         return swerveControllerCommand;
     }

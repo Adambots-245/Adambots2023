@@ -23,14 +23,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class AutoInitAndScoreCube extends SequentialCommandGroup{
+public class AutoInitAndScoreCone extends SequentialCommandGroup{
   /** Creates a new AutonLeftRedPlaceCubeGrabCharge. */
-  public AutoInitAndScoreCube(Trajectory traj1, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
+  public AutoInitAndScoreCone(Trajectory traj1, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
     super(
     new InstantCommand(() -> RobotMap.GyroSensor.reset()),
     new InstantCommand(() -> DriveConstants.field.getObject("traj").setTrajectory(traj1)),
     new InstantCommand(() -> drivetrainSubsystem.resetOdometry(traj1.getInitialPose())),
-    Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
+    Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highConeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highConeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highConeState)),
     new WaitCommand(1.2),
     new UngrabCommand(grabSubsystem),
     new WaitCommand(0.2)

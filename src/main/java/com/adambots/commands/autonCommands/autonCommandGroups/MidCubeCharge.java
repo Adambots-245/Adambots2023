@@ -10,6 +10,7 @@ import com.adambots.commands.SecondExtenderChangeStateCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
 import com.adambots.commands.autonCommands.TimedCommand;
+import com.adambots.commands.autonCommands.TraversePlatform;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
@@ -37,7 +38,7 @@ public class MidCubeCharge extends SequentialCommandGroup{
       Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)),
       // new InstantCommand(() -> drivetrainSubsystem.drive(-0.1, 0, 0, false)),
       new WaitCommand(1),
-      // Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
+      new TraversePlatform(drivetrainSubsystem, gyro),
       new TestAutoBalanceCommand(drivetrainSubsystem, gyro, grabbyLifterSubsystem),
       new HockeyStopCommand(drivetrainSubsystem)
     )).andThen(new HockeyStopCommand(drivetrainSubsystem)));

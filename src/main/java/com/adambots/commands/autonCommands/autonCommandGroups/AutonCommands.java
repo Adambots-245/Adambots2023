@@ -59,12 +59,13 @@ public class AutonCommands {
         return resetGyroCommand().andThen(
                 initializeFieldTrajectoryCommand(trajectory),
                 resetOdometryCommand(trajectory),
-                Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
-                        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
-                        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
-                new WaitCommand(1.7),
+                armCommands.HighCubeCommand,
+                // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
+                        // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
+                        // new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
+                new WaitCommand(1.2),
                 new UngrabCommand(grabSubsystem),
-                new WaitCommand(0.3)
+                new WaitCommand(0.2)
         );
     }
 

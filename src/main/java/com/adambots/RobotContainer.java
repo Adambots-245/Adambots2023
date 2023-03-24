@@ -53,6 +53,7 @@ public class RobotContainer {
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);
+  private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem, ledSubsystem);
 
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
@@ -90,7 +91,6 @@ public class RobotContainer {
     // MockCancoder armCancoder = new MockCancoder(GrabbyConstants.initiaLifterValue); // + GrabbyConstants.mech2dAdjustment);
     // GrabberSubsystem grabbysubsystem = new GrabberSubsystem(new MockMotor(armCancoder), new MockMotor(), new MockMotor(), armCancoder, new MockDoubleSolenoid(), new MockPhotoEye(), new MockPhotoEye());
 
-    ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem, ledSubsystem);
 
     //Enable for XBoxx controller code
     Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
@@ -157,9 +157,10 @@ public class RobotContainer {
   }
 
   private void setupDashboard() {
-    AutonCommands autonCommands = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, ledSubsystem);
+    AutonCommands autonCommands = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, ledSubsystem, armCommands);
     
-    Command defaultCommand = autonCommands.autoInitAndScoreCube();
+    // Command defaultCommand = autonCommands.autoInitAndScoreCube();
+    Command defaultCommand = autonCommands.noTrajInitAndScore();
 
     autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
     autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());

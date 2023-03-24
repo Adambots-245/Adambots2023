@@ -4,11 +4,13 @@
 
 package com.adambots.commands.autonCommands;
 
+import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TraversePlatform extends CommandBase {
@@ -18,6 +20,7 @@ public class TraversePlatform extends CommandBase {
   private int inc1;
   private int inc2;
   private int inc3;
+  private PIDController thetaController;
 
   /** Creates a new AutoBalanceCommand. */
   public TraversePlatform(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro) {
@@ -35,6 +38,10 @@ public class TraversePlatform extends CommandBase {
     inc1 = 0;
     inc2 = 0;
     inc3 = 0;
+
+    thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    thetaController.setSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,7 +60,8 @@ public class TraversePlatform extends CommandBase {
     }
 
     if (state == 1) { //Drive at slower speed until platform tips
-      m_drivetrainSubsystem.drive(0.5, 0, 0.9, true);
+      double rot = thetaController.calculate(Math.toRadians(m_gyro.getYaw()));
+      m_drivetrainSubsystem.drive(0.5, 0, rot, true);
       if (Math.abs(pitchAngleDegrees) < 5) {
         inc2++;
       } else {

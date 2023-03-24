@@ -4,11 +4,8 @@
 
 package com.adambots.commands.autonCommands;
 
-import java.util.List;
-
 import com.adambots.Constants;
 import com.adambots.Constants.AutoConstants;
-import com.adambots.Constants.DriveConstants;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
@@ -17,14 +14,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 public class TestDriveToAprilTagCommand extends CommandBase {
   

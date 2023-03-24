@@ -318,7 +318,7 @@ public final class Constants {
 
         public static final int armEncoderCPR = 2048;
         public static final int mech2dAdjustment = 45;
-        public static final double limitOffset = -137.2;
+        public static final double limitOffset = -135;
 
         // misc.
         //WORKS
@@ -327,7 +327,7 @@ public final class Constants {
         public static final double initialSecondExtenderValue = 0;
 
         //WORKS
-        public static final double groundLifterValue = 93.5;
+        public static final double groundLifterValue = 94.5;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
@@ -423,7 +423,7 @@ public final class Constants {
         public static final double lifterSpeed = 1; //0.65
         public static final double manualLifterSpeed = 0.18;
         public static final double extenderSpeed = 0.8; //0.525
-        public static final double linearExtenderSpeed = 0.22;
+        public static final double linearExtenderSpeed = 0.24;
 
         public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;
         public static final double veritcalMaxEncoderValue = 44.2 * armEncoderCPR;

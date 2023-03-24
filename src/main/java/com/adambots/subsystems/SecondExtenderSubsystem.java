@@ -29,6 +29,9 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   private double secondExtenderSpeed = 0;
   private double targetPosition = GrabbyConstants.initState.getSecondExtendTarget();
   private double maxSpeed = GrabbyConstants.extenderSpeed;
+  private double offset = 0;
+
+  private double maxTotal;
 
   public SecondExtenderSubsystem(TalonFX secondExtender, PhotoEye photoEye, WPI_CANCoder armLifterEncoder) {
     this.secondExtender = secondExtender;
@@ -77,6 +80,15 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     return photoEye.isDetecting();
   }
 
+  public void setOffset (double offset) {
+    this.offset = offset;
+  }
+
+  public void addOffset (double offset) {
+    this.offset += offset;
+    offset = MathUtil.clamp(offset, -5, 5);
+  }
+
   @Override
   public void periodic() {
 
@@ -92,6 +104,11 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Arm Encoder W/ Offset", armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
     // SmartDashboard.putNumber("horizontalLimit", horizontalLimit);
     // SmartDashboard.putNumber("verticalLimit", verticalLimit);  
+
+    maxTotal = (28.646 + 152.727)/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition() + GrabbyConstants.limitOffset + offset));
+    if(maxTotal <= 62 + (targetPosition/GrabbyConstants.armEncoderCPR) + 89.09){
+      targetPosition = (maxTotal - (62 + 89.09 + 6))*GrabbyConstants.armEncoderCPR;
+    }
 
     if(targetPosition > 0){
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
@@ -118,6 +135,8 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     // if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){
     //   secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     // }
+
+
 
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;

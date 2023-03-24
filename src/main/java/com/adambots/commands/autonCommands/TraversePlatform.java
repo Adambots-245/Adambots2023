@@ -5,10 +5,8 @@
 package com.adambots.commands.autonCommands;
 
 import com.adambots.Constants.AutoConstants;
-import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
-import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -41,7 +39,7 @@ public class TraversePlatform extends CommandBase {
 
     thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    thetaController.setSetpoint(0);
+    thetaController.setSetpoint(Math.PI);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,20 +52,20 @@ public class TraversePlatform extends CommandBase {
       if (Math.abs(pitchAngleDegrees) > 5) {
         inc1++;
       }
-      if (inc1 > 35) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc1 > 27) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }
 
     if (state == 1) { //Drive at slower speed until platform tips
       double rot = thetaController.calculate(Math.toRadians(m_gyro.getYaw()));
-      m_drivetrainSubsystem.drive(0.5, 0, rot, true);
+      m_drivetrainSubsystem.drive(0.5, 0, -rot, true);
       if (Math.abs(pitchAngleDegrees) < 5) {
         inc2++;
       } else {
         inc2 = 0;
       }
-      if (inc2 > 40) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc2 > 30) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 2;
       }
     }

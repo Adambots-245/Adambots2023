@@ -8,8 +8,11 @@
 
 package com.adambots;
 
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.commands.ArmCommands;
+import com.adambots.commands.GrabCommand;
+import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
@@ -34,6 +37,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -129,29 +133,14 @@ public class RobotContainer {
     ledSubsystem.setColor(0, 255, 0);
 
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    Buttons.JoystickButton16.onTrue(
+      new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1)
+      .andThen(armCommands.HumanStationCommand)
+      .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.4)
+      .andThen(new WaitCommand(0.35))
+      .andThen(new GrabCommand(grabSubsystem))
+      ));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
-
-
-
-    // Trigger trigger = new Trigger(() -> {
-    //   double distance = RobotMap.ultrasonic.getInches();
-    //   return (distance < 34 && distance > 12);
-    // });
-
-    // trigger.onTrue(new InstantCommand(() -> {
-    //   Buttons.rumble(Buttons.primaryJoystick, 1000, 1);
-    //   ledSubsystem.setColor(255, 0, 0);
-    //   // ledSubsystem.changeAnimation(AnimationTypes.Rainbow);
-    //   RobotMap.grabbyMotor.set(0.1);
-    // }));
-
-    // trigger.onFalse(new WaitCommand(1).andThen(new InstantCommand(() -> {
-    //   // ledSubsystem.changeAnimation(AnimationTypes.Empty);
-    //   ledSubsystem.clearAllAnims();
-    //   RobotMap.grabbyMotor.set(0);
-    //   ledSubsystem.setColor(255, 216, 0);
-    // })));
-    // Buttons.JoystickButton11.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
   private void setupDashboard() {
@@ -165,10 +154,6 @@ public class RobotContainer {
       RobotMap.GyroSensor, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
 
-    // autoChooser.addOption("BlueTopSimple", //drive for time and distance
-    //   new BasicTop(
-    //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    // );
     autoChooser.addOption("BlueTopSimple",
       new ScorePickupTop(
         Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
@@ -204,6 +189,7 @@ public class RobotContainer {
     Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
     Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
     Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
+    Dash.add("Arm Encoder w/ offset", () -> RobotMap.armRotationEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
 
     Dash.add("Sonic Dist", () -> RobotMap.ultrasonic.getInches());
     Dash.add("LIDAR Dist", () -> RobotMap.lidar.getDistance());
@@ -268,30 +254,6 @@ public class RobotContainer {
       Log.info("Chosen Auton Command: None");
     }
     return autoChooser.getSelected();
-
-    // return new DriveToAprilTagCommand(drivetrainSubsystem, VisionHelpers.getAprilTagPose2d(), (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
-
-    /*
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(3, 0)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0.5, new Rotation2d(0)),
-        config); 
-    */
-    // System.out.println("Total time: " + exampleTrajectory.getTotalTimeSeconds());
-
-    // return new TestDriveToAprilTagCommand(drivetrainSubsystem, (int)VisionHelpers.getDetectedResult(), RobotMap.GyroSensor);
     //Tardirades can survive in a vacuum
   }
 }

@@ -7,9 +7,8 @@ package com.adambots.commands.autonCommands.autonCommandGroups;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.SecondExtenderChangeStateCommand;
+import com.adambots.commands.autonCommands.AutoBalanceCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
-import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
-import com.adambots.commands.autonCommands.TimedCommand;
 import com.adambots.commands.autonCommands.TraversePlatform;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
@@ -19,8 +18,6 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -39,7 +36,8 @@ public class MidCubeCharge extends SequentialCommandGroup{
       // new InstantCommand(() -> drivetrainSubsystem.drive(-0.1, 0, 0, false)),
       new WaitCommand(1),
       new TraversePlatform(drivetrainSubsystem, gyro),
-      new TestAutoBalanceCommand(drivetrainSubsystem, gyro, grabbyLifterSubsystem),
+      // new TestAutoBalanceCommand(drivetrainSubsystem, gyro, grabbyLifterSubsystem),
+      new AutoBalanceCommand(drivetrainSubsystem, gyro, grabbyLifterSubsystem),
       new HockeyStopCommand(drivetrainSubsystem)
     )).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }

@@ -4,93 +4,84 @@
 
 package com.adambots.commands.autonCommands;
 
-import com.adambots.Constants.DriveConstants;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
+import com.adambots.subsystems.GrabbyLifterSubsystem;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class AutoBalanceCommand extends CommandBase {
   private DrivetrainSubsystem m_drivetrainSubsystem;
   private Gyro m_gyro;
-  private boolean autoBalanceXMode;
-  private boolean autoBalanceYMode;
-  private int count = 0;
+  private int state;
+  private int firstInc;
+  private int balInc;
+  private PIDController pid;
+  private GrabbyLifterSubsystem grabbyLifterSubsystem;
 
   /** Creates a new AutoBalanceCommand. */
-  public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro) {
+  public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro, GrabbyLifterSubsystem grabbyLifterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     addRequirements(drivetrainSubsystem);
     m_drivetrainSubsystem = drivetrainSubsystem;
     m_gyro = gyro;
+    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    count = 0;
+    state = 0;
+    firstInc = 0;
+    balInc = 0;
+
+    pid = new PIDController(0.017, 0, 0.0015);
+    pid.setSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double pitchAngleDegrees = m_gyro.getPitch();
-    double rollAngleDegrees = m_gyro.getRoll();
-    double xAxisRate = 0.0;
-    double yAxisRate = 0.0;
 
-    if (!autoBalanceXMode &&
-        (Math.abs(pitchAngleDegrees) >= Math.abs(DriveConstants.kOffBalanceAngleThresholdDegrees))) {
-      autoBalanceXMode = true;
-    } else if (autoBalanceXMode &&
-        (Math.abs(pitchAngleDegrees) < Math.abs(DriveConstants.kOonBalanceAngleThresholdDegrees))) {
-      autoBalanceXMode = false;
-    }
-    if (!autoBalanceYMode &&
-        (Math.abs(rollAngleDegrees) >= Math.abs(DriveConstants.kOffBalanceAngleThresholdDegrees))) {
-      autoBalanceYMode = true;
-    } else if (autoBalanceYMode &&
-        (Math.abs(rollAngleDegrees) < Math.abs(DriveConstants.kOonBalanceAngleThresholdDegrees))) {
-      autoBalanceYMode = false;
+    if (state == 0) { //Initial getting onto drivestation at higher speed
+      m_drivetrainSubsystem.drive(-0.7, 0, 0, true);
+      if (Math.abs(pitchAngleDegrees) > 3) {
+        if (firstInc == 0) {
+          grabbyLifterSubsystem.changeTarget(GrabbyConstants.balancingState.getArmLiftTarget());
+        }
+        firstInc++;
+      }
+      if (firstInc > 25) { //Drive for 30 ticks after front wheels get up to get back wheels up
+        state = 1;
+      }
     }
 
-    // Control drive system automatically,
-    // driving in reverse direction of pitch/roll angle,
-    // with a magnitude based upon the angle
+    if (state == 1) { //Drive at slower speed until platform tips
+      double speed = pid.calculate(pitchAngleDegrees);
+      m_drivetrainSubsystem.drive(speed, 0, 0, true);
 
-    if (autoBalanceXMode) {
-      double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
-      xAxisRate = Math.sin(pitchAngleRadians) * -1;
+      if (Math.abs(pitchAngleDegrees) < 3) {
+        balInc++;
+      }
+      if (balInc > 50) { //Drive for 30 ticks after front wheels get up to get back wheels up
+        state = 2;
+      }
     }
-    if (autoBalanceYMode) {
-      double rollAngleRadians = rollAngleDegrees * (Math.PI / 180.0);
-      yAxisRate = Math.sin(rollAngleRadians) * -1;
-    }
-
-    SmartDashboard.putNumber("xAxisRate", pitchAngleDegrees);
-    SmartDashboard.putNumber("yAxisRate", rollAngleDegrees);
-    double speed = 1;
-    m_drivetrainSubsystem.drive(xAxisRate*speed, -yAxisRate*speed, 0, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drivetrainSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-      if (!autoBalanceXMode && !autoBalanceYMode) {
-        count++;
-      } else {
-        count = Math.max(count-1, 0);
-      }
-
-      return count > 20;
-      // return false;
-    }
+    return state == 2;
+  }
 }

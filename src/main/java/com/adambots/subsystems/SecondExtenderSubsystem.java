@@ -107,7 +107,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
     maxTotal = (28.646 + 152.727)/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition() + GrabbyConstants.limitOffset + offset));
     if(maxTotal <= 62 + (targetPosition/GrabbyConstants.armEncoderCPR) + 89.09){
-      targetPosition = (maxTotal - (62 + 89.09 + 6))*GrabbyConstants.armEncoderCPR;
+      targetPosition = (maxTotal - (62 + 89.09 + 0))*GrabbyConstants.armEncoderCPR;
     }
 
     if(targetPosition > 0){

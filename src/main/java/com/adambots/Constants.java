@@ -406,7 +406,7 @@ public final class Constants {
 
         //PID values
         public static final double lifterP = 0.015; //0.015
-        public static final double lifterI = 0.0015; //0.0015
+        public static final double lifterI = 0.0018; //0.0015
         public static final double lifterD = 0.0014; //0.002
 
         public static final double firstExtenderP = 0.0001;
@@ -422,7 +422,7 @@ public final class Constants {
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
         public static final double lifterSpeed = 1; //0.65
         public static final double manualLifterSpeed = 0.18;
-        public static final double extenderSpeed = 0.8; //0.525
+        public static final double extenderSpeed = 0.8; //0.8
         public static final double linearExtenderSpeed = 0.24;
 
         public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;

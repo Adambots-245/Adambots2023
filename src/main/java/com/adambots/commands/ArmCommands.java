@@ -52,7 +52,8 @@ public class ArmCommands {
         this.grabSubsystem = grabSubsystem;
 
         LiftArmCommand = new LiftArmCommand(grabbyLifterSubsystem, 9999);
-        LowerArmCommand = new LowerArmCommand(grabbyLifterSubsystem, 9999);
+        // LowerArmCommand = new LowerArmCommand(grabbyLifterSubsystem, 9999);
+        LowerArmCommand = new LowerAndRetractCommand(grabbyLifterSubsystem, secondExtenderSubsystem, 9999);
         ExtendFirstStageCommand = new ExtendFirstStageCommand(firstExtenderSubsystem);
         RetractFirstStageCommand = new RetractFirstStageCommand(firstExtenderSubsystem);
         ExtendSecondStageCommand = new ExtendSecondStageCommand(secondExtenderSubsystem);

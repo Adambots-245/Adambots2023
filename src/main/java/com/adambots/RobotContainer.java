@@ -10,7 +10,6 @@ package com.adambots;
 
 import com.adambots.Gamepad.Buttons;
 import com.adambots.commands.ArmCommands;
-import com.adambots.commands.DriveToDistanceCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
@@ -173,6 +172,7 @@ public class RobotContainer {
     autoChooser.addOption("BlueTopSimple",
       new ScorePickupTop(
         Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+        Functions.getTrajectory("BlueTopCubeCube2.wpilib.json"), 
         Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"),
         drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
@@ -185,8 +185,9 @@ public class RobotContainer {
 
     autoChooser.addOption("RedTopSimple",
       new ScorePickupTop(
-      Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"),
+        Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+        Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+        Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"),
       drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     );
     autoChooser.addOption("RedBottomSimple",

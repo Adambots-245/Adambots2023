@@ -354,13 +354,17 @@ public final class Constants {
         public static final double midConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double midConeSecondExtenderValue = 0 * armEncoderCPR;
 
-        public static final double highConeLifterValue = 181.6;
+        public static final double highConeLifterValue = 173;
         public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
-        public static final double highConeSecondExtenderValue = 69 * armEncoderCPR;
+        public static final double highConeSecondExtenderValue = 64.5 * armEncoderCPR;
 
         public static final double sideStationLifterValue = 167.9;
         public static final double sideStationFirstExtenderValue = 12 * armEncoderCPR;
         public static final double sideStationSecondExtenderValue = 0 * armEncoderCPR;
+
+        public static final double retractLifterValue = 190; //171.5
+        public static final double retractFirstExtenderValue = 0 * armEncoderCPR;
+        public static final double retractSecondExtenderValue = 0 * armEncoderCPR;
 
         public static class State{
             double armLiftTarget;
@@ -391,15 +395,10 @@ public final class Constants {
         public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
         public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
-        // public static final State midCubeState = new State(midCubeLifterValue, 0, midCubeFirstExtenderValue);
-        // public static final State midConeState = new State(midConeLifterValue, 0, midConeFirstExtenderValue);
-        // public static final State highCubeState = new State(highCubeLifterValue, 0, 0);
-        // public static final State highConeState = new State(highConeLifterValue, 0, 0);
         public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
         public static final State humanStationState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
         public static final State sideStationState = new State(sideStationLifterValue, sideStationFirstExtenderValue, sideStationSecondExtenderValue);
-        // public static final State humanStationState = new State(humanLifterValue, 0, humanFirstExtenderValue);
-        // public static final State sideStationState = new State(sideStationLifterValue, 0, sideStationFirstExtenderValue);
+        public static final State retractState = new State(retractLifterValue, retractFirstExtenderValue, retractSecondExtenderValue);
 
 
         public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
@@ -424,6 +423,7 @@ public final class Constants {
         public static final double lifterSpeed = 1; //0.65
         public static final double manualLifterSpeed = 0.18;
         public static final double extenderSpeed = 0.8; //0.525
+        public static final double linearExtenderSpeed = 0.22;
 
         public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;
         public static final double veritcalMaxEncoderValue = 44.2 * armEncoderCPR;

@@ -11,7 +11,10 @@ package com.adambots;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.commands.ArmCommands;
+import com.adambots.commands.ArmLifterChangeStateCommand;
+import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.GrabCommand;
+import com.adambots.commands.SecondExtenderChangeStateCommand;
 import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
@@ -35,7 +38,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -135,11 +140,19 @@ public class RobotContainer {
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     Buttons.JoystickButton16.onTrue(
       new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1)
-      .andThen(armCommands.HumanStationCommand)
-      .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.4)
-      .andThen(new WaitCommand(0.35))
+      .andThen(new ParallelCommandGroup(
+        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationState),
+        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationState),
+        new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState)))
+      .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.38))
+      .andThen(new WaitCommand(0.6))
       .andThen(new GrabCommand(grabSubsystem))
-      ));
+      .andThen(new WaitCommand(0.35))
+      .andThen(new ParallelCommandGroup(
+        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
+        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
+        new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState)))
+    );
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
@@ -209,7 +222,7 @@ public class RobotContainer {
    * This method will be called periodically to update the dashboard values
    * Call from Robot.java robotPeriodic
    */
-  public void updateDashboard() {
+  // public void updateDashboard() {
     // SmartDashboard.putNumber("getY", Buttons.forwardSupplier.getAsDouble());
     // SmartDashboard.putNumber("getX", Buttons.sidewaysSupplier.getAsDouble());
     // SmartDashboard.putNumber("getZ", Buttons.rotateSupplier.getAsDouble());
@@ -226,7 +239,7 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Gyro", RobotMap.GyroSensor.getAngle());
     // SmartDashboard.putNumber("Curve2:" , slewFilter.calculate(Buttons.forwardSupplier.getAsDouble()));
     // SmartDashboard.putNumber("Sigmoid:" , Buttons.smoothInput(Buttons.forwardSupplier.getAsDouble()));
-  }
+  // }
 
   private void setupDefaultCommands() {
 

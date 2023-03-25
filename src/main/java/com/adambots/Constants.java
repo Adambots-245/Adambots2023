@@ -354,9 +354,9 @@ public final class Constants {
         public static final double midConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double midConeSecondExtenderValue = 0 * armEncoderCPR;
 
-        public static final double highConeLifterValue = 173;
+        public static final double highConeLifterValue = 176;
         public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
-        public static final double highConeSecondExtenderValue = 64.5 * armEncoderCPR;
+        public static final double highConeSecondExtenderValue = 65.5 * armEncoderCPR;
 
         public static final double sideStationLifterValue = 167.9;
         public static final double sideStationFirstExtenderValue = 12 * armEncoderCPR;
@@ -422,7 +422,7 @@ public final class Constants {
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
         public static final double lifterSpeed = 1; //0.65
         public static final double manualLifterSpeed = 0.18;
-        public static final double extenderSpeed = 0.8; //0.8
+        public static final double extenderSpeed = 0.6; //0.8
         public static final double linearExtenderSpeed = 0.24;
 
         public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;

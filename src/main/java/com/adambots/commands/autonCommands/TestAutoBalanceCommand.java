@@ -39,7 +39,7 @@ public class TestAutoBalanceCommand extends CommandBase {
     state = 0;
     inc = 0;
     revInc = 0;
-    finalInc = 0;
+    // finalInc = 0;
     firstInc = 0;
     debounce = 0;
   }
@@ -78,26 +78,23 @@ public class TestAutoBalanceCommand extends CommandBase {
       }
     }
 
-    // if (state == 3) {
-    //   if (finalInc > 0) {
-    //     if (m_gyro.getPitch() < 7) {
-    //       m_drivetrainSubsystem.drive(0.075, 0, 0, false);
-    //     }
-    //     else if (m_gyro.getPitch() > 7) {
-    //       m_drivetrainSubsystem.drive(-0.075, 0, 0, false);
-    //     }
-    //     else {
-    //       debounce++;
-    //       if (debounce > 20) {
-    //         state = 4;
-    //       }
-    //       else {
-    //         debounce = Math.max(debounce-1, 0);
-    //       }
-    //     }
-    //   } else {
-    //     m_drivetrainSubsystem.drive(0, 0, 0, false);
-    //   }
+    if (state == 3) {
+      // if (finalInc > 0) {
+        if (m_gyro.getPitch() < 7) {
+          m_drivetrainSubsystem.drive(0.075, 0, 0, false);
+        }
+        else if (m_gyro.getPitch() > 7) {
+          m_drivetrainSubsystem.drive(-0.075, 0, 0, false);
+        }
+        else {
+          debounce++;
+          if (debounce > 20) {
+            state = 4;
+          } else {
+            debounce = Math.max(debounce-1, 0);
+          }
+        }
+      } 
     //   finalInc++;
     // }
   }
@@ -106,13 +103,12 @@ public class TestAutoBalanceCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drivetrainSubsystem.stop();
-    new HockeyStopCommand(m_drivetrainSubsystem).schedule();;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // return inc > 600 || state == 4;
-    return state == 3;
+    return state == 4;
+    // return state == 3;
   }
 }

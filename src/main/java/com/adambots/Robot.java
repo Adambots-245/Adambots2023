@@ -100,9 +100,6 @@ public class Robot extends TimedRobot {
     // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
     // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
-    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
-    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
-    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override
@@ -135,10 +132,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    
-    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
-    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
-    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   /**
@@ -161,10 +154,6 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
 
     // RobotMap.GyroSensor.reset();
-    
-    RobotMap.armLifter.setNeutralMode(NeutralMode.Brake);
-    RobotMap.firstArmExtender.setNeutralMode(NeutralMode.Brake);
-    RobotMap.secondArmExtender.setNeutralMode(NeutralMode.Brake);
   }
 
   /**

@@ -97,35 +97,35 @@ public class RobotContainer {
 
 
     //Enable for XBoxx controller code
-    Buttons.primaryBackButton.onTrue(armCommands.GroundCommand);
-    Buttons.primaryBackButton.onFalse(armCommands.HomeCommand);
-    Buttons.primaryStartButton.onTrue(armCommands.HomeCommand);
+    Buttons.primaryBackButton.onTrue(armCommands.groundCommand());
+    Buttons.primaryBackButton.onFalse(armCommands.homeCommand());
+    Buttons.primaryStartButton.onTrue(armCommands.homeCommand());
 
-    Buttons.primaryRB.whileTrue(armCommands.SmartExtendArmCommand);
-    Buttons.primaryLB.whileTrue(armCommands.SmartRetractArmCommand);
+    Buttons.primaryRB.whileTrue(armCommands.smartExtendArmCommand());
+    Buttons.primaryLB.whileTrue(armCommands.smartRetractArmCommand());
 
-    Buttons.primaryLeftStickButton.whileTrue(armCommands.UngrabWithRetractCommand);
-    Buttons.primaryRightStickButton.whileTrue(armCommands.UngrabWithRetractCommand);
+    Buttons.primaryLeftStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
+    Buttons.primaryRightStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
 
-    Buttons.primaryDPadN.whileTrue(armCommands.LiftArmCommand);
-    Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
-    Buttons.primaryDPadNE.whileTrue(armCommands.LiftArmCommand);
-    Buttons.primaryDPadSE.whileTrue(armCommands.LowerArmCommand);
-    Buttons.primaryDPadNW.whileTrue(armCommands.LiftArmCommand);
-    Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
+    Buttons.primaryDPadN.whileTrue(armCommands.liftArmCommand());
+    Buttons.primaryDPadS.whileTrue(armCommands.lowerArmCommand());
+    Buttons.primaryDPadNE.whileTrue(armCommands.liftArmCommand());
+    Buttons.primaryDPadSE.whileTrue(armCommands.lowerArmCommand());
+    Buttons.primaryDPadNW.whileTrue(armCommands.liftArmCommand());
+    Buttons.primaryDPadSW.whileTrue(armCommands.lowerArmCommand());
 
 
-    Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
-    Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
+    Buttons.primaryAButton.onTrue(armCommands.midCubeCommand());
+    Buttons.primaryXButton.onTrue(armCommands.highCubeCommand());
 
-    Buttons.primaryBButton.onTrue(armCommands.MidConeCommand);
-    Buttons.primaryYButton.onTrue(armCommands.HighConeCommand);
+    Buttons.primaryBButton.onTrue(armCommands.midConeCommand());
+    Buttons.primaryYButton.onTrue(armCommands.highConeCommand());
     
     //Joystick Keybinds
     Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
-    Buttons.JoystickButton1.onTrue(armCommands.GrabCommand);
-    Buttons.JoystickButton3.onTrue(armCommands.HumanStationCommand);
-    Buttons.JoystickButton7.onTrue(armCommands.SideStationCommand);
+    Buttons.JoystickButton1.onTrue(armCommands.grabCommand());
+    Buttons.JoystickButton3.onTrue(armCommands.humanStationCommand());
+    Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
 
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
@@ -137,10 +137,11 @@ public class RobotContainer {
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     Buttons.JoystickButton16.onTrue(
       new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1)
-      .andThen(armCommands.HumanStationCommand)
+      .andThen(armCommands.humanStationCommand())
       .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.4)
       .andThen(new WaitCommand(0.35))
-      .andThen(new GrabCommand(grabSubsystem))
+      .andThen(armCommands.grabCommand())
+      .andThen(armCommands.homeCommand())
       ));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
@@ -154,18 +155,18 @@ public class RobotContainer {
     autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
     autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());
 
-    // Will automatically call blue or red
+    // // Will automatically call blue or red
     autoChooser.addOption("TopSimple", autonCommands.scorePickupTop());
-    // autoChooser.addOption("BlueTopSimple",
-    //   new BasicTop(
-    //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    // );
-    // autoChooser.addOption("BlueTopSimple",
-    //   new ScorePickupTop(
-    //     Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-    //     Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"),
-    //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    // );
+    // // autoChooser.addOption("BlueTopSimple",
+    // //   new BasicTop(
+    // //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // // );
+    // // autoChooser.addOption("BlueTopSimple",
+    // //   new ScorePickupTop(
+    // //     Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+    // //     Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"),
+    // //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // // );
     autoChooser.addOption("BottomSimple", autonCommands.scorePickupBottom());
 
     // autoChooser.addOption("RedTopSimple",

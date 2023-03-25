@@ -59,7 +59,7 @@ public class AutonCommands {
         return resetGyroCommand().andThen(
                 initializeFieldTrajectoryCommand(trajectory),
                 resetOdometryCommand(trajectory),
-                armCommands.HighCubeCommand,
+                armCommands.highCubeCommand(),
                 // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
                         // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
                         // new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
@@ -74,7 +74,7 @@ public class AutonCommands {
         return resetGyroCommand().andThen(
             initializeFieldTrajectoryCommand(trajectory),
             resetOdometryCommand(trajectory),
-            armCommands.HighConeCommand,
+            armCommands.highConeCommand(),
             // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highConeState), 
                             //   new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highConeState), 
                             //   new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highConeState)),
@@ -85,9 +85,9 @@ public class AutonCommands {
     }
 
     public SequentialCommandGroup noTrajInitAndScore() {
-        return (SequentialCommandGroup) Commands.sequence(
+        return new SequentialCommandGroup(
                 resetGyroCommand(),
-                armCommands.HighCubeCommand,
+                armCommands.highCubeCommand(),
                 // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
                         // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
                         // new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
@@ -138,14 +138,14 @@ public class AutonCommands {
                 stopDriving(),
                 new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.75),
                 new WaitCommand(1),
-                armCommands.HomeCommand,
+                armCommands.homeCommand(),
                 // Commands.parallel(
                 //     new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), 
                 //     new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), 
                 //     new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)),
                 Commands.parallel(driveTrajectory(drivetrainSubsystem, trajectory3), 
                     new WaitCommand(3).andThen(
-                        armCommands.HighCubeCommand
+                        armCommands.highCubeCommand()
                         // Commands.parallel(
                         //     new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), 
                         //     new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), 
@@ -156,7 +156,7 @@ public class AutonCommands {
                 stopDriving(),
                 new UngrabCommand(grabSubsystem),
                 new WaitCommand(0.3),
-                armCommands.HomeCommand
+                armCommands.homeCommand()
                 // Commands.parallel(
                 //     new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), 
                 //     new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), 
@@ -172,7 +172,7 @@ public class AutonCommands {
         Trajectory trajectory2 = getTrajectory(bottomCubePath2);
 
         return Commands.sequence(autoInitAndScoreCube(trajectory1),
-                armCommands.HomeCommand,
+                armCommands.homeCommand(),
                 // Commands.parallel(
                         // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
                         // new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
@@ -180,7 +180,7 @@ public class AutonCommands {
                 new WaitCommand(1.5),
                 driveTrajectory(drivetrainSubsystem, trajectory1),
                 stopDriving(),
-                armCommands.GroundCommand,
+                armCommands.groundCommand(),
                 // Commands.parallel(
                 //         new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState),
                 //         new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState),
@@ -188,7 +188,7 @@ public class AutonCommands {
                 new WaitCommand(1.5),
                 new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 2.2),
                 new WaitCommand(0.75),
-                armCommands.HomeCommand,
+                armCommands.homeCommand(),
                 // Commands.parallel(
                 //         new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
                 //         new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),

@@ -9,6 +9,7 @@
 package com.adambots;
 
 import com.adambots.Gamepad.Buttons;
+import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.ArmCommands;
 import com.adambots.commands.DriveToDistanceCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
@@ -50,7 +51,7 @@ public class RobotContainer {
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
-  private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);
+  private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);  
 
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
@@ -215,6 +216,13 @@ public class RobotContainer {
     Dash.add("Ultrasonic Distance", () -> RobotMap.ultrasonic.getInches());
 
     Dash.add("Lidar", () -> RobotMap.lidar.getInches());
+
+    Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cone"));
+
+    Dash.add("pieceX", () -> VisionHelpers.getPieceX("cone"));
+    Dash.add("pieceY", () -> VisionHelpers.getPieceY("cone"));
+
+    Dash.add("DistanceToObject", () -> VisionHelpers.getDistanceToObject());
   }
 
   /**

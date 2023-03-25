@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.actuators.StepperMotor;
+import com.adambots.actuators.StepperMotorPWM;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
@@ -17,9 +18,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GrabSubsystem extends SubsystemBase {
     private DoubleSolenoid grabby;
-    private StepperMotor grabbyStepper;
+    private StepperMotorPWM grabbyStepper;
 
-  public GrabSubsystem(DoubleSolenoid grabby, StepperMotor grabbyStepper) {
+  public GrabSubsystem(DoubleSolenoid grabby, StepperMotorPWM grabbyStepper) {
     this.grabby = grabby;
     this.grabbyStepper = grabbyStepper;
   }
@@ -33,11 +34,15 @@ public class GrabSubsystem extends SubsystemBase {
   }
 
   public void stepUp(){
-    grabbyStepper.stepUp(20);
+    grabbyStepper.setSpeed(0.50);
   }
   
   public void stepDown(){
-    grabbyStepper.stepDown(20);
+    grabbyStepper.setSpeed(-0.50);
+  }
+
+  public void stop(){
+    grabbyStepper.stop();
   }
 
   @Override

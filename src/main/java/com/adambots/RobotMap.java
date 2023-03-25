@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 /**
  * Define all the devices here
@@ -107,7 +108,8 @@ public class RobotMap {
         public static final DigitalInput upperSwitch = new DigitalInput(upperSwitchPort);
         public static final UltrasonicSensor ultrasonic = new UltrasonicSensor(kUltrasonicAnalogPort);
         public static final Lidar lidar = new Lidar(kLidarDio);
-        public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
+        // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
+        public static final PWMSparkMax grabbyMotor = new PWMSparkMax(0);
         public static final CANdle candleLEDs = new CANdle(kCANdleCANPort);
 
         // Operator Interface (Joystick and XBoxControllers)

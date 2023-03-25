@@ -20,6 +20,7 @@ import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.actuators.StepperMotor;
+import com.adambots.actuators.StepperMotorPWM;
 import com.adambots.commands.*;
 import com.adambots.commands.autonCommands.*;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
@@ -72,7 +73,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, new StepperMotor(RobotMap.grabbyMotor, 90, false));
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, new StepperMotorPWM(RobotMap.grabbyMotor, 90, false));
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder, RobotMap.groundSwitch, RobotMap.upperSwitch);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
@@ -155,12 +156,23 @@ public class RobotContainer {
     ledSubsystem.clearAllAnims();
     ledSubsystem.setColor(0, 255, 0);
 
-    Buttons.primaryYButton.onTrue(new InstantCommand(() -> {
+    Buttons.primaryYButton.whileTrue(new InstantCommand(() -> {
+      System.out.println("Running Stepper...");
       grabSubsystem.stepUp();
     }));
-    Buttons.primaryAButton.onTrue(new InstantCommand(() -> {
+    Buttons.primaryYButton.onFalse(new InstantCommand(
+      () -> {
+        grabSubsystem.stop();
+      }
+    ));
+    Buttons.primaryAButton.whileTrue(new InstantCommand(() -> {
       grabSubsystem.stepDown();
     }));
+    Buttons.primaryAButton.onFalse(new InstantCommand(
+      () -> {
+        grabSubsystem.stop();
+      }
+    ));
 
     // Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));

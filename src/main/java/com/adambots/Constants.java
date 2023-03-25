@@ -128,15 +128,15 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 1.625; //Max speed of auton - 2.3
+        public static final double kMaxSpeedMetersPerSecond = 10; //Max speed of auton - 2.3 - 1.625
         public static final double kMaxAccelerationMetersPerSecondSquared = 1.5; //Max acceleration of auton
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //Max rotational speed of auton
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //Max rotational acceleration of auton
 
         public static final double kPXController = 3.05; // P 0 0 values for auton X, Y, and Theta controllers
         public static final double kPYController = 3.05;
-        public static final double kDXController = 0.093; //0.083 // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kDYController = 0.093;
+        public static final double kDXController = 0.083; //0.093 // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kDYController = 0.083;
         public static final double kPThetaController = 0.78;
         public static final double kDThetaController = 0.05;
 
@@ -317,8 +317,8 @@ public final class Constants {
     public static final class GrabbyConstants {
 
         public static final int armEncoderCPR = 2048;
-        public static final int mech2dAdjustment = +45;
-        public static final double limitOffset = -137.2;
+        public static final int mech2dAdjustment = 45;
+        public static final double limitOffset = -135;
 
         // misc.
         //WORKS
@@ -327,7 +327,7 @@ public final class Constants {
         public static final double initialSecondExtenderValue = 0;
 
         //WORKS
-        public static final double groundLifterValue = 93.5;
+        public static final double groundLifterValue = 94.5;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
 
@@ -354,9 +354,17 @@ public final class Constants {
         public static final double midConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double midConeSecondExtenderValue = 0 * armEncoderCPR;
 
-        public static final double highConeLifterValue = 181.6;
+        public static final double highConeLifterValue = 176;
         public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
-        public static final double highConeSecondExtenderValue = 69 * armEncoderCPR;
+        public static final double highConeSecondExtenderValue = 65.5 * armEncoderCPR;
+
+        public static final double sideStationLifterValue = 167.9;
+        public static final double sideStationFirstExtenderValue = 12 * armEncoderCPR;
+        public static final double sideStationSecondExtenderValue = 0 * armEncoderCPR;
+
+        public static final double retractLifterValue = 190; //171.5
+        public static final double retractFirstExtenderValue = 0 * armEncoderCPR;
+        public static final double retractSecondExtenderValue = 0 * armEncoderCPR;
 
         public static class State{
             double armLiftTarget;
@@ -389,29 +397,33 @@ public final class Constants {
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
         public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
         public static final State humanStationState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
+        public static final State sideStationState = new State(sideStationLifterValue, sideStationFirstExtenderValue, sideStationSecondExtenderValue);
+        public static final State retractState = new State(retractLifterValue, retractFirstExtenderValue, retractSecondExtenderValue);
+
 
         public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
+        // public static final State extendState = new State(humanLifterValue, 0, humanFirstExtenderValue);
 
         //PID values
         public static final double lifterP = 0.015; //0.015
-        public static final double lifterI = 0.0015; //0.0015
+        public static final double lifterI = 0.0018; //0.0015
         public static final double lifterD = 0.0014; //0.002
 
         public static final double firstExtenderP = 0.0001;
         public static final double firstExtenderI = 0;
         public static final double firstExtenderD = 0.000001;
 
-        public static final double secondExtenderP = 0.0001;
+        public static final double secondExtenderP = 0.00004;
         public static final double secondExtenderI = 0;
-        public static final double secondExtenderD = 0.000001;
+        public static final double secondExtenderD = 0.0000027;
 
         //general
         public static final double firstExtenderMaxExtend = 60.25 * armEncoderCPR; //60.25
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
-        public static final double rotationPerInch = 1;
-        public static final double lifterSpeed = 0.65; //0.525
-        public static final double manualLifterSpeed = 0.15;
-        public static final double extenderSpeed = 0.525; //0.525
+        public static final double lifterSpeed = 1; //0.65
+        public static final double manualLifterSpeed = 0.18;
+        public static final double extenderSpeed = 0.6; //0.8
+        public static final double linearExtenderSpeed = 0.24;
 
         public static final double horizontalMaxEncoderValue = 33.7 * armEncoderCPR;
         public static final double veritcalMaxEncoderValue = 44.2 * armEncoderCPR;

@@ -9,8 +9,10 @@ import com.adambots.RobotMap;
 import com.adambots.commands.ArmLifterChangeStateCommand;
 import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.SecondExtenderChangeStateCommand;
+import com.adambots.commands.UngrabCommand;
 import com.adambots.commands.autonCommands.AutoBalanceCommand;
 import com.adambots.commands.autonCommands.AutonPickupCommand;
+import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
 import com.adambots.subsystems.DrivetrainSubsystem;
@@ -31,20 +33,25 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ScorePickupTop extends SequentialCommandGroup{
   /** Creates a new AutonLeftRedPlaceCubeGrabCharge. */
-  public ScorePickupTop(Trajectory traj1, Trajectory traj2, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
+  public ScorePickupTop(Trajectory traj1, Trajectory traj2, Trajectory traj3, DrivetrainSubsystem drivetrainSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem, FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, GrabSubsystem grabSubsystem) {
     
     super(
-    new AutoInitAndScoreCube(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
+    // new AutoInitAndScoreCube(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
+    new AutoInitAndScoreCone(traj1, drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem),
     Commands.parallel(new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)),
-    // Commands.parallel(Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1).andThen(new InstantCommand(() -> drivetrainSubsystem.stop())), new WaitCommand(1.75).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))),
-    Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1), 
+    new DriveTimeCommand(drivetrainSubsystem, 0.7, -0.3, 0, true, 1),
     new InstantCommand(() -> drivetrainSubsystem.stop()),
-    new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
-    new WaitCommand(1.5),
-    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 1),
+    Commands.parallel(Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj2), new WaitCommand(1).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState))),
+    new InstantCommand(() -> drivetrainSubsystem.stop()),
+    new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.75),
     new WaitCommand(1),
     Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)),
-    Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj2)
-    );
+    Commands.parallel(Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj3), new WaitCommand(3).andThen(Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)))),
+    new DriveTimeCommand(drivetrainSubsystem, 0.5, 0, 0, false, 0.5),
+    new InstantCommand(() -> drivetrainSubsystem.stop()),
+    new UngrabCommand(grabSubsystem),
+    new WaitCommand(0.3),
+    Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState), new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState), new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState)));
   }
 }
+

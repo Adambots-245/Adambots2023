@@ -8,14 +8,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import com.adambots.Constants;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
+import com.adambots.subsystems.SecondExtenderSubsystem;
 
 public class LowerArmCommand extends CommandBase {
   /** Creates a new LiftArmCommand. */
   double increment;
   GrabbyLifterSubsystem grabbyLifterSubsystem;
-  public LowerArmCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, double increment) {
+  SecondExtenderSubsystem secondExtenderSubsystem;
+  public LowerArmCommand(GrabbyLifterSubsystem grabbyLifterSubsystem, SecondExtenderSubsystem secondExtenderSubsystem, double increment) {
     addRequirements(grabbyLifterSubsystem);
     this.grabbyLifterSubsystem = grabbyLifterSubsystem;
+    this.secondExtenderSubsystem = secondExtenderSubsystem;
     this.increment = increment;
   }
 
@@ -30,6 +33,7 @@ public class LowerArmCommand extends CommandBase {
   @Override
   public void execute() {
     grabbyLifterSubsystem.manualDown(increment);
+    secondExtenderSubsystem.addOffset(-0.1);
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +41,7 @@ public class LowerArmCommand extends CommandBase {
   public void end(boolean interrupted) {
     grabbyLifterSubsystem.changeMaxSpeed(Constants.GrabbyConstants.lifterSpeed);
     grabbyLifterSubsystem.stopLifting();
+    secondExtenderSubsystem.setOffset(0);
   }
 
   // Returns true when the command should end.

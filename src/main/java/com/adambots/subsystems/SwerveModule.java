@@ -106,6 +106,8 @@ public class SwerveModule {
     // m_canCoderConfig.unitString = "rad";
     // m_encoder.configAllSettings(m_canCoderConfig);
     m_absoluteEncoder.clearStickyFaults();
+    m_driveMotor.clearFaults();
+    m_turningMotor.clearFaults();
 
 
     // m_drivePIDController = m_driveMotor.getPIDController();

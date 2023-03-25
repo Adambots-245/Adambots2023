@@ -4,11 +4,7 @@
 
 package com.adambots.commands;
 
-import com.adambots.Constants;
-import com.adambots.RobotMap;
-import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Constants.GrabbyConstants.State;
-import com.adambots.subsystems.CANdleSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;

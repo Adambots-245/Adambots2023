@@ -4,42 +4,42 @@
 
 package com.adambots.commands.autonCommands;
 
-import com.adambots.Constants.GrabbyConstants;
+import com.adambots.Constants.AutoConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
-import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class AutoBalanceCommand extends CommandBase {
+public class TraversePlatform extends CommandBase {
   private DrivetrainSubsystem m_drivetrainSubsystem;
   private Gyro m_gyro;
   private int state;
-  private int firstInc;
-  private int balInc;
-  private PIDController pid;
-  private GrabbyLifterSubsystem grabbyLifterSubsystem;
+  private int inc1;
+  private int inc2;
+  private int inc3;
+  private PIDController thetaController;
 
   /** Creates a new AutoBalanceCommand. */
-  public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro, GrabbyLifterSubsystem grabbyLifterSubsystem) {
+  public TraversePlatform(DrivetrainSubsystem drivetrainSubsystem, Gyro gyro) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     addRequirements(drivetrainSubsystem);
     m_drivetrainSubsystem = drivetrainSubsystem;
     m_gyro = gyro;
-    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     state = 0;
-    firstInc = 0;
-    balInc = 0;
+    inc1 = 0;
+    inc2 = 0;
+    inc3 = 0;
 
-    pid = new PIDController(0.017, 0, 0.0015);
-    pid.setSetpoint(0);
+    thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    thetaController.setSetpoint(Math.PI);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,26 +48,24 @@ public class AutoBalanceCommand extends CommandBase {
     double pitchAngleDegrees = m_gyro.getPitch();
 
     if (state == 0) { //Initial getting onto drivestation at higher speed
-      m_drivetrainSubsystem.drive(-0.7, 0, 0, true);
-      if (Math.abs(pitchAngleDegrees) > 3) {
-        if (firstInc == 0) {
-          grabbyLifterSubsystem.changeTarget(GrabbyConstants.balancingState.getArmLiftTarget());
-        }
-        firstInc++;
+      m_drivetrainSubsystem.drive(1, 0, 0, true);
+      if (Math.abs(pitchAngleDegrees) > 5) {
+        inc1++;
       }
-      if (firstInc > 25) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc1 > 27) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }
 
     if (state == 1) { //Drive at slower speed until platform tips
-      double speed = pid.calculate(pitchAngleDegrees);
-      m_drivetrainSubsystem.drive(speed, 0, 0, true);
-
-      if (Math.abs(pitchAngleDegrees) < 3) {
-        balInc++;
+      double rot = thetaController.calculate(Math.toRadians(m_gyro.getYaw()));
+      m_drivetrainSubsystem.drive(0.5, 0, -rot, true);
+      if (Math.abs(pitchAngleDegrees) < 5) {
+        inc2++;
+      } else {
+        inc2 = 0;
       }
-      if (balInc > 50) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc2 > 30) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 2;
       }
     }

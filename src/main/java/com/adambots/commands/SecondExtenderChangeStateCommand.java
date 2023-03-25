@@ -4,7 +4,6 @@
 
 package com.adambots.commands;
 
-import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants.State;
 import com.adambots.subsystems.SecondExtenderSubsystem;
 

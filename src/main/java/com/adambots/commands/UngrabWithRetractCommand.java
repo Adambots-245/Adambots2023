@@ -39,14 +39,27 @@ public class UngrabWithRetractCommand extends CommandBase {
   @Override
   public void execute() {
     grabSubsystem.ungrab();
-    if (RobotMap.armRotationEncoder.getAbsolutePosition() >= GrabbyConstants.midCubeLifterValue-3 && RobotMap.armRotationEncoder.getAbsolutePosition() <= GrabbyConstants.highConeLifterValue+3
-     && grabbyLifterSubsystem.getState() != GrabbyConstants.humanLifterValue && grabbyLifterSubsystem.getState() != GrabbyConstants.groundLifterValue) {
+    if (grabbyLifterSubsystem.getState() == GrabbyConstants.highConeLifterValue) {
       Commands.waitSeconds(0.3).andThen(Commands.parallel(
+        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.midConeState),
+        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.midConeState)),
+        new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.retractState)
+        .andThen(new WaitCommand(1)).andThen(
+        Commands.parallel(
+          new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
           new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
           new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
-          .andThen(new WaitCommand(1)).andThen(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState))
+      )).schedule();
+    } else if (RobotMap.armRotationEncoder.getAbsolutePosition() >= GrabbyConstants.midCubeLifterValue-3 && RobotMap.armRotationEncoder.getAbsolutePosition() <= GrabbyConstants.highConeLifterValue+3
+     && grabbyLifterSubsystem.getState() != GrabbyConstants.humanLifterValue
+     && grabbyLifterSubsystem.getState() != GrabbyConstants.groundLifterValue 
+     && grabbyLifterSubsystem.getState() != GrabbyConstants.sideStationLifterValue) {
+      Commands.waitSeconds(0.3).andThen(Commands.parallel(
+          new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState),
+          new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
+          new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState))
       ).schedule();
-    }
+    } 
   }
 
   // Called once the command ends or is interrupted.

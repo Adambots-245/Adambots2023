@@ -84,8 +84,9 @@ public class AutonCommands {
         );
     }
 
-    public Command noTrajInitAndScore() {
-        return resetGyroCommand().andThen(
+    public SequentialCommandGroup noTrajInitAndScore() {
+        return (SequentialCommandGroup) Commands.sequence(
+                resetGyroCommand(),
                 armCommands.HighCubeCommand,
                 // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
                         // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
@@ -103,7 +104,7 @@ public class AutonCommands {
 
         return Commands.deadline(new WaitCommand(14.6), 
                     // autoInitAndScoreCube(trajectory).andThen(
-                    noTrajInitAndScore().andThen(
+                    Commands.sequence(noTrajInitAndScore(),
                     Commands.parallel(
                             new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.balancingState),
                             new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.balancingState)),
@@ -127,7 +128,7 @@ public class AutonCommands {
         Trajectory trajectory3 = getTrajectory(topCubeScorePath2);
 
         // return autoInitAndScoreCube(trajectory1).andThen(
-        return autoInitAndScoreCone(trajectory1).andThen(
+        return Commands.sequence(autoInitAndScoreCone(trajectory1),
                 Commands.parallel(
                         new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState),
                         new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)),
@@ -170,7 +171,7 @@ public class AutonCommands {
         Trajectory trajectory1 = getTrajectory(bottomCubePath1);
         Trajectory trajectory2 = getTrajectory(bottomCubePath2);
 
-        return autoInitAndScoreCube(trajectory1).andThen(
+        return Commands.sequence(autoInitAndScoreCube(trajectory1),
                 armCommands.HomeCommand,
                 // Commands.parallel(
                         // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),

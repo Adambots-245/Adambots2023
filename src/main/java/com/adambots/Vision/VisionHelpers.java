@@ -2,6 +2,7 @@ package com.adambots.Vision;
 
 import com.adambots.Constants.VisionConstants;
 import com.adambots.utils.LimelightHelpers;
+import com.adambots.utils.LimelightHelpers.LimelightTarget_Detector;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -23,8 +24,9 @@ public class VisionHelpers {
     }
 
     public static double getTurnAngle() {
-        // return LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue().getRotation()
-        //         .getDegrees();
+        // return
+        // LimelightHelpers.getLatestResults("limelight").targetingResults.getBotPose2d_wpiBlue().getRotation()
+        // .getDegrees();
         return 0.0;
     }
 
@@ -45,7 +47,7 @@ public class VisionHelpers {
         Field2d field = new Field2d();
 
         // field.setRobotPose(
-        //         LimelightHelpers.getLatestResults(VisionConstants.Limelight1).targetingResults.getBotPose2d_wpiBlue());
+        // LimelightHelpers.getLatestResults(VisionConstants.Limelight1).targetingResults.getBotPose2d_wpiBlue());
         // return field;
         return null;
 
@@ -63,4 +65,6 @@ public class VisionHelpers {
         // NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(def);
         return LimelightHelpers.getLimelightNTDoubleArray(VisionConstants.Limelight1, "botpose");
     }
+
+
 }

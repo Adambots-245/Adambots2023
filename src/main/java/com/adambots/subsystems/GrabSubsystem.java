@@ -34,11 +34,11 @@ public class GrabSubsystem extends SubsystemBase {
   }
 
   public void stepUp(){
-    grabbyStepper.setSpeed(0.50);
+    grabbyStepper.setSpeed(0.80);
   }
   
   public void stepDown(){
-    grabbyStepper.setSpeed(-0.50);
+    grabbyStepper.setSpeed(-0.80);
   }
 
   public void stop(){

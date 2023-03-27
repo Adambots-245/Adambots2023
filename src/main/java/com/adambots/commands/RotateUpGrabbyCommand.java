@@ -12,7 +12,7 @@ public class RotateUpGrabbyCommand extends CommandBase {
   private GrabSubsystem grabSubsystem;
   private long startTime;
   private long currentTime;
-  private long durationInMillis = 3000;
+  private long durationInMillis = 5000;
 
   /** Creates a new RotateGrabbyCommand. */
   public RotateUpGrabbyCommand(GrabSubsystem grabSubsystem) {

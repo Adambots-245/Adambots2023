@@ -58,6 +58,8 @@ public class RobotContainer {
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);
   private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem, ledSubsystem);
+  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, ledSubsystem, armCommands);
+
 
   // commands
   // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
@@ -68,7 +70,6 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-
     setupDefaultCommands();
 
     // Don't enable this for the competition
@@ -135,20 +136,11 @@ public class RobotContainer {
     ledSubsystem.setColor(0, 255, 0);
 
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
-    Buttons.JoystickButton16.onTrue(
-      new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1)
-      .andThen(armCommands.humanStationCommand())
-      .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.4)
-      .andThen(new WaitCommand(0.35))
-      .andThen(armCommands.grabCommand())
-      .andThen(armCommands.homeCommand())
-      ));
+    Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }
 
-  private void setupDashboard() {
-    AutonCommands autonCommands = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, ledSubsystem, armCommands);
-    
+  private void setupDashboard() {    
     // Command defaultCommand = autonCommands.autoInitAndScoreCube();
     Command defaultCommand = autonCommands.noTrajInitAndScore();
 
@@ -181,33 +173,33 @@ public class RobotContainer {
     //   Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"),
     //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
     // );
-    autoChooser.addOption("BlueTopSimple",
-      new ScorePickupTop(
-        Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
-        Functions.getTrajectory("BlueTopCubeCube2.wpilib.json"), 
-        Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"),
-        drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("BlueBottomSimple",
-      new ScorePickupBottom(
-      Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"),
-      Functions.getTrajectory("BlueBottomCubeCubeScore2.wpilib.json"), 
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    // autoChooser.addOption("BlueTopSimple",
+    //   new ScorePickupTop(
+    //     Functions.getTrajectory("BlueTopCubeCube1.wpilib.json"), 
+    //     Functions.getTrajectory("BlueTopCubeCube2.wpilib.json"), 
+    //     Functions.getTrajectory("BlueTopCubeCubeScore2.wpilib.json"),
+    //     drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("BlueBottomSimple",
+    //   new ScorePickupBottom(
+    //   Functions.getTrajectory("BlueBottomCubeCube1.wpilib.json"),
+    //   Functions.getTrajectory("BlueBottomCubeCubeScore2.wpilib.json"), 
+    //   drivetrainSubsystem, grabbyLifterSubsystem, wfirstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
 
-    autoChooser.addOption("RedTopSimple",
-      new ScorePickupTop(
-        Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-        Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
-        Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"),
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
-    autoChooser.addOption("RedBottomSimple",
-      new ScorePickupBottom(
-      Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
-      Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"),
-      drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
-    );
+    // autoChooser.addOption("RedTopSimple",
+    //   new ScorePickupTop(
+    //     Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //     Functions.getTrajectory("RedTopCubeCube1.wpilib.json"), 
+    //     Functions.getTrajectory("RedTopCubeCubeScore2.wpilib.json"),
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
+    // autoChooser.addOption("RedBottomSimple",
+    //   new ScorePickupBottom(
+    //   Functions.getTrajectory("RedBottomCubeCube1.wpilib.json"), 
+    //   Functions.getTrajectory("RedBottomCubeCubeScore2.wpilib.json"),
+    //   drivetrainSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, grabSubsystem)
+    // );
 
     SmartDashboard.putData("Auton Mode", autoChooser);
     Dash.add("getY", Buttons.forwardSupplier);

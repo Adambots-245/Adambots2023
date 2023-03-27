@@ -10,26 +10,22 @@ package com.adambots;
 
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
+import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.ArmCommands;
+import com.adambots.commands.ArmLifterChangeStateCommand;
+import com.adambots.commands.DriveToDistanceCommand;
+import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.GrabCommand;
-import com.adambots.commands.autonCommands.DriveTimeCommand;
+import com.adambots.commands.SecondExtenderChangeStateCommand;
+import com.adambots.commands.TurnToObjectCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
-import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
-import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutonCommands;
-import com.adambots.commands.autonCommands.autonCommandGroups.BasicTop;
-import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
-import com.adambots.commands.autonCommands.autonCommandGroups.NoTrajInitAndScore;
-import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupBottom;
-import com.adambots.commands.autonCommands.autonCommandGroups.ScorePickupTop;
-import com.adambots.subsystems.CANdleSubsystem;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 import com.adambots.subsystems.SecondExtenderSubsystem;
 import com.adambots.utils.Dash;
-import com.adambots.utils.Functions;
 import com.adambots.utils.Log;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -37,9 +33,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -52,11 +48,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
-  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder, RobotMap.groundSwitch, RobotMap.upperSwitch);
+  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
-  // private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);
   private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
   private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, armCommands);
 
@@ -130,10 +125,15 @@ public class RobotContainer {
 
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
-    // Buttons.JoystickButton2.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic, RobotMap.GyroSensor));
-    // RobotMap.candleLEDs.animate(new RainbowAnimation());
-    // ledSubsystem.clearAllAnims();
-    // ledSubsystem.setColor(0, 255, 0);
+    Buttons.JoystickButton10.onTrue(
+      new TurnToObjectCommand(drivetrainSubsystem, "cube")
+      .andThen(Commands.parallel(
+        new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
+        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState),
+        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
+      .andThen(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem))
+      .andThen(new GrabCommand(grabSubsystem))
+      );
 
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
@@ -210,7 +210,6 @@ public class RobotContainer {
     Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
     Dash.add("Arm Encoder w/ offset", () -> RobotMap.armRotationEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
 
-    Dash.add("Sonic Dist", () -> RobotMap.ultrasonic.getInches());
     Dash.add("LIDAR Dist", () -> RobotMap.lidar.getDistance());
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
@@ -222,6 +221,13 @@ public class RobotContainer {
     Dash.add("Ultrasonic Distance", () -> RobotMap.ultrasonic.getInches());
 
     Dash.add("Lidar", () -> RobotMap.lidar.getInches());
+
+    Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cube"));
+
+    Dash.add("pieceX", () -> VisionHelpers.getPieceX("cube"));
+    Dash.add("pieceY", () -> VisionHelpers.getPieceY("cube"));
+
+    Dash.add("DistanceToObject", () -> VisionHelpers.getDistanceToObject());
   }
 
   /**

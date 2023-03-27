@@ -103,8 +103,6 @@ public class RobotMap {
         public static final WPI_CANCoder armRotationEncoder = new WPI_CANCoder(armRotationEncoderPort);        
         public static final PhotoEye firstExtenderPhotoEye = new PhotoEye(leftArmLimitPort);
         public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
-        public static final DigitalInput groundSwitch = new DigitalInput(groundSwitchPort);
-        public static final DigitalInput upperSwitch = new DigitalInput(upperSwitchPort);
         public static final UltrasonicSensor ultrasonic = new UltrasonicSensor(kUltrasonicAnalogPort);
         public static final Lidar lidar = new Lidar(kLidarDio);
         // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);

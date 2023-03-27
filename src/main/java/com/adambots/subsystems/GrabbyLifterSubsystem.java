@@ -21,23 +21,18 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
   private final TalonFX armLifter;
   private final WPI_CANCoder armLifterEncoder;
   private final PIDController pid;
-  private final DigitalInput groundSwitch;
-  private final DigitalInput upperSwitch;
 
   private double maxSpeed = Constants.GrabbyConstants.lifterSpeed;
 
   private double armLifterSpeed = 0;
   private double targetPosition;
 
-  public GrabbyLifterSubsystem(TalonFX armLifter, WPI_CANCoder armLifterEncoder, DigitalInput groundSwitch, DigitalInput upperSwitch) {
+  public GrabbyLifterSubsystem(TalonFX armLifter, WPI_CANCoder armLifterEncoder) {
     this.armLifter = armLifter;
     armLifter.setInverted(true);
     this.armLifterEncoder = armLifterEncoder;
     targetPosition = armLifterEncoder.getAbsolutePosition();
     this.pid = new PIDController(Constants.GrabbyConstants.lifterP, Constants.GrabbyConstants.lifterI, Constants.GrabbyConstants.lifterD);
-
-    this.groundSwitch = groundSwitch;
-    this.upperSwitch = upperSwitch;
   }
 
   public void changeTarget(double newTarget){
@@ -76,6 +71,10 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
   public void stopLifting(){
     targetPosition = armLifterEncoder.getAbsolutePosition();
     pid.reset();
+  }
+
+  public double getEncoder() {
+    return armLifterEncoder.getAbsolutePosition();
   }
 
   @Override

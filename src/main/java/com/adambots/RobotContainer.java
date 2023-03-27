@@ -8,10 +8,16 @@
 
 package com.adambots;
 
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.ArmCommands;
+import com.adambots.commands.ArmLifterChangeStateCommand;
 import com.adambots.commands.DriveToDistanceCommand;
+import com.adambots.commands.FirstExtenderChangeStateCommand;
+import com.adambots.commands.GrabCommand;
+import com.adambots.commands.SecondExtenderChangeStateCommand;
+import com.adambots.commands.TurnToObjectCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
 import com.adambots.commands.autonCommands.autonCommandGroups.MidCubeCharge;
@@ -33,6 +39,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -47,7 +54,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
-  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder, RobotMap.groundSwitch, RobotMap.upperSwitch);
+  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
@@ -124,10 +131,15 @@ public class RobotContainer {
 
     Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
 
-    Buttons.JoystickButton2.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic, RobotMap.GyroSensor));
-    // RobotMap.candleLEDs.animate(new RainbowAnimation());
-    ledSubsystem.clearAllAnims();
-    ledSubsystem.setColor(0, 255, 0);
+    Buttons.JoystickButton10.onTrue(
+      new TurnToObjectCommand(drivetrainSubsystem, "cube")
+      .andThen(Commands.parallel(
+        new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
+        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState),
+        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
+      .andThen(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem))
+      .andThen(new GrabCommand(grabSubsystem))
+      );
 
     // Buttons.JoystickButton7.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
@@ -204,7 +216,6 @@ public class RobotContainer {
     Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
     Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
 
-    Dash.add("Sonic Dist", () -> RobotMap.ultrasonic.getInches());
     Dash.add("LIDAR Dist", () -> RobotMap.lidar.getDistance());
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
@@ -217,10 +228,10 @@ public class RobotContainer {
 
     Dash.add("Lidar", () -> RobotMap.lidar.getInches());
 
-    Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cone"));
+    Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cube"));
 
-    Dash.add("pieceX", () -> VisionHelpers.getPieceX("cone"));
-    Dash.add("pieceY", () -> VisionHelpers.getPieceY("cone"));
+    Dash.add("pieceX", () -> VisionHelpers.getPieceX("cube"));
+    Dash.add("pieceY", () -> VisionHelpers.getPieceY("cube"));
 
     Dash.add("DistanceToObject", () -> VisionHelpers.getDistanceToObject());
   }

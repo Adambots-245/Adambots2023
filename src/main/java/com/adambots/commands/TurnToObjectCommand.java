@@ -16,13 +16,13 @@ public class TurnToObjectCommand extends CommandBase {
   PIDController pid;
   double rotSpeed;
 
-  int direction = -1;
+  int direction = 1;
 
   public TurnToObjectCommand(DrivetrainSubsystem drivetrainSubsystem, String pieceType) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     addRequirements(drivetrainSubsystem);
     this.pieceType = pieceType;
-    this.pid = new PIDController(0.01, 0, 0.005);
+    this.pid = new PIDController(0.015, 0, 0.01);
   }
 
   // Called when the command is initially scheduled.
@@ -37,7 +37,7 @@ public class TurnToObjectCommand extends CommandBase {
     if (!VisionHelpers.isDetectingPieces(pieceType))
     {
       drivetrainSubsystem.drive(0, 0, 0.2 * direction, false);
-    }
+    }else{
 
     rotSpeed = pid.calculate(VisionHelpers.getPieceX(pieceType), 0);
     drivetrainSubsystem.drive(0, 0, rotSpeed, false);
@@ -49,6 +49,7 @@ public class TurnToObjectCommand extends CommandBase {
       direction = -1;
     }
   }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -58,6 +59,6 @@ public class TurnToObjectCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // return Math.abs(VisionHelpers.getPieceX("cube")) < 5;
-    return rotSpeed == rotSpeed && Math.abs(rotSpeed) < 0.05 && Math.abs(rotSpeed) > 0;
+    return VisionHelpers.isDetectingPieces(pieceType) && Math.abs(VisionHelpers.getPieceX(pieceType)) < 1.2;
   }
 }

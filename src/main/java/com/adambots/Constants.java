@@ -7,12 +7,9 @@
 
 package com.adambots;
 
-import org.opencv.core.Scalar;
-
-import java.lang.reflect.Field;
 import java.util.Map;
 
-import com.adambots.utils.ModuleMap;
+import org.opencv.core.Scalar;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -35,17 +32,15 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
  */
 
 public final class Constants {
-
     public static final String kDefaultShuffleboardTab = "debug";
-    public static final int LEDS_IN_STRIP = 300;
     public static ShuffleboardTab debugTab;
 
     public static final class DriveConstants {
         public static Field2d field = new Field2d();
 
-        public static final boolean kFrontLeftTurningEncoderReversed = true; // false
+        public static final boolean kFrontLeftTurningEncoderReversed = true;
         public static final boolean kRearLeftTurningEncoderReversed = false;
-        public static final boolean kFrontRightTurningEncoderReversed = true; // false
+        public static final boolean kFrontRightTurningEncoderReversed = true;
         public static final boolean kRearRightTurningEncoderReversed = false;
 
         public static final boolean kFrontLeftDriveEncoderReversed = false;
@@ -55,9 +50,9 @@ public final class Constants {
 
         // In Meters
         // Distance between centers of right and left wheels on robot
-        public static final double kTrackWidth = 0.61; // 0.5
+        public static final double kTrackWidth = 0.61;
         // Distance between front and back wheels on robot
-        public static final double kWheelBase = 0.61; // 0.7
+        public static final double kWheelBase = 0.61;
 
         public enum ModulePosition {
             FRONT_LEFT,
@@ -72,10 +67,6 @@ public final class Constants {
               ModulePosition.REAR_LEFT, new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
               ModulePosition.REAR_RIGHT, new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
       
-        //   public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-        //       ModuleMap.orderedValues(DriveConstants.kModuleTranslations, new Translation2d[0]));
-      
-
         // Distance between front and back wheels on robot
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -98,10 +89,6 @@ public final class Constants {
         public static final double kMaxSpeedMetersPerSecond = 3; //Only used in Drive and SetModuleStates
 
         public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
-        public static int kOffBalanceAngleThresholdDegrees = 3;
-        public static int kOonBalanceAngleThresholdDegrees = 3;
-
-
     }
 
     public static final class ModuleConstants {
@@ -115,7 +102,6 @@ public final class Constants {
                 (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
         public static final double kDriveEncoderScale = 0.0470915; //0.0470915
  
-
         public static final double kTurningEncoderDistancePerPulse =
                 // Assumes the encoders are on a 1:1 reduction with the module shaft.
                 (2 * Math.PI) / (double) kEncoderCPR;
@@ -139,7 +125,6 @@ public final class Constants {
         public static final double kDYController = 0.083;
         public static final double kPThetaController = 0.78;
         public static final double kDThetaController = 0.05;
-
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
@@ -194,7 +179,8 @@ public final class Constants {
               Units.inchesToMeters(40.45),
               Units.inchesToMeters(42.19),
               Units.inchesToMeters(18.22),
-              new Rotation3d()));
+              new Rotation3d())
+        );
     }
 
     public static final class VisionConstants {
@@ -222,17 +208,13 @@ public final class Constants {
     }
 
     public static final class GamepadConstants {
-        
         // deadzone
         public static final double kDeadZone = 0.15;
-    
-        /**
-         * Primary Driver Controller Port Number.
-         */
+
+        // Primary Driver Controller Port Number.
         public static final int kPrimaryDriver = RobotMap.kPrimaryControllerPort;
-        /**
-         * Secondary Driver Controller Port Number.
-         */
+
+        // Secondary Driver Controller Port Number.
         public static final int kSecondaryDriver = RobotMap.kSecondaryControllerPort;
         /**
          * XBOX 360 South Face Button
@@ -315,18 +297,15 @@ public final class Constants {
     }
 
     public static final class GrabbyConstants {
-
         public static final int armEncoderCPR = 2048;
         public static final int mech2dAdjustment = 45;
         public static final double limitOffset = -135;
 
         // misc.
-        //WORKS
         public static final double initiaLifterValue = 212;
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
-        //WORKS
         public static final double groundLifterValue = 94.5;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
@@ -334,6 +313,18 @@ public final class Constants {
         public static final double balancingLifterValue = 115;
         public static final double balancingFirstExtenderValue = 0;
         public static final double balancingSecondExtenderValue = 0;
+
+        public static final double humanLifterValue = 173.5; //171.5
+        public static final double humanFirstExtenderValue = 60 * armEncoderCPR;
+        public static final double humanSecondExtenderValue = 0 * armEncoderCPR;
+
+        public static final double sideStationLifterValue = 167.9;
+        public static final double sideStationFirstExtenderValue = 12 * armEncoderCPR;
+        public static final double sideStationSecondExtenderValue = 0 * armEncoderCPR;
+
+        public static final double retractLifterValue = 190;
+        public static final double retractFirstExtenderValue = 0 * armEncoderCPR;
+        public static final double retractSecondExtenderValue = 0 * armEncoderCPR;
 
         // cube
         public static final double midCubeLifterValue = 155.7;
@@ -343,13 +334,8 @@ public final class Constants {
         public static final double highCubeLifterValue = 171;
         public static final double highCubeFirstExtenderValue = 55.7 * armEncoderCPR;
         public static final double highCubeSecondExtenderValue = 58.9 * armEncoderCPR;
-
-        public static final double humanLifterValue = 173.5; //171.5
-        public static final double humanFirstExtenderValue = 60 * armEncoderCPR;
-        public static final double humanSecondExtenderValue = 0 * armEncoderCPR;
         
         // cone
-        //WORKS
         public static final double midConeLifterValue = 177;
         public static final double midConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double midConeSecondExtenderValue = 0 * armEncoderCPR;
@@ -357,14 +343,6 @@ public final class Constants {
         public static final double highConeLifterValue = 173;
         public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double highConeSecondExtenderValue = 64.5 * armEncoderCPR;
-
-        public static final double sideStationLifterValue = 167.9;
-        public static final double sideStationFirstExtenderValue = 12 * armEncoderCPR;
-        public static final double sideStationSecondExtenderValue = 0 * armEncoderCPR;
-
-        public static final double retractLifterValue = 190; //171.5
-        public static final double retractFirstExtenderValue = 0 * armEncoderCPR;
-        public static final double retractSecondExtenderValue = 0 * armEncoderCPR;
 
         public static class State{
             double armLiftTarget;
@@ -399,10 +377,6 @@ public final class Constants {
         public static final State humanStationState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
         public static final State sideStationState = new State(sideStationLifterValue, sideStationFirstExtenderValue, sideStationSecondExtenderValue);
         public static final State retractState = new State(retractLifterValue, retractFirstExtenderValue, retractSecondExtenderValue);
-
-
-        public static final State extendState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
-        // public static final State extendState = new State(humanLifterValue, 0, humanFirstExtenderValue);
 
         //PID values
         public static final double lifterP = 0.015; //0.015

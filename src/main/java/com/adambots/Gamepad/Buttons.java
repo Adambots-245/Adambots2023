@@ -123,12 +123,8 @@ public class Buttons {
         public static final Trigger JoystickThumbCenter = ex3dPro.povCenter();
 
         // deadzoning
-        public static double deaden(double rawInput) {
-                return Math.abs(rawInput) < GamepadConstants.kDeadZone ? 0 : rawInput;
-        }
-
-        public static double deaden(double input, double sadDeadenVariable) {
-                if (Math.abs(input) < sadDeadenVariable) {
+        public static double deaden(double input, double deadenThreshold) {
+                if (Math.abs(input) < deadenThreshold) {
                         return 0;
                 } else {
                         return input;
@@ -183,27 +179,21 @@ public class Buttons {
          * getY or LeftY
          */
         public static DoubleSupplier forwardSupplier = () -> isJoystickConnected.getAsBoolean()
-                        // ? deaden(ex3dPro.getY(), GamepadConstants.kDeadZone)
-                        ? applyCurve(ex3dPro.getY(), forwardCurve) // CHANGE BACK IF IT DOESNT WORK
-                        // ? deaden(smoothInput(ex3dPro.getY()), GamepadConstants.kDeadZone)
+                        ? applyCurve(ex3dPro.getY(), forwardCurve)
                         : deaden(primaryJoystick.getLeftY(), GamepadConstants.kDeadZone);
 
         /**
          * getX or LeftX
          */
         public static DoubleSupplier sidewaysSupplier = () -> isJoystickConnected.getAsBoolean()
-                        // ? deaden(ex3dPro.getX(), GamepadConstants.kDeadZone)
-                        ? applyCurve(ex3dPro.getX(), sidewaysCurve) // CHANGE BACK IF IT DOESNT WORK
-                        // ? deaden(smoothInput(ex3dPro.getX()), GamepadConstants.kDeadZone)
+                        ? applyCurve(ex3dPro.getX(), sidewaysCurve)
                         : deaden(primaryJoystick.getLeftX(), GamepadConstants.kDeadZone);
 
         /**
          * getZ or RightX
          */
         public static DoubleSupplier rotateSupplier = () -> isJoystickConnected.getAsBoolean()
-                        // ? deaden(ex3dPro.getZ(), 0.4)
-                        ? applyCurve(ex3dPro.getZ(), rotateCurve) // CHANGE BACK IF IT DOESNT WORK
-                        // ? deaden(smoothInput(ex3dPro.getZ()), 0.4)
+                        ? applyCurve(ex3dPro.getZ(), rotateCurve)
                         : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
 
         /** Rumble the XBox Controller 

@@ -12,7 +12,6 @@ import com.adambots.subsystems.SecondExtenderSubsystem;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 /** Add your docs here. */
@@ -55,7 +54,7 @@ public CommandBase sideStationCommand() {
 
 public CommandBase humanStationCommand(){
         return new ParallelCommandGroup(
-        new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationState),
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationState));
 }
@@ -99,8 +98,7 @@ public CommandBase homeCommand() {
         return new ParallelCommandGroup(
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
-                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState)
-                );
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState));
 }
 
 public Command smartExtendArmCommand() {

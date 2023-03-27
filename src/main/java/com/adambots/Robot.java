@@ -9,19 +9,10 @@ package com.adambots;
 
 import java.util.logging.Level;
 
-import com.adambots.Vision.ConePipeline;
-import com.adambots.Vision.CubePipeline;
-import com.adambots.Vision.ReflectivePipeline;
-import com.adambots.sensors.Gyro;
-import com.adambots.subsystems.*;
 import com.adambots.utils.Log;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -96,10 +87,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Coast);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Coast);
+
   }
 
   @Override
@@ -139,6 +127,7 @@ public class Robot extends TimedRobot {
    */
   //@Override
   public void autonomousPeriodic() {
+
   }
 
   @Override
@@ -150,10 +139,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
     CommandScheduler.getInstance().cancelAll();
-
-    // RobotMap.GyroSensor.reset();
   }
 
   /**
@@ -161,6 +147,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
   }
 
   @Override
@@ -169,14 +156,11 @@ public class Robot extends TimedRobot {
     // CommandScheduler.getInstance().cancelAll();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    RobotMap.GyroSensor.reset();
-
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       System.out.println("Scheduling test command");
       m_autonomousCommand.schedule();
     }
-    
     
     // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Brake);
     // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Brake);
@@ -189,7 +173,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    
     CommandScheduler.getInstance().run();
   }
 }

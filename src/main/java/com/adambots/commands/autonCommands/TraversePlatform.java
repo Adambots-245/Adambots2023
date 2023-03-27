@@ -17,7 +17,6 @@ public class TraversePlatform extends CommandBase {
   private int state;
   private int inc1;
   private int inc2;
-  private int inc3;
   private PIDController thetaController;
 
   /** Creates a new AutoBalanceCommand. */
@@ -35,7 +34,6 @@ public class TraversePlatform extends CommandBase {
     state = 0;
     inc1 = 0;
     inc2 = 0;
-    inc3 = 0;
 
     thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);

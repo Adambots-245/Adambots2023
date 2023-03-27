@@ -56,9 +56,9 @@ public class RobotContainer {
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
-  private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);
-  private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem, ledSubsystem);
-  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, ledSubsystem, armCommands);
+  // private final CANdleSubsystem ledSubsystem = new CANdleSubsystem(RobotMap.candleLEDs, RobotMap.ultrasonic);
+  private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
+  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, armCommands);
 
 
   // commands
@@ -132,8 +132,8 @@ public class RobotContainer {
 
     // Buttons.JoystickButton2.whileTrue(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.ultrasonic, RobotMap.GyroSensor));
     // RobotMap.candleLEDs.animate(new RainbowAnimation());
-    ledSubsystem.clearAllAnims();
-    ledSubsystem.setColor(0, 255, 0);
+    // ledSubsystem.clearAllAnims();
+    // ledSubsystem.setColor(0, 255, 0);
 
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());

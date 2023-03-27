@@ -30,18 +30,16 @@ public class AutonCommands {
     private FirstExtenderSubsystem firstExtenderSubsystem;
     private SecondExtenderSubsystem secondExtenderSubsystem;
     private DrivetrainSubsystem drivetrainSubsystem;
-    private CANdleSubsystem ledSubsystem;
     private ArmCommands armCommands;
 
     public AutonCommands(GrabSubsystem grabSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem,
             FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem,
-            DrivetrainSubsystem drivetrainSubsystem, CANdleSubsystem ledSubsystem, ArmCommands armCommands) {
+            DrivetrainSubsystem drivetrainSubsystem, ArmCommands armCommands) {
         this.grabSubsystem = grabSubsystem;
         this.grabbyLifterSubsystem = grabbyLifterSubsystem;
         this.firstExtenderSubsystem = firstExtenderSubsystem;
         this.secondExtenderSubsystem = secondExtenderSubsystem;
         this.drivetrainSubsystem = drivetrainSubsystem;
-        this.ledSubsystem = ledSubsystem;
         this.armCommands = armCommands;
     }
 
@@ -50,9 +48,10 @@ public class AutonCommands {
     public Command humanStationPickup() {
         return new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1)
         .andThen(armCommands.humanStationCommand())
-        .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.4))
-        .andThen(new WaitCommand(0.35))
+        .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.3))
+        .andThen(new WaitCommand(0.5))
         .andThen(armCommands.grabCommand())
+        .andThen(new WaitCommand(0.4))
         .andThen(armCommands.homeCommand());
     }
 
@@ -96,7 +95,7 @@ public class AutonCommands {
     public SequentialCommandGroup noTrajInitAndScore() {
         return new SequentialCommandGroup(
                 resetGyroCommand(),
-                armCommands.highCubeCommand(),
+                // armCommands.highCubeCommand(),
                 // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
                         // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
                         // new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),
@@ -121,8 +120,7 @@ public class AutonCommands {
                     new WaitCommand(1),
                     new TraversePlatform(drivetrainSubsystem, RobotMap.GyroSensor),
                     // Functions.CreateSwerveControllerCommand(drivetrainSubsystem, traj1),
-                    new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem),
-                    // new AutoBalanceCommand(drivetrainSubsystem, gyro)
+                    new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem),
                     new HockeyStopCommand(drivetrainSubsystem))
                 ).andThen(new HockeyStopCommand(drivetrainSubsystem));
     }

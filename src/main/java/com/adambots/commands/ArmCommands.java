@@ -22,11 +22,9 @@ public class ArmCommands {
     private SecondExtenderSubsystem secondExtenderSubsystem;
     private GrabbyLifterSubsystem grabbyLifterSubsystem;
     private GrabSubsystem grabSubsystem;
-    private CANdleSubsystem candle;
-
 
     public ArmCommands(FirstExtenderSubsystem firstExtenderSubsystem, SecondExtenderSubsystem secondExtenderSubsystem,
-            GrabbyLifterSubsystem grabbyLifterSubsystem, GrabSubsystem grabSubsystem, CANdleSubsystem candle) {
+            GrabbyLifterSubsystem grabbyLifterSubsystem, GrabSubsystem grabSubsystem) {
         this.firstExtenderSubsystem = firstExtenderSubsystem;
         this.secondExtenderSubsystem = secondExtenderSubsystem;
         this.grabbyLifterSubsystem = grabbyLifterSubsystem;

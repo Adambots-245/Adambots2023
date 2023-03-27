@@ -38,7 +38,7 @@ public class AutoBalanceCommand extends CommandBase {
     firstInc = 0;
     balInc = 0;
 
-    pid = new PIDController(0.017, 0, 0.0015);
+    pid = new PIDController(0.01, 0, 0.0017);
     pid.setSetpoint(0);
   }
 

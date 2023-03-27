@@ -47,6 +47,15 @@ public class AutonCommands {
 
     private final String autoInitAndScoreCubePath = "TopCubeCube1.wpilib.json";
 
+    public Command humanStationPickup() {
+        return new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1)
+        .andThen(armCommands.humanStationCommand())
+        .andThen(new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.4))
+        .andThen(new WaitCommand(0.35))
+        .andThen(armCommands.grabCommand())
+        .andThen(armCommands.homeCommand());
+    }
+
     public Command autoInitAndScoreCube() {
         String trajectoryFileName = autoInitAndScoreCubePath;
 

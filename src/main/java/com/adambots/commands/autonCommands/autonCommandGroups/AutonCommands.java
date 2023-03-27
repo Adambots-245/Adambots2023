@@ -95,7 +95,7 @@ public class AutonCommands {
     public SequentialCommandGroup noTrajInitAndScore() {
         return new SequentialCommandGroup(
                 resetGyroCommand(),
-                // armCommands.highCubeCommand(),
+                armCommands.highCubeCommand(),
                 // Commands.parallel(new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
                         // new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
                         // new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState)),

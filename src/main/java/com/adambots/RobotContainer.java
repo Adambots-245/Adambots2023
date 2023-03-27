@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -133,6 +134,12 @@ public class RobotContainer {
         new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)))
       .andThen(new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem))
       .andThen(new GrabCommand(grabSubsystem))
+      .andThen(new WaitCommand(0.2))
+      .andThen(Commands.parallel(
+        new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
+        new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
+        new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState)
+        ))
       );
 
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));

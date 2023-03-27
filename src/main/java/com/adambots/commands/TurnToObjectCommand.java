@@ -22,7 +22,7 @@ public class TurnToObjectCommand extends CommandBase {
     this.drivetrainSubsystem = drivetrainSubsystem;
     addRequirements(drivetrainSubsystem);
     this.pieceType = pieceType;
-    this.pid = new PIDController(0.015, 0, 0.01);
+    this.pid = new PIDController(0.02, 0, 0);
   }
 
   // Called when the command is initially scheduled.
@@ -59,6 +59,6 @@ public class TurnToObjectCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // return Math.abs(VisionHelpers.getPieceX("cube")) < 5;
-    return VisionHelpers.isDetectingPieces(pieceType) && Math.abs(VisionHelpers.getPieceX(pieceType)) < 1.2;
+    return VisionHelpers.isDetectingPieces(pieceType) && Math.abs(VisionHelpers.getPieceX(pieceType)) < 2.6;
   }
 }

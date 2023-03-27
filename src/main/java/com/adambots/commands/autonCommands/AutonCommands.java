@@ -239,15 +239,15 @@ public class AutonCommands {
         return swerveControllerCommand;
     }
 
-    private Command initializeFieldTrajectoryCommand(Trajectory trajectory) {
+    public Command initializeFieldTrajectoryCommand(Trajectory trajectory) {
         return new InstantCommand(() -> DriveConstants.field.getObject("traj").setTrajectory(trajectory));
     }
 
-    private Command resetOdometryCommand(Trajectory trajectory) {
+    public Command resetOdometryCommand(Trajectory trajectory) {
         return new InstantCommand(() -> drivetrainSubsystem.resetOdometry(trajectory.getInitialPose()));
     }
 
-    private Command resetGyroCommand() {
+    public Command resetGyroCommand() {
         return new InstantCommand(() -> RobotMap.GyroSensor.reset());
     }
 

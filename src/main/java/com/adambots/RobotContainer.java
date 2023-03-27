@@ -110,7 +110,7 @@ public class RobotContainer {
     Buttons.JoystickButton3.onTrue(armCommands.humanStationCommand());
     Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
 
-    Buttons.JoystickButton4.onTrue(new InstantCommand(() -> RobotMap.GyroSensor.reset()));
+    Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
 
     Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("cube"));
 

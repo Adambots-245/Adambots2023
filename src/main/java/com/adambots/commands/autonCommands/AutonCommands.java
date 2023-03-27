@@ -54,7 +54,10 @@ public class AutonCommands {
             new WaitCommand(0.5),
             armCommands.grabCommand(),
             new WaitCommand(0.4),
-            armCommands.homeCommand()
+            new ParallelCommandGroup(
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState))
         );
     }
 
@@ -69,7 +72,10 @@ public class AutonCommands {
             new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem),
             new GrabCommand(grabSubsystem),
             new WaitCommand(0.2),
-            armCommands.homeCommand()
+            new ParallelCommandGroup(
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState))
         );
     }
 

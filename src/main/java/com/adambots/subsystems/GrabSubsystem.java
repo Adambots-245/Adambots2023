@@ -5,8 +5,6 @@
 package com.adambots.subsystems;
 
 import com.adambots.actuators.StepperMotor;
-import com.adambots.actuators.StepperMotorPWM;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -18,11 +16,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GrabSubsystem extends SubsystemBase {
     private DoubleSolenoid grabby;
-    private StepperMotorPWM grabbyStepper;
+    private StepperMotor grabbyStepper;
+    private GrabbyLifterSubsystem grabbyLifterSubsystem;
 
-  public GrabSubsystem(DoubleSolenoid grabby, StepperMotorPWM grabbyStepper) {
+    private double currentLifterVal;
+
+  public GrabSubsystem(DoubleSolenoid grabby, StepperMotor grabbyStepper, GrabbyLifterSubsystem grabbyLifterSubsystem) {
     this.grabby = grabby;
     this.grabbyStepper = grabbyStepper;
+    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
+    currentLifterVal = grabbyLifterSubsystem.getEncoder();
   }
 
   public void grab(){
@@ -34,21 +37,18 @@ public class GrabSubsystem extends SubsystemBase {
   }
 
   public void stepUp(){
-    grabbyStepper.setSpeed(0.80);
+    grabbyStepper.stepUp(5);
   }
   
   public void stepDown(){
-    grabbyStepper.setSpeed(-0.80);
-  }
-
-  public void stop(){
-    grabbyStepper.stop();
+    grabbyStepper.stepDown(5);
   }
 
   @Override
-  public void periodic(
-    
-  ) {
-    // This method will be called once per scheduler run
+  public void periodic() {
+    if(Math.abs(currentLifterVal - grabbyLifterSubsystem.getEncoder()) > 3){
+      grabbyStepper.stepUp(currentLifterVal - grabbyLifterSubsystem.getEncoder());
+      currentLifterVal = grabbyLifterSubsystem.getEncoder();
+    }
   }
 }

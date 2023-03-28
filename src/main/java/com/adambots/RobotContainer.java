@@ -125,17 +125,13 @@ public class RobotContainer {
     // Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
 
     Trigger rightTrigger = new Trigger(()-> {
-      double rightTriggerVal = Buttons.rightTrigger; 
-      return (rightTriggerVal > 0.5);
+      return Buttons.primaryRightTrigger > 0.5;
     });
-
     rightTrigger.onTrue(new RotateUpGrabbyCommand(grabSubsystem));
 
     Trigger leftTrigger = new Trigger(()-> {
-      double leftTriggerVal = Buttons.leftTrigger; 
-      return (leftTriggerVal > 0.5);
+      return Buttons.primaryLeftTrigger > 0.5;
     });
-
     leftTrigger.onTrue(new RotateDownGrabbyCommand(grabSubsystem));
 
 

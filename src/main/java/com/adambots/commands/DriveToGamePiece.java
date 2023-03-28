@@ -11,13 +11,13 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveToDistanceCommand extends CommandBase {
+public class DriveToGamePiece extends CommandBase {
   private DrivetrainSubsystem drivetrainSubsystem;
   private GrabbyLifterSubsystem grabbyLifterSubsystem;
   private Lidar lidar;
 
   /** Creates a new DriveToDistanceCommand. */
-  public DriveToDistanceCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, GrabbyLifterSubsystem grabbyLifterSubsystem) {
+  public DriveToGamePiece(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, GrabbyLifterSubsystem grabbyLifterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.grabbyLifterSubsystem = grabbyLifterSubsystem;
@@ -34,7 +34,7 @@ public class DriveToDistanceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrainSubsystem.drive(lidar.getInches()*0.023, 0, 0, false);
+    drivetrainSubsystem.drive((lidar.getInches()-3)*0.023, 0, 0, false);
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +50,6 @@ public class DriveToDistanceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return lidar.getInches() <= 5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10;
+    return lidar.getInches() <= 7 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10;
   }
 }

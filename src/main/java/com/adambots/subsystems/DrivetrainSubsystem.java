@@ -65,8 +65,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // }
     );
 
-    SmartDashboard.putData("Field", m_field);
-
     // When the robot starts, the Gyro may not be ready to reset - wait 1 second and
     // then reset
     new Thread(() -> {
@@ -91,17 +89,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_odometry.update(
         m_gyro.getRotation2d(),
         ModuleMap.orderedModulePositions(swerveModules)
-    // new SwerveModulePosition[] {
-    // m_frontLeft.getPosition(),
-    // m_frontRight.getPosition(),
-    // m_rearLeft.getPosition(),
-    // m_rearRight.getPosition()
-    // }
     );
 
-    // updateDashboard();
-
-    m_field.setRobotPose(getPose());
+    // m_field.setRobotPose(getPose());
   }
 
   @Override
@@ -168,17 +158,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    *          The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-    m_odometry.resetPosition(
-        m_gyro.getRotation2d(),
-        ModuleMap.orderedModulePositions(swerveModules),
-
-        // new SwerveModulePosition[] {
-        // m_frontLeft.getPosition(),
-        // m_frontRight.getPosition(),
-        // m_rearLeft.getPosition(),
-        // m_rearRight.getPosition()
-        // },
-        pose);
+    m_odometry.resetPosition(m_gyro.getRotation2d(), ModuleMap.orderedModulePositions(swerveModules), pose);
   }
 
   /**
@@ -274,40 +254,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     swerveModules.get(ModulePosition.FRONT_RIGHT).setPIDValues(kP, kI, kD);
     swerveModules.get(ModulePosition.REAR_LEFT).setPIDValues(kP, kI, kD);
     swerveModules.get(ModulePosition.REAR_RIGHT).setPIDValues(kP, kI, kD);
-
-    // m_frontLeft.setPIDValues(kP, kI, kD);
-    // m_frontRight.setPIDValues(kP, kI, kD);
-    // m_rearLeft.setPIDValues(kP, kI, kD);
-    // m_rearRight.setPIDValues(kP, kI, kD);
   }
 
   public void stop() {
     drive(0, 0, 0, false);
   }
-
-  // public void hockeyStop() {
-  //   swerveModules.get(ModulePosition.FRONT_LEFT).turn(45);
-  //   swerveModules.get(ModulePosition.FRONT_RIGHT).turn(-45);
-  //   swerveModules.get(ModulePosition.REAR_LEFT).turn(-45);
-  //   swerveModules.get(ModulePosition.REAR_RIGHT).turn(45);
-  // }
-
-  private void updateDashboard() {
-    SmartDashboard.putNumber("m_frontLeft", swerveModules.get(ModulePosition.FRONT_LEFT).getState().angle.getDegrees());
-    SmartDashboard.putNumber("m_rearLeft", swerveModules.get(ModulePosition.REAR_LEFT).getState().angle.getDegrees());
-    SmartDashboard.putNumber("m_frontRight", swerveModules.get(ModulePosition.FRONT_RIGHT).getState().angle.getDegrees());
-    SmartDashboard.putNumber("m_rearRight", swerveModules.get(ModulePosition.REAR_RIGHT).getState().angle.getDegrees());
-
-    SmartDashboard.putNumber("gyro", getHeading());
-
-    SmartDashboard.putNumber("m_frontLeft speeed", swerveModules.get(ModulePosition.FRONT_LEFT).getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("m_rearLeft speeed", swerveModules.get(ModulePosition.REAR_LEFT).getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("m_frontRight speeed", swerveModules.get(ModulePosition.FRONT_RIGHT).getState().speedMetersPerSecond);
-    SmartDashboard.putNumber("m_rearRight speeed", swerveModules.get(ModulePosition.REAR_RIGHT).getState().speedMetersPerSecond);
-
-    SmartDashboard.putNumber("Odom Rot", m_gyro.getRotation2d().getDegrees());
-    SmartDashboard.putNumber("Odom X", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Odom Y", m_odometry.getPoseMeters().getY());
-  }
-
 }

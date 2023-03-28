@@ -45,37 +45,23 @@ public class AutonCommands {
     public Command humanStationPickup() {
         return Commands.sequence(
             new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1),
-            // armCommands.humanStationCommand(), //NEED TO MAKE SURE THESE ARE FIXED FOR TELEOP
-            new ParallelCommandGroup(
-                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),
-                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationState),
-                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationState)),
+            armCommands.humanStationCommand(), //NEED TO MAKE SURE THESE ARE FIXED FOR TELEOP
             new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.3),
             new WaitCommand(0.5),
             armCommands.grabCommand(),
             new WaitCommand(0.4),
-            new ParallelCommandGroup(
-                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
-                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
-                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState))
+            armCommands.homeCommand()
         );
     }
 
     public Command pickupGamePiece(String pieceType) {
         return Commands.sequence(
             new TurnToObjectCommand(drivetrainSubsystem, pieceType),
-            // armCommands.groundCommand(),
-            new ParallelCommandGroup(
-                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.groundState),
-                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.groundState),
-                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.groundState)),
-            new DriveToDistanceCommand(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem),
+            armCommands.groundCommand(),
+            new DriveToGamePiece(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem),
             new GrabCommand(grabSubsystem),
             new WaitCommand(0.2),
-            new ParallelCommandGroup(
-                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.initState),
-                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.initState),
-                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.initState))
+            armCommands.homeCommand()
         );
     }
 
@@ -127,19 +113,20 @@ public class AutonCommands {
         return Commands.deadline(
             new WaitCommand(14.6), 
             Commands.sequence(
-                autoInitAndScoreCube(),
+                autoInitAndScoreCone(),
                 armCommands.homeCommand(),
                 new WaitCommand(1),
                 new TraversePlatform(drivetrainSubsystem, RobotMap.GyroSensor),
+                pickupGamePiece("cube"),
                 new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem),
                 new HockeyStopCommand(drivetrainSubsystem)
             )
         ).andThen(new HockeyStopCommand(drivetrainSubsystem));
     }
 
-    private final String topCubePath1 = "TopCubeCube1.wpilib.json";
-    private final String topCubePath2 = "TopCubeCube2.wpilib.json"; 
-    private final String topCubeScorePath2 = "TopCubeCubeScore2.wpilib.json"; 
+    private final String topCubePath1 = "BlueTopCubeCube1.wpilib.json";
+    private final String topCubePath2 = "BlueTopCubeCube2.wpilib.json"; 
+    private final String topCubeScorePath2 = "BlueTopCubeCubeScore2.wpilib.json"; 
 
     public Command scorePickupTop() {
         Trajectory trajectory1 = getTrajectory(topCubePath1);
@@ -149,14 +136,11 @@ public class AutonCommands {
         return Commands.sequence(
             autoInitAndScoreCone(trajectory1),
             armCommands.homeCommand(),
-            new DriveTimeCommand(drivetrainSubsystem, 0.7, -0.3, 0, true, 1),
-            Commands.parallel(
-                driveTrajectory(drivetrainSubsystem, trajectory2), 
-                new WaitCommand(1).andThen(armCommands.groundCommand())),
+            new DriveTimeCommand(drivetrainSubsystem, 0.2, -0.1, 0, true, 1),
+            driveTrajectory(drivetrainSubsystem, trajectory2), 
             stopDriving(),
-            new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.75),
-            new WaitCommand(1),
-            armCommands.homeCommand(),
+            pickupGamePiece("cube"),
+            resetOdometryCommand(trajectory3),
             Commands.parallel(
                 driveTrajectory(drivetrainSubsystem, trajectory3), 
                 new WaitCommand(3).andThen(armCommands.highCubeCommand())),
@@ -194,13 +178,13 @@ public class AutonCommands {
     // Common Functions
     public Trajectory getTrajectory(String trajectoryName) {
         Trajectory trajectory = new Trajectory();
-        String allianceColor = DriverStation.getAlliance().name();
+        // String allianceColor = DriverStation.getAlliance().name();
 
-        // If the trajectoryname already has Blue or Red in it, don't mess with it
-        if (!(trajectoryName.startsWith("Blue") || trajectoryName.startsWith("Red"))) {
+        // // If the trajectoryname already has Blue or Red in it, don't mess with it
+        // if (!(trajectoryName.startsWith("Blue") || trajectoryName.startsWith("Red"))) {
 
-            trajectoryName = allianceColor + trajectoryName;
-        }
+        //     trajectoryName = allianceColor + trajectoryName;
+        // }
 
         try {
             Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryName);

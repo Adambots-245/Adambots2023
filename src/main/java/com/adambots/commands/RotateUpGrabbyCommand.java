@@ -10,9 +10,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RotateUpGrabbyCommand extends CommandBase {
   private GrabSubsystem grabSubsystem;
-  private long startTime;
-  private long currentTime;
-  private double durationInMillis = 5000;
 
   /** Creates a new RotateGrabbyCommand. */
   public RotateUpGrabbyCommand(GrabSubsystem grabSubsystem) {
@@ -24,26 +21,22 @@ public class RotateUpGrabbyCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    startTime = System.currentTimeMillis();
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    currentTime = System.currentTimeMillis();
     grabSubsystem.stepUp();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    grabSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((currentTime-startTime) >= durationInMillis);
+    return true;
   }
 }

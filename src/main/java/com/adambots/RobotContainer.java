@@ -19,7 +19,6 @@ import com.adambots.commands.RotateUpGrabbyCommand;
 import com.adambots.commands.SecondExtenderChangeStateCommand;
 import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.actuators.StepperMotor;
-import com.adambots.actuators.StepperMotorPWM;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.commands.autonCommands.TestAutoBalanceCommand;
 import com.adambots.commands.autonCommands.autonCommandGroups.AutoInitAndScoreCube;
@@ -59,8 +58,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, new StepperMotorPWM(RobotMap.grabbyMotor, 90, false));
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder, RobotMap.groundSwitch, RobotMap.upperSwitch);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, new StepperMotor(RobotMap.grabbyMotor, 90, false), grabbyLifterSubsystem);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);

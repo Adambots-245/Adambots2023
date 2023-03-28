@@ -86,6 +86,7 @@ public class RobotMap {
         public static final int secondArmExtenderPort = 10;
         public static final int grabbyPort = 0;
         public static final int ungrabbyPort = 1;
+        public static final int grabbyMotorPort = 0;
         // public static final int rightGrabbyPort = 0;
         public static final int leftArmLimitPort = 1;
         public static final int rightArmLimitPort = 0;
@@ -109,7 +110,7 @@ public class RobotMap {
         public static final UltrasonicSensor ultrasonic = new UltrasonicSensor(kUltrasonicAnalogPort);
         public static final Lidar lidar = new Lidar(kLidarDio);
         // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
-        public static final PWMSparkMax grabbyMotor = new PWMSparkMax(0);
+        public static final CANSparkMax grabbyMotor = new CANSparkMax(grabbyMotorPort, MotorType.kBrushless);
         public static final CANdle candleLEDs = new CANdle(kCANdleCANPort);
 
         // Operator Interface (Joystick and XBoxControllers)

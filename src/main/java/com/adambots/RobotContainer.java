@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -93,7 +94,9 @@ public class RobotContainer {
    * created by instantiating a {@link GenericHID} or one of its subclasses
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * 
    */
+  
   private void configureButtonBindings() {
 
     // Buttons.primaryAButton.onTrue(new ChangeStream());
@@ -118,8 +121,22 @@ public class RobotContainer {
     Buttons.primaryDPadS.whileTrue(armCommands.LowerArmCommand);
     Buttons.primaryDPadNE.whileTrue(armCommands.LiftArmCommand);
     Buttons.primaryDPadSE.whileTrue(armCommands.LowerArmCommand);
-    Buttons.primaryDPadNW.whileTrue(armCommands.LiftArmCommand);
-    Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
+    // Buttons.primaryDPadNW.whileTrue(armCommands.LiftArmCommand);
+    // Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
+
+    Trigger rightTrigger = new Trigger(()-> {
+      double rightTriggerVal = Buttons.rightTrigger; 
+      return (rightTriggerVal > 0.5);
+    });
+
+    rightTrigger.onTrue(new RotateUpGrabbyCommand(grabSubsystem));
+
+    Trigger leftTrigger = new Trigger(()-> {
+      double leftTriggerVal = Buttons.leftTrigger; 
+      return (leftTriggerVal > 0.5);
+    });
+
+    leftTrigger.onTrue(new RotateDownGrabbyCommand(grabSubsystem));
 
 
     // Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
@@ -225,7 +242,6 @@ public class RobotContainer {
 
     Dash.add("Lidar", () -> RobotMap.lidar.getInches());
   }
-
   /**
    * This method will be called periodically to update the dashboard values
    * Call from Robot.java robotPeriodic

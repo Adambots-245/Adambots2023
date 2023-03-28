@@ -46,6 +46,7 @@ public class StepperMotorPWM {
 
     public void setSpeed(double speed){
         motorController.set(speed);
+    
     }
 
     public void stop(){

@@ -14,6 +14,7 @@ import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.ArmCommands;
 import com.adambots.commands.autonCommands.AutonCommands;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
+import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
@@ -40,8 +41,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.armRotationEncoder, RobotMap.lidar);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
@@ -107,14 +108,14 @@ public class RobotContainer {
     //Joystick Keybinds
     Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
     Buttons.JoystickButton1.onTrue(armCommands.grabCommand());
-    Buttons.JoystickButton3.onTrue(armCommands.humanStationCommand());
+    Buttons.JoystickButton3.onTrue(autonCommands.humanStationPickup());
     Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
 
     Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
 
     Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("cube"));
 
-    Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
+    // Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
   }

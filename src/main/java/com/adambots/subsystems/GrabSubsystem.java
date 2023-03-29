@@ -4,14 +4,23 @@
 
 package com.adambots.subsystems;
 
+import com.adambots.Constants.GrabbyConstants;
+import com.adambots.sensors.Lidar;
+import com.ctre.phoenix.sensors.CANCoder;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GrabSubsystem extends SubsystemBase {
-    DoubleSolenoid grabby;
-  public GrabSubsystem(DoubleSolenoid grabby) {
+  DoubleSolenoid grabby;
+  CANCoder lifterEncoder;
+  Lidar lidar;
+
+  public GrabSubsystem(DoubleSolenoid grabby, CANCoder lifterEncoder, Lidar lidar) {
     this.grabby = grabby;
+    this.lifterEncoder = lifterEncoder;
+    this.lidar = lidar;
   }
 
   public void grab(){
@@ -24,6 +33,8 @@ public class GrabSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (lifterEncoder.getAbsolutePosition() <= GrabbyConstants.groundLifterValue+10 && lidar.getInches() < 7) {
+      grab();
+    }
   }
 }

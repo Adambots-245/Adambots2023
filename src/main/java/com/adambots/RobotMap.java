@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
+import com.adambots.actuators.StepperMotor;
 import com.adambots.sensors.Gyro;
 import com.adambots.sensors.Lidar;
 import com.adambots.sensors.PhotoEye;
@@ -86,7 +87,7 @@ public class RobotMap {
         public static final int secondArmExtenderPort = 10;
         public static final int grabbyPort = 0;
         public static final int ungrabbyPort = 1;
-        public static final int grabbyMotorPort = 0;
+        public static final int grabbyMotorPort = 19;
         // public static final int rightGrabbyPort = 0;
         public static final int leftArmLimitPort = 1;
         public static final int rightArmLimitPort = 0;
@@ -96,7 +97,7 @@ public class RobotMap {
 
         // Arm and Grabby Devices
         public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
-        // public static final Solenoid rightGrabby = new Solenoida (PneumaticsModuleType.CTREPCM, rightGrabbyPort);
+        // public static final Solenoid rightGrabby = new Solenoid (PneumaticsModuleType.CTREPCM, rightGrabbyPort);
         
         public static final WPI_TalonFX firstArmExtender = new WPI_TalonFX(firstArmExtenderPort);
         public static final WPI_TalonFX secondArmExtender = new WPI_TalonFX(secondArmExtenderPort);
@@ -111,6 +112,7 @@ public class RobotMap {
         public static final Lidar lidar = new Lidar(kLidarDio);
         // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
         public static final CANSparkMax grabbyMotor = new CANSparkMax(grabbyMotorPort, MotorType.kBrushless);
+        public static final StepperMotor grabbyTiltMotor = new StepperMotor(grabbyMotor, 360, false);
         public static final CANdle candleLEDs = new CANdle(kCANdleCANPort);
 
         // Operator Interface (Joystick and XBoxControllers)

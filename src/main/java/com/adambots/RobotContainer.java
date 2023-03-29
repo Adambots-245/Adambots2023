@@ -59,7 +59,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder, RobotMap.groundSwitch, RobotMap.upperSwitch);
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, new StepperMotor(RobotMap.grabbyMotor, 90, false), RobotMap.armRotationEncoder);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.grabbyTiltMotor, RobotMap.armRotationEncoder);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
@@ -123,16 +123,8 @@ public class RobotContainer {
     // Buttons.primaryDPadNW.whileTrue(armCommands.LiftArmCommand);
     // Buttons.primaryDPadSW.whileTrue(armCommands.LowerArmCommand);
 
-    Trigger rightTrigger = new Trigger(()-> {
-      return Buttons.primaryRightTrigger > 0.5;
-    });
-    rightTrigger.onTrue(new RotateUpGrabbyCommand(grabSubsystem));
-
-    Trigger leftTrigger = new Trigger(()-> {
-      return Buttons.primaryLeftTrigger > 0.5;
-    });
-    leftTrigger.onTrue(new RotateDownGrabbyCommand(grabSubsystem));
-
+    Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem));    
+    Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem));
 
     // Buttons.primaryAButton.onTrue(armCommands.MidCubeCommand);
     Buttons.primaryXButton.onTrue(armCommands.HighCubeCommand);
@@ -226,6 +218,9 @@ public class RobotContainer {
 
     Dash.add("Sonic Dist", () -> RobotMap.ultrasonic.getInches());
     Dash.add("LIDAR Dist", () -> RobotMap.lidar.getDistance());
+
+    Dash.add("LTriggerTrigger", Buttons.leftTrigger);
+    Dash.add("RTriggerTrigger", Buttons.rightTrigger);
 
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 

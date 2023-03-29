@@ -8,13 +8,13 @@
 
 package com.adambots;
 
-import com.adambots.Constants.GrabbyConstants;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.ArmCommands;
+import com.adambots.commands.RotateDownGrabbyCommand;
+import com.adambots.commands.RotateUpGrabbyCommand;
 import com.adambots.commands.autonCommands.AutonCommands;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
-import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /**
@@ -42,7 +41,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.armRotationEncoder, RobotMap.lidar);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.grabbyTiltMotor, RobotMap.armRotationEncoder, RobotMap.lidar);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
@@ -77,7 +76,9 @@ public class RobotContainer {
    * created by instantiating a {@link GenericHID} or one of its subclasses
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * 
    */
+  
   private void configureButtonBindings() {
     //Enable for XBox controller code
     Buttons.primaryBackButton.onTrue(armCommands.groundCommand());
@@ -98,6 +99,8 @@ public class RobotContainer {
     Buttons.primaryDPadNW.whileTrue(armCommands.liftArmCommand());
     Buttons.primaryDPadSW.whileTrue(armCommands.lowerArmCommand());
 
+    Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem));    
+    Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem));
 
     Buttons.primaryAButton.onTrue(armCommands.midCubeCommand());
     Buttons.primaryXButton.onTrue(armCommands.highCubeCommand());
@@ -114,7 +117,6 @@ public class RobotContainer {
     Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
 
     Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("cube"));
-
     // Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));

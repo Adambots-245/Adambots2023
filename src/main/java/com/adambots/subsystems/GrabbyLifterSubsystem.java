@@ -73,7 +73,7 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     pid.reset();
   }
 
-  public double getEncoder() {
+  public double getEncoder(){
     return armLifterEncoder.getAbsolutePosition();
   }
 

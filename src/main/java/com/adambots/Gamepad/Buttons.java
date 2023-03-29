@@ -57,6 +57,14 @@ public class Buttons {
         public static final Trigger primaryDPadE = primaryJoystick.pov(GamepadConstants.kDpadEAngle);
         public static final Trigger primaryDPadNE = primaryJoystick.pov(GamepadConstants.kDpadNEAngle);
 
+        // primary analog inputs
+        public static Trigger leftTrigger = new Trigger(()-> {
+                return primaryJoystick.getLeftTriggerAxis() > 0.5;
+        });
+        public static Trigger rightTrigger = new Trigger(()-> {
+                return primaryJoystick.getRightTriggerAxis() > 0.5;
+        });
+
         // primary axes
         // RIGHT TRIGGER primaryJoystick.getRightTriggerAxis()
         // LEFT TRIGGER primaryJoystick.getLeftTriggerAxis()

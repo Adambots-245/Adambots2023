@@ -7,6 +7,7 @@ package com.adambots.actuators;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 /**
@@ -48,11 +49,11 @@ public class StepperMotor {
         pidController = motorController.getPIDController();
         motorController.getEncoder().setPositionConversionFactor(1.0);
 
-        motorController.setSoftLimit(SoftLimitDirection.kForward, this.maxAngle);
-        motorController.setSoftLimit(SoftLimitDirection.kReverse, -this.maxAngle);
+        // motorController.setSoftLimit(SoftLimitDirection.kForward, this.maxAngle);
+        // motorController.setSoftLimit(SoftLimitDirection.kReverse, -this.maxAngle);
 
-        motorController.enableSoftLimit(SoftLimitDirection.kForward, true);
-        motorController.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        // motorController.enableSoftLimit(SoftLimitDirection.kForward, true);
+        // motorController.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
         pidController.setP(kP);
         pidController.setI(kI);
@@ -61,6 +62,12 @@ public class StepperMotor {
 
         // Set the position reference for the encoder
         motorController.getEncoder().setPosition(0);
+
+        motorController.setIdleMode(IdleMode.kCoast);
+    }
+
+    public void setIdleMode (IdleMode idleMode) {
+        motorController.setIdleMode(idleMode);
     }
 
     /**

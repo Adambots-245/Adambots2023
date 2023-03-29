@@ -136,9 +136,9 @@ public class AutonCommands {
         ).andThen(new HockeyStopCommand(drivetrainSubsystem));
     }
 
-    private final String topCubePath1 = "BlueTopCubeCube1.wpilib.json";
-    private final String topCubePath2 = "BlueTopCubeCube2.wpilib.json"; 
-    private final String topCubeScorePath2 = "BlueTopCubeCubeScore2.wpilib.json"; 
+    private final String topCubePath1 = "TopCubeCube1.wpilib.json";
+    private final String topCubePath2 = "TopCubeCube2.wpilib.json"; 
+    private final String topCubeScorePath2 = "TopCubeCubeScore2.wpilib.json"; 
 
     public Command scorePickupTop() {
         Trajectory trajectory1 = getTrajectory(topCubePath1);
@@ -195,12 +195,12 @@ public class AutonCommands {
     // Common Functions
     public Trajectory getTrajectory(String trajectoryName) {
         Trajectory trajectory = new Trajectory();
-        // String allianceColor = DriverStation.getAlliance().name();
+        String allianceColor = DriverStation.getAlliance().name();
 
         // // If the trajectoryname already has Blue or Red in it, don't mess with it
         // if (!(trajectoryName.startsWith("Blue") || trajectoryName.startsWith("Red"))) {
 
-        //     trajectoryName = allianceColor + trajectoryName;
+        trajectoryName = allianceColor + trajectoryName;
         // }
 
         try {

@@ -66,8 +66,7 @@ public class RobotMap {
         public static final WPI_TalonFX secondArmExtender = new WPI_TalonFX(secondArmExtenderPort);
         public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
         // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
-        public static final CANSparkMax grabbyMotor = new CANSparkMax(grabbyMotorPort, MotorType.kBrushless);
-        public static final StepperMotor grabbyTiltMotor = new StepperMotor(grabbyMotor, 360, false);
+        public static final StepperMotor grabbyTiltMotor = new StepperMotor(new CANSparkMax(grabbyMotorPort, MotorType.kBrushless), 360, false);
 
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;

@@ -99,8 +99,8 @@ public class RobotContainer {
     Buttons.primaryDPadNW.whileTrue(armCommands.liftArmCommand());
     Buttons.primaryDPadSW.whileTrue(armCommands.lowerArmCommand());
 
-    Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem));    
-    Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem));
+    Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));    
+    Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));
 
     Buttons.primaryAButton.onTrue(armCommands.midCubeCommand());
     Buttons.primaryXButton.onTrue(armCommands.highCubeCommand());

@@ -5,6 +5,7 @@
 package com.adambots.subsystems;
 
 import com.adambots.actuators.StepperMotor;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -17,15 +18,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class GrabSubsystem extends SubsystemBase {
     private DoubleSolenoid grabby;
     private StepperMotor grabbyStepper;
-    private GrabbyLifterSubsystem grabbyLifterSubsystem;
+    private WPI_CANCoder lifterEncoder;
 
     private double currentLifterVal;
 
-  public GrabSubsystem(DoubleSolenoid grabby, StepperMotor grabbyStepper, GrabbyLifterSubsystem grabbyLifterSubsystem) {
+  public GrabSubsystem(DoubleSolenoid grabby, StepperMotor grabbyStepper, WPI_CANCoder lifterEncoder) {
     this.grabby = grabby;
     this.grabbyStepper = grabbyStepper;
-    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
-    currentLifterVal = grabbyLifterSubsystem.getEncoder();
+    this.lifterEncoder = lifterEncoder;
   }
 
   public void grab(){
@@ -46,9 +46,9 @@ public class GrabSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(Math.abs(currentLifterVal - grabbyLifterSubsystem.getEncoder()) > 3){
-      grabbyStepper.stepUp(currentLifterVal - grabbyLifterSubsystem.getEncoder());
-      currentLifterVal = grabbyLifterSubsystem.getEncoder();
+    if(Math.abs(currentLifterVal - lifterEncoder.getAbsolutePosition()) > 3){
+      grabbyStepper.stepUp(currentLifterVal - lifterEncoder.getAbsolutePosition());
+      currentLifterVal = lifterEncoder.getAbsolutePosition();
     }
   }
 }

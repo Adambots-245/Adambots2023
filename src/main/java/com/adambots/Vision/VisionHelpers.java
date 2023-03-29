@@ -193,4 +193,8 @@ public class VisionHelpers {
         // calculate distance
         return (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
     }
+
+    public static void setPipeline(int pipeline) {
+        LimelightHelpers.setPipelineIndex(VisionConstants.Limelight1, pipeline); 
+    }
 }

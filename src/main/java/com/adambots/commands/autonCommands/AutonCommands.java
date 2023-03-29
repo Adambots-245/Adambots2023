@@ -44,9 +44,9 @@ public class AutonCommands {
 
     public Command humanStationPickup() {
         return Commands.sequence(
-            new DriveTimeCommand(drivetrainSubsystem, 0.1, 0, 0, true, 0.1),
+            new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, true, 0.3),
             armCommands.humanStationCommand(), //NEED TO MAKE SURE THESE ARE FIXED FOR TELEOP
-            new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.3),
+            new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.325),
             new WaitCommand(0.5),
             armCommands.grabCommand(),
             new WaitCommand(0.4),
@@ -56,7 +56,7 @@ public class AutonCommands {
 
     public Command pickupGamePiece(String pieceType) {
         return Commands.sequence(
-            new TurnToObjectCommand(drivetrainSubsystem, pieceType),
+            new TurnToObjectCommand(drivetrainSubsystem, RobotMap.lidar, pieceType),
             armCommands.groundCommand(),
             new DriveToGamePiece(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem),
             new GrabCommand(grabSubsystem),
@@ -152,19 +152,19 @@ public class AutonCommands {
             driveTrajectory(drivetrainSubsystem, trajectory2), 
             stopDriving(),
             pickupGamePiece("cube"),
-            resetOdometryCommand(trajectory3),
+            // resetOdometryCommand(trajectory3),
             Commands.parallel(
                 driveTrajectory(drivetrainSubsystem, trajectory3), 
-                new WaitCommand(3).andThen(
+                new WaitCommand(3.7).andThen(
                     new ParallelCommandGroup(
                     new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
                     new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
                     new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState))
                 )),
-            new DriveTimeCommand(drivetrainSubsystem, 0.5, 0, 0, false, 0.5),
+            new DriveTimeCommand(drivetrainSubsystem, 0.5, 0, 0, false, 0.35),
             stopDriving(),
             new UngrabCommand(grabSubsystem),
-            new WaitCommand(0.3),
+            new WaitCommand(0.35),
             armCommands.homeCommand()
         );
     }

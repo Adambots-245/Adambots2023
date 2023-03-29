@@ -131,7 +131,7 @@ public class RobotContainer {
 
 
     SmartDashboard.putData("Auton Mode", autoChooser);
-    // SmartDashboard.putData("Field", Constants.DriveConstants.field);
+    SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
     // Dash.add("getY", Buttons.forwardSupplier);
     // Dash.add("getX", Buttons.sidewaysSupplier);
@@ -141,7 +141,7 @@ public class RobotContainer {
     // Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
     // Dash.add("Arm Encoder w/ offset", () -> RobotMap.armRotationEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
 
-    // Dash.add("LIDAR Dist", () -> RobotMap.lidar.getDistance());
+    Dash.add("LIDAR Dist", () -> RobotMap.lidar.getInches());
 
     // // Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
     // // Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());
@@ -149,10 +149,10 @@ public class RobotContainer {
 
     // Dash.add("Lidar", () -> RobotMap.lidar.getInches());
 
-    // Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cube"));
-    // Dash.add("pieceX", () -> VisionHelpers.getPieceX("cube"));
-    // Dash.add("pieceY", () -> VisionHelpers.getPieceY("cube"));
-    // Dash.add("DistanceToObject", () -> VisionHelpers.getDistanceToObject());
+    Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cube"));
+    Dash.add("pieceX", () -> VisionHelpers.getPieceX("cube"));
+    Dash.add("pieceY", () -> VisionHelpers.getPieceY("cube"));
+    Dash.add("DistanceToObject", () -> VisionHelpers.getDistanceToObject());
   }
 
   private void setupDefaultCommands() {

@@ -91,7 +91,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         ModuleMap.orderedModulePositions(swerveModules)
     );
 
-    // m_field.setRobotPose(getPose());
+    m_field.setRobotPose(getPose());
   }
 
   @Override

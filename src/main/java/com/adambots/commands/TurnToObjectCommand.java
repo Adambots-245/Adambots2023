@@ -5,6 +5,7 @@
 package com.adambots.commands;
 
 import com.adambots.Vision.VisionHelpers;
+import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -15,20 +16,25 @@ public class TurnToObjectCommand extends CommandBase {
   String pieceType;
   PIDController pid;
   double rotSpeed;
+  Lidar lidar;
+  int debounce;
 
   int direction;
 
-  public TurnToObjectCommand(DrivetrainSubsystem drivetrainSubsystem, String pieceType) {
+  public TurnToObjectCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, String pieceType) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     addRequirements(drivetrainSubsystem);
     this.pieceType = pieceType;
-    this.pid = new PIDController(0.02, 0, 0);
+    this.lidar = lidar;
+    this.pid = new PIDController(0.02, 0, 0.0015);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    VisionHelpers.setPipeline(0);
     direction = -1;
+    debounce = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,9 +42,9 @@ public class TurnToObjectCommand extends CommandBase {
 
   public void execute() {
 
-    if (!VisionHelpers.isDetectingPieces(pieceType))
+    if (!VisionHelpers.isDetectingPieces(pieceType) || (lidar.getInches() >= 50 && Math.abs(VisionHelpers.getPieceX(pieceType)) < 2.3))
     {
-      drivetrainSubsystem.drive(0, 0, 0.2 * direction, false);
+      drivetrainSubsystem.drive(0, 0, 0.1 * direction, false);
     }else{
 
     rotSpeed = pid.calculate(VisionHelpers.getPieceX(pieceType), 0);
@@ -61,6 +67,9 @@ public class TurnToObjectCommand extends CommandBase {
   @Override
   public boolean isFinished() {
     // return Math.abs(VisionHelpers.getPieceX("cube")) < 5;
-    return VisionHelpers.isDetectingPieces(pieceType) && Math.abs(VisionHelpers.getPieceX(pieceType)) < 2.6;
+    if (VisionHelpers.isDetectingPieces(pieceType) && Math.abs(VisionHelpers.getPieceX(pieceType)) < 2.3 && lidar.getInches() < 50) {
+      debounce++;
+    }
+    return debounce > 5;
   }
 }

@@ -21,7 +21,7 @@ public class VisionHelpers {
     public static boolean isAligned() {
         // return
         // NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-        return isDetected() && Math.abs(LimelightHelpers.getTX(VisionConstants.Limelight1)) <= 3;
+        return isDetected() && Math.abs(LimelightHelpers.getTX(VisionConstants.Limelight1)) <= 1;
     }
 
     public static boolean isDetected() {

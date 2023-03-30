@@ -13,7 +13,9 @@ import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.ArmCommands;
 import com.adambots.commands.RotateDownGrabbyCommand;
 import com.adambots.commands.RotateUpGrabbyCommand;
+import com.adambots.commands.ShiftToTowerCommand;
 import com.adambots.commands.autonCommands.AutonCommands;
+import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
@@ -117,6 +119,8 @@ public class RobotContainer {
     Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
 
     Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("cube"));
+    Buttons.JoystickButton2.onTrue(new DriveTimeCommand(drivetrainSubsystem, 0.25, 0, 0, true, 0.1).andThen(new ShiftToTowerCommand(drivetrainSubsystem)).andThen(new DriveTimeCommand(drivetrainSubsystem, -0.25, 0, 0, true, 0.3)));
+
     // Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));

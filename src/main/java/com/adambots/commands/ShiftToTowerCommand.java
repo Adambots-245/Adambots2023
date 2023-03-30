@@ -19,7 +19,7 @@ public class ShiftToTowerCommand extends CommandBase {
   public ShiftToTowerCommand(DrivetrainSubsystem drivetrainSubsystem) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     addRequirements(drivetrainSubsystem);
-    this.pid = new PIDController(0.02, 0, 0.0015);
+    this.pid = new PIDController(0.035, 0, 0);
   }
 
   // Called when the command is initially scheduled.

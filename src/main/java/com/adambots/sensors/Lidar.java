@@ -31,7 +31,7 @@ public class Lidar extends BaseSensor {
 	    // Configure for measuring rising to falling pulses
 	    counter.setSemiPeriodMode(true);
 	    counter.reset();
-		System.out.println("Counter: " + counter);
+		// System.out.println("Counter: " + counter);
     }
     
 	/**
@@ -42,7 +42,7 @@ public class Lidar extends BaseSensor {
 	public double getDistance() {
 		double cm;
 
-		SmartDashboard.putNumber("Period", counter.getPeriod());
+		// SmartDashboard.putNumber("Period", counter.getPeriod());
 
 		// if (counter.get() < 1)
 			// return 0;

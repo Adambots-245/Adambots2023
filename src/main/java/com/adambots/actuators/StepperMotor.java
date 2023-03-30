@@ -47,13 +47,13 @@ public class StepperMotor {
         this.motorController.setInverted(isInverted);
 
         pidController = motorController.getPIDController();
-        motorController.getEncoder().setPositionConversionFactor(1.0);
+        motorController.getEncoder().setPositionConversionFactor(1);
 
-        // motorController.setSoftLimit(SoftLimitDirection.kForward, this.maxAngle);
-        // motorController.setSoftLimit(SoftLimitDirection.kReverse, -this.maxAngle);
+        motorController.setSoftLimit(SoftLimitDirection.kForward, this.maxAngle);
+        motorController.setSoftLimit(SoftLimitDirection.kReverse, -this.maxAngle);
 
-        // motorController.enableSoftLimit(SoftLimitDirection.kForward, true);
-        // motorController.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        motorController.enableSoftLimit(SoftLimitDirection.kForward, true);
+        motorController.enableSoftLimit(SoftLimitDirection.kReverse, true);
 
         pidController.setP(kP);
         pidController.setI(kI);
@@ -64,6 +64,7 @@ public class StepperMotor {
         motorController.getEncoder().setPosition(0);
 
         motorController.setIdleMode(IdleMode.kCoast);
+        motorController.setSmartCurrentLimit(50);
     }
 
     public void setIdleMode (IdleMode idleMode) {

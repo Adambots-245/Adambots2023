@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.adambots.Constants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.utils.ModuleMap;
@@ -41,7 +42,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private SwerveDriveOdometry m_odometry;
 
   // Field details that can be viewed in Glass
-  private final Field2d m_field = new Field2d();
   private SimDouble m_simAngle;
   HashMap<ModulePosition, SwerveModule> swerveModules;
 
@@ -91,7 +91,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         ModuleMap.orderedModulePositions(swerveModules)
     );
 
-    m_field.setRobotPose(getPose());
+    Constants.DriveConstants.field.setRobotPose(getPose());
   }
 
   @Override
@@ -129,7 +129,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // System.out.println("Pose: " + getPose().toString());
 
-    m_field.setRobotPose(getPose());
+    Constants.DriveConstants.field.setRobotPose(getPose());
 
     Unmanaged.feedEnable(20);
   }

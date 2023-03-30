@@ -7,15 +7,14 @@ package com.adambots.subsystems;
 import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
+import com.adambots.utils.Dash;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SecondExtenderSubsystem extends SubsystemBase {
@@ -38,11 +37,13 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     secondExtender.setInverted(true);
     secondExtender.setNeutralMode(NeutralMode.Brake);
 
-    // secondExtender.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 10, 12, 0.1));
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.secondExtenderP, Constants.GrabbyConstants.secondExtenderI, Constants.GrabbyConstants.secondExtenderD);
     this.armLifterEncoder = armLifterEncoder;
-    // secondExtender.configOpenloopRamp(0.2);
+
+    Dash.add("Second Extender Encoder", () -> secondExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
+    Dash.add("Second Extender Speed", () -> secondExtenderSpeed);
+    Dash.add("Second PhotoEye", () -> isMaxRetracted());
   }
 
   public void changeMaxSpeed(double newMax){
@@ -91,38 +92,21 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    SmartDashboard.putNumber("Second Extender Encoder", secondExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
-    
-    //Horizontal and vertical expansion limits
-    // double horizontalLimit = Math.abs(GrabbyConstants.horizontalMaxEncoderValue/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset)));
-    // double verticalLimit = Math.abs(GrabbyConstants.veritcalMaxEncoderValue/Math.sin(Math.toRadians(armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset)));
-
-    // horizontalLimit = MathUtil.clamp(horizontalLimit, GrabbyConstants.horizontalMaxEncoderValue, GrabbyConstants.horizontalMaxEncoderValue*3);
-    // verticalLimit = MathUtil.clamp(verticalLimit, GrabbyConstants.veritcalMaxEncoderValue, GrabbyConstants.veritcalMaxEncoderValue*3);
-
-    SmartDashboard.putNumber("Arm Encoder W/ Offset", armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
-    // SmartDashboard.putNumber("horizontalLimit", horizontalLimit);
-    // SmartDashboard.putNumber("verticalLimit", verticalLimit);  
-
-    maxTotal = (28.646 + 152.727)/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition() + GrabbyConstants.limitOffset + offset));
+    maxTotal = (28.646 + 152.727)/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition() + GrabbyConstants.limitOffset + offset)); //limits horizontal max extension
     if(maxTotal <= 62 + (targetPosition/GrabbyConstants.armEncoderCPR) + 89.09){
       targetPosition = (maxTotal - (62 + 89.09 - 6))*GrabbyConstants.armEncoderCPR;
     }
 
-    if(targetPosition > 0){
+    if(targetPosition > 0){ //Calculate arm extension speed if target is positive
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -maxSpeed, maxSpeed);
-    }else if(!isMaxRetracted()){
+    }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye
       secondExtenderSpeed = -maxSpeed;
     }
 
     failsafes();
     secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
     // secondExtender.set(ControlMode.PercentOutput, 0);
-
-    SmartDashboard.putNumber("Second Extender Speed", secondExtenderSpeed);
-    SmartDashboard.putBoolean("decond Photo Eye", photoEye.isDetecting());
   }
 
   private void failsafes() {
@@ -132,11 +116,9 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     //   secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     // }
 
-    // if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){
-    //   secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
-    // }
-
-
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){ //CRUDELY limits vertical max entension
+      secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
+    }
 
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;

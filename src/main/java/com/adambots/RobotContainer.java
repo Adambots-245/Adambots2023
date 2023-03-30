@@ -139,9 +139,9 @@ public class RobotContainer {
     SmartDashboard.putData("Auton Mode", autoChooser);
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    // Dash.add("getY", Buttons.forwardSupplier);
-    // Dash.add("getX", Buttons.sidewaysSupplier);
-    // Dash.add("getZ", Buttons.rotateSupplier);
+    Dash.add("getY", Buttons.forwardSupplier);
+    Dash.add("getX", Buttons.sidewaysSupplier);
+    Dash.add("getZ", Buttons.rotateSupplier);
     // Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
     // Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
     // Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());

@@ -10,13 +10,11 @@ import com.adambots.sensors.PhotoEye;
 import com.adambots.utils.Dash;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class FirstExtenderSubsystem extends SubsystemBase {
@@ -41,7 +39,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     
     Dash.add("First Extender Encoder", () -> firstExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
     Dash.add("First Extender Speed", () -> firstExtenderSpeed);
-    Dash.add("first PhotoEye", () -> photoEye.isDetecting());
+    Dash.add("first PhotoEye", () -> isMaxRetracted());
   }
 
   public void changeTarget(double newTarget){
@@ -112,6 +110,6 @@ public class FirstExtenderSubsystem extends SubsystemBase {
 
     if (armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundLifterValue + 10) {
       targetPosition = 0;
-  } 
+    } 
   }
 }

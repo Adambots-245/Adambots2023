@@ -5,15 +5,13 @@
 package com.adambots.subsystems;
 
 import com.adambots.Constants;
-import com.adambots.Constants.GrabbyConstants;
+import com.adambots.utils.Dash;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GrabbyLifterSubsystem extends SubsystemBase {
@@ -30,9 +28,16 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
   public GrabbyLifterSubsystem(TalonFX armLifter, WPI_CANCoder armLifterEncoder) {
     this.armLifter = armLifter;
     armLifter.setInverted(true);
+
     this.armLifterEncoder = armLifterEncoder;
     targetPosition = armLifterEncoder.getAbsolutePosition();
+
     this.pid = new PIDController(Constants.GrabbyConstants.lifterP, Constants.GrabbyConstants.lifterI, Constants.GrabbyConstants.lifterD);
+
+    Dash.add("Lifter Encoder", () -> armLifterEncoder.getAbsolutePosition());
+    Dash.add("Arm Lifter Speed", () -> armLifterSpeed);
+    Dash.add("Fwd Limit Switch", () -> armLifter.getSensorCollection().isFwdLimitSwitchClosed());
+    Dash.add("Rev Limit Switch", () -> armLifter.getSensorCollection().isRevLimitSwitchClosed());
   }
 
   public void changeTarget(double newTarget){
@@ -79,18 +84,11 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
-    SmartDashboard.putNumber("Lifter Encoder", armLifterEncoder.getAbsolutePosition());
-
     armLifterSpeed = pid.calculate(armLifterEncoder.getAbsolutePosition(), targetPosition);
     armLifterSpeed = MathUtil.clamp(armLifterSpeed, -maxSpeed, maxSpeed);
     failsafes();
     armLifter.set(ControlMode.PercentOutput, armLifterSpeed);
     // armLifter.set(ControlMode.PercentOutput, 0);
-
-    SmartDashboard.putNumber("Arm Lifter Speed", armLifterSpeed);
-    SmartDashboard.putNumber("Fwd Limit Switch", armLifter.getSensorCollection().isFwdLimitSwitchClosed());
-    SmartDashboard.putNumber("Rev Limit Switch", armLifter.getSensorCollection().isRevLimitSwitchClosed());
   }
 
   private void failsafes() {

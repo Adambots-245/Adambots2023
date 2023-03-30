@@ -149,10 +149,11 @@ public class AutonCommands {
             autoInitAndScoreCone(trajectory1),
             armCommands.homeCommand(),
             new DriveTimeCommand(drivetrainSubsystem, 0.2, -0.1, 0, true, 1),
-            driveTrajectory(drivetrainSubsystem, trajectory2), 
+            Commands.parallel(driveTrajectory(drivetrainSubsystem, trajectory2), new WaitCommand(2).andThen(armCommands.groundCommand())),
             stopDriving(),
             // pickupGamePiece("cube"),
-            new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 1),
+            new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.75),
+            new WaitCommand(0.3),
             // resetOdometryCommand(trajectory3),
             Commands.parallel(
                 driveTrajectory(drivetrainSubsystem, trajectory3), 

@@ -4,6 +4,7 @@
 
 package com.adambots.commands;
 
+import com.adambots.RobotMap;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
@@ -25,7 +26,8 @@ public class ShiftToTowerCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    VisionHelpers.setPipeline(1);
+    VisionHelpers.setPipeline(1); 
+    RobotMap.GyroSensor.reset();
     debounce = 0;
   }
 

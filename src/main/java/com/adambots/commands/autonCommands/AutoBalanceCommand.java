@@ -38,7 +38,7 @@ public class AutoBalanceCommand extends CommandBase {
     firstInc = 0;
     balInc = 0;
 
-    pid = new PIDController(0.01, 0, 0.0017);
+    pid = new PIDController(0.009, 0, 0.00183);
     pid.setSetpoint(0);
   }
 
@@ -48,14 +48,14 @@ public class AutoBalanceCommand extends CommandBase {
     double pitchAngleDegrees = m_gyro.getPitch();
 
     if (state == 0) { //Initial getting onto drivestation at higher speed
-      m_drivetrainSubsystem.drive(-0.7, 0, 0, true);
+      m_drivetrainSubsystem.drive(-0.8, 0, 0, true);
       if (Math.abs(pitchAngleDegrees) > 3) {
         if (firstInc == 0) {
           grabbyLifterSubsystem.changeTarget(GrabbyConstants.balancingState.getArmLiftTarget());
         }
         firstInc++;
       }
-      if (firstInc > 25) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (firstInc > 40) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }

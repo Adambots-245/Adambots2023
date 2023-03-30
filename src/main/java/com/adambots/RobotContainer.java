@@ -14,6 +14,7 @@ import com.adambots.commands.ArmCommands;
 import com.adambots.commands.RotateDownGrabbyCommand;
 import com.adambots.commands.RotateUpGrabbyCommand;
 import com.adambots.commands.ShiftToTowerCommand;
+import com.adambots.commands.autonCommands.AutoBalanceCommand;
 import com.adambots.commands.autonCommands.AutonCommands;
 import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
@@ -123,7 +124,7 @@ public class RobotContainer {
 
     // Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
-    // Buttons.JoystickButton7.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor).andThen(new HockeyStopCommand(drivetrainSubsystem)));
+    Buttons.JoystickButton16.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem));
   }
 
   private void setupDashboard() {    

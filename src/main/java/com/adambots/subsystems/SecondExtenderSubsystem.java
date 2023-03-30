@@ -116,7 +116,12 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     //   secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     // }
 
-    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){ //CRUDELY limits vertical max entension
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue-GrabbyConstants.armEncoderCPR*3 && armLifterEncoder.getAbsolutePosition() > 200){ //limits vertical max entension
+      if (secondExtenderSpeed > 0) {
+        secondExtenderSpeed = 0;
+      }
+    }
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){ //also limits vertical max entension
       secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     }
 

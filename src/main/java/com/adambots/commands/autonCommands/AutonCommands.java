@@ -197,7 +197,7 @@ public class AutonCommands {
         Trajectory trajectory = new Trajectory();
         String allianceColor = DriverStation.getAlliance().name();
 
-        // // If the trajectoryname already has Blue or Red in it, don't mess with it
+        // // If the trajectoryname already has Blue or Red in it, don't mess with it //Previously were getting errors maybe relating to this, commenting it out for now
         // if (!(trajectoryName.startsWith("Blue") || trajectoryName.startsWith("Red"))) {
 
         trajectoryName = allianceColor + trajectoryName;

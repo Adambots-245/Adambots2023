@@ -136,8 +136,8 @@ public class AutonCommands {
         ).andThen(new HockeyStopCommand(drivetrainSubsystem));
     }
 
-    private final String topCubePath1 = "TopCubeCube1.wpilib.json";
-    private final String topCubePath2 = "TopCubeCube2.wpilib.json"; 
+    private final String topCubePath1 = "Init.wpilib.json";
+    private final String topCubePath2 = "TopCubeCube1.wpilib.json"; 
     private final String topCubeScorePath2 = "TopCubeCubeScore2.wpilib.json"; 
 
     public Command scorePickupTop() {
@@ -151,7 +151,8 @@ public class AutonCommands {
             new DriveTimeCommand(drivetrainSubsystem, 0.2, -0.1, 0, true, 1),
             driveTrajectory(drivetrainSubsystem, trajectory2), 
             stopDriving(),
-            pickupGamePiece("cube"),
+            // pickupGamePiece("cube"),
+            new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 1),
             // resetOdometryCommand(trajectory3),
             Commands.parallel(
                 driveTrajectory(drivetrainSubsystem, trajectory3), 

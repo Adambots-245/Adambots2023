@@ -67,7 +67,7 @@ public class TestDriveToAprilTagCommand extends CommandBase {
     Pose2d robotPos = VisionHelpers.getAprilTagPose2d();
     driveTrainSubsystem.resetOdometry(robotPos);
 
-    var dX = VisionHelpers.getDistanceAway();
+    var dX = VisionHelpers.getTX();
     var dY = VisionHelpers.getLeftRightDistance();
 
     var dist = Math.sqrt(dX*dX + dY*dY);

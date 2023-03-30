@@ -151,10 +151,14 @@ public class RobotContainer {
 
     // Dash.add("Lidar", () -> RobotMap.lidar.getInches());
 
-    Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cube"));
-    Dash.add("pieceX", () -> VisionHelpers.getPieceX("cube"));
-    Dash.add("pieceY", () -> VisionHelpers.getPieceY("cube"));
-    Dash.add("DistanceToObject", () -> VisionHelpers.getDistanceToObject());
+    // Dash.add("isDetectingPieces", () -> VisionHelpers.isDetectingPieces("cube"));
+    // Dash.add("pieceX", () -> VisionHelpers.getPieceX("cube"));
+    // Dash.add("pieceY", () -> VisionHelpers.getPieceY("cube"));
+    // Dash.add("DistanceToObject", () -> VisionHelpers.getDistanceToObject());
+    Dash.add("tx", () -> VisionHelpers.getTX());
+    Dash.add("Aligned", () -> VisionHelpers.isAligned());
+
+
   }
 
   private void setupDefaultCommands() {

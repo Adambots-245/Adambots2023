@@ -13,10 +13,15 @@ public class VisionHelpers {
         // SmartDashboard.putBoolean("isDetectingPieces()", isDetectingPieces());
     }
 
-    public static double getDistanceAway() {
+    public static double getTX() {
         // return
         // NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
         return LimelightHelpers.getTX(VisionConstants.Limelight1);
+    }
+    public static boolean isAligned() {
+        // return
+        // NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+        return isDetected() && Math.abs(LimelightHelpers.getTX(VisionConstants.Limelight1)) <= 3;
     }
 
     public static boolean isDetected() {

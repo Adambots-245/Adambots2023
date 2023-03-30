@@ -44,11 +44,11 @@ public class GrabSubsystem extends SubsystemBase {
   }
 
   public void stepUp(){
-    grabbyStepper.stepUp(15);
+    grabbyStepper.stepUp(20);
   }
   
   public void stepDown(){
-    grabbyStepper.stepDown(15);
+    grabbyStepper.stepDown(20);
   }
 
   @Override

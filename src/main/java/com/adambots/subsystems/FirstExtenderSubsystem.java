@@ -7,6 +7,7 @@ package com.adambots.subsystems;
 import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
+import com.adambots.utils.Dash;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
@@ -37,6 +38,10 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.firstExtenderP, Constants.GrabbyConstants.firstExtenderI, Constants.GrabbyConstants.firstExtenderD);
     this.armLifterEncoder = armLifterEncoder;
+    
+    Dash.add("First Extender Encoder", () -> firstExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
+    Dash.add("First Extender Speed", () -> firstExtenderSpeed);
+    Dash.add("first PhotoEye", () -> photoEye.isDetecting());
   }
 
   public void changeTarget(double newTarget){
@@ -81,8 +86,6 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     
-    SmartDashboard.putNumber("First Extender Encoder", firstExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
-
     if(targetPosition > 0){
       firstExtenderSpeed = pid.calculate(firstExtender.getSelectedSensorPosition(), targetPosition);
       firstExtenderSpeed = MathUtil.clamp(firstExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
@@ -93,8 +96,6 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     failsafes();
     firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
     // firstExtender.set(ControlMode.PercentOutput, 0);
-    SmartDashboard.putNumber("First Extender Speed", firstExtenderSpeed);
-    SmartDashboard.putBoolean("first PhotoEye", photoEye.isDetecting());
   }
 
   private void failsafes() {

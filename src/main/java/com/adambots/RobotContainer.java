@@ -45,7 +45,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.grabbyTiltMotor, RobotMap.armRotationEncoder, RobotMap.lidar);
+  // private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.grabbyTiltMotor, RobotMap.armRotationEncoder, RobotMap.lidar);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.armRotationEncoder, RobotMap.lidar);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
@@ -103,8 +104,8 @@ public class RobotContainer {
     Buttons.primaryDPadNW.whileTrue(armCommands.liftArmCommand());
     Buttons.primaryDPadSW.whileTrue(armCommands.lowerArmCommand());
 
-    Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));    
-    Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));
+    // Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));    
+    // Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));
 
     Buttons.primaryAButton.onTrue(armCommands.midCubeCommand());
     Buttons.primaryXButton.onTrue(armCommands.highCubeCommand());
@@ -113,20 +114,22 @@ public class RobotContainer {
     Buttons.primaryYButton.onTrue(armCommands.highConeCommand());
     
     //Joystick Keybinds
-    Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
+    // Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
     Buttons.JoystickButton1.onTrue(armCommands.grabCommand());
-    Buttons.JoystickButton3.onTrue(autonCommands.humanStationPickup());
-    Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
+    Buttons.JoystickButton3.onTrue(autonCommands.humanStationConePickup());
+    Buttons.JoystickButton2.onTrue(autonCommands.humanStationCubePickup());
+    // Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
 
     Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
+    Buttons.JoystickButton6.onTrue(armCommands.humanStationConeCommand());
 
-    Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("cube"));
+    // Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("cube"));
     // Buttons.JoystickButton10.onTrue(new LidarTurnToObjectCommand(drivetrainSubsystem, RobotMap.lidar));
-    Buttons.JoystickButton2.onTrue(new DriveTimeCommand(drivetrainSubsystem, 0.25, 0, 0, true, 0.1).andThen(new ShiftToTowerCommand(drivetrainSubsystem)).andThen(new DriveTimeCommand(drivetrainSubsystem, -0.25, 0, 0, true, 0.3)));
+    Buttons.JoystickButton7.onTrue(new DriveTimeCommand(drivetrainSubsystem, 0.25, 0, 0, true, 0.1).andThen(new ShiftToTowerCommand(drivetrainSubsystem)).andThen(new DriveTimeCommand(drivetrainSubsystem, -0.25, 0, 0, true, 0.3)));
 
     // Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
-    Buttons.JoystickButton16.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem));
+    // Buttons.JoystickButton16.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem));
   }
 
   private void setupDashboard() {    
@@ -141,6 +144,11 @@ public class RobotContainer {
 
     SmartDashboard.putData("Auton Mode", autoChooser);
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
+
+    Dash.add("Port 0 Current", () -> RobotMap.PDM.getCurrent(0));
+    Dash.add("Port 1 Current", () -> RobotMap.PDM.getCurrent(1));
+    Dash.add("Port 11 Current", () -> RobotMap.PDM.getCurrent(11));
+    Dash.add("Port 14 Current", () -> RobotMap.PDM.getCurrent(14));
 
     Dash.add("getY", Buttons.forwardSupplier);
     Dash.add("getX", Buttons.sidewaysSupplier);
@@ -173,7 +181,7 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> drivetrainSubsystem.drive(
+            () -> drivetrainSubsystem.driveTeleop(
                 -Buttons.forwardSupplier.getAsDouble(),
                 -Buttons.sidewaysSupplier.getAsDouble(),
                 -Buttons.rotateSupplier.getAsDouble(),

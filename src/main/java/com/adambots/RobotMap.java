@@ -25,13 +25,17 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 /**
  * Define all the devices here
  */
 public class RobotMap {
+        public static final PowerDistribution PDM = new PowerDistribution(1, ModuleType.kCTRE);
+
         // PORTS Definition - This should be the only place to define all ports
         public final static I2C.Port I2C_PORT = I2C.Port.kOnboard;
         public static final int kLidarDio = 4;
@@ -66,7 +70,7 @@ public class RobotMap {
         public static final WPI_TalonFX secondArmExtender = new WPI_TalonFX(secondArmExtenderPort);
         public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
         // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
-        public static final StepperMotor grabbyTiltMotor = new StepperMotor(new CANSparkMax(grabbyMotorPort, MotorType.kBrushless), 270, false);
+        // public static final StepperMotor grabbyTiltMotor = new StepperMotor(new CANSparkMax(grabbyMotorPort, MotorType.kBrushless), 270, false);
 
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;

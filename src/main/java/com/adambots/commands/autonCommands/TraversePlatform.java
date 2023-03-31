@@ -37,7 +37,8 @@ public class TraversePlatform extends CommandBase {
 
     thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    thetaController.setSetpoint(Math.PI+Math.toRadians(25));
+    // thetaController.setSetpoint(Math.PI+Math.toRadians(25));
+    thetaController.setSetpoint(Math.PI);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -63,8 +64,9 @@ public class TraversePlatform extends CommandBase {
       } else {
         inc2 = 0;
       }
-      if (inc2 > 15) { //Drive for 30 ticks after front wheels get up to get back wheels up
-        state = 2;
+      // if (inc2 > 15) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc2 > 20) { //Drive for 30 ticks after front wheels get up to get back wheels up
+          state = 2;
       }
     }
   }

@@ -193,6 +193,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  public void driveTeleop(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        fieldRelative
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(-xSpeed*1.65, -ySpeed*1.65, rot*1.43, m_gyro.getRotation2d())
+            : new ChassisSpeeds(xSpeed, ySpeed, rot));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    ModuleMap.setDesiredState(swerveModules, swerveModuleStates);
+  }
+
   /**
    * Sets the swerve ModuleStates.
    *

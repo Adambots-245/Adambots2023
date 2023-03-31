@@ -86,7 +86,7 @@ public final class Constants {
         public static final double kvVoltSecondsPerMeter = 0.8;
         public static final double kaVoltSecondsSquaredPerMeter = 0.15;
 
-        public static final double kMaxSpeedMetersPerSecond = 10; //Only used in Drive and SetModuleStates
+        public static final double kMaxSpeedMetersPerSecond = 99; //Only used in Drive and SetModuleStates
 
         public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
     }
@@ -313,9 +313,13 @@ public final class Constants {
         public static final double balancingFirstExtenderValue = 0;
         public static final double balancingSecondExtenderValue = 0;
 
-        public static final double humanLifterValue = 173.5; //171.5
-        public static final double humanFirstExtenderValue = 60 * armEncoderCPR;
-        public static final double humanSecondExtenderValue = 0 * armEncoderCPR;
+        public static final double humanLifterConeValue = 173.5; //171.5
+        public static final double humanFirstExtenderConeValue = 60 * armEncoderCPR;
+        public static final double humanSecondExtenderConeValue = 0 * armEncoderCPR;
+
+        public static final double humanLifterCubeValue = 167;
+        public static final double humanFirstExtenderCubeValue = 57 * armEncoderCPR;
+        public static final double humanSecondExtenderCubeValue = 0 * armEncoderCPR;
 
         public static final double sideStationLifterValue = 167.9;
         public static final double sideStationFirstExtenderValue = 12 * armEncoderCPR;
@@ -373,7 +377,8 @@ public final class Constants {
         public static final State highCubeState = new State(highCubeLifterValue, highCubeFirstExtenderValue, highCubeSecondExtenderValue);
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
         public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
-        public static final State humanStationState = new State(humanLifterValue, humanFirstExtenderValue, humanSecondExtenderValue);
+        public static final State humanStationConeState = new State(humanLifterConeValue, humanFirstExtenderConeValue, humanSecondExtenderConeValue);
+        public static final State humanStationCubeState = new State(humanLifterCubeValue, humanFirstExtenderCubeValue, humanSecondExtenderCubeValue);
         public static final State sideStationState = new State(sideStationLifterValue, sideStationFirstExtenderValue, sideStationSecondExtenderValue);
         public static final State retractState = new State(retractLifterValue, retractFirstExtenderValue, retractSecondExtenderValue);
 

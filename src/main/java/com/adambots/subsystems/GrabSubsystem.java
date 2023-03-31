@@ -28,7 +28,8 @@ public class GrabSubsystem extends SubsystemBase {
 
   // private double currentLifterVal;
 
-  public GrabSubsystem(DoubleSolenoid grabby, StepperMotor grabbyStepper, WPI_CANCoder lifterEncoder, Lidar lidar) {
+  // public GrabSubsystem(DoubleSolenoid grabby, StepperMotor grabbyStepper, WPI_CANCoder lifterEncoder, Lidar lidar) {
+  public GrabSubsystem(DoubleSolenoid grabby, WPI_CANCoder lifterEncoder, Lidar lidar) {
     this.grabby = grabby;
     this.grabbyStepper = grabbyStepper;
     this.lifterEncoder = lifterEncoder;
@@ -53,9 +54,9 @@ public class GrabSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (lifterEncoder.getAbsolutePosition() <= (GrabbyConstants.groundLifterValue + 10) && lidar.getInches() < 7 && prevDist >= 7 && lidar.getInches() > 2.5) {
-      grab();
-    }
+    // if (lifterEncoder.getAbsolutePosition() <= (GrabbyConstants.groundLifterValue + 10) && lidar.getInches() < 7 && prevDist >= 7 && lidar.getInches() > 2.5) {
+    //   grab();
+    // }
     prevDist = lifterEncoder.getAbsolutePosition();
 
     // if(Math.abs(currentLifterVal - lifterEncoder.getAbsolutePosition()) > 3){

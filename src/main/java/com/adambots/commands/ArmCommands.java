@@ -52,11 +52,18 @@ public CommandBase sideStationCommand() {
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.sideStationState));
 }
 
-public CommandBase humanStationCommand(){
+public CommandBase humanStationConeCommand(){
         return new ParallelCommandGroup(
-                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationState),
-                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationState),
-                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationState));
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationConeState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationConeState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationConeState));
+}
+
+public CommandBase humanStationCubeCommand(){
+        return new ParallelCommandGroup(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationCubeState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationCubeState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationCubeState));
 }
 
 public CommandBase groundCommand() {

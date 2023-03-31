@@ -193,6 +193,8 @@ public class SwerveModule {
     m_driveMotor.set(driveOutput);
     m_turningMotor.set(turnOutput);
 
+    SmartDashboard.putNumber("device id" + m_driveMotor.getDeviceId(), driveOutput);
+
     // If using motor's PID Controller, then enable this instead of the set above.
     // m_drivePIDController.setReference(state.speedMetersPerSecond, ControlType.kVelocity, 1);
 

@@ -56,7 +56,7 @@ public class AutonCommands {
 
     public Command pickupGamePiece(String pieceType) {
         return Commands.sequence(
-            new TurnToObjectCommand(drivetrainSubsystem, RobotMap.lidar, pieceType),
+            new LidarTurnToObjectCommand(drivetrainSubsystem, RobotMap.lidar),
             armCommands.groundCommand(),
             new DriveToGamePiece(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem),
             new GrabCommand(grabSubsystem),
@@ -127,9 +127,9 @@ public class AutonCommands {
             Commands.sequence(
                 autoInitAndScoreCone(),
                 armCommands.homeCommand(),
-                new WaitCommand(1),
+                // new WaitCommand(1),
                 new TraversePlatform(drivetrainSubsystem, RobotMap.GyroSensor),
-                // pickupGamePiece("cube"),
+                pickupGamePiece("cube"),
                 new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem),
                 new HockeyStopCommand(drivetrainSubsystem)
             )

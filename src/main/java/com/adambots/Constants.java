@@ -86,7 +86,7 @@ public final class Constants {
         public static final double kvVoltSecondsPerMeter = 0.8;
         public static final double kaVoltSecondsSquaredPerMeter = 0.15;
 
-        public static final double kMaxSpeedMetersPerSecond = 3; //Only used in Drive and SetModuleStates
+        public static final double kMaxSpeedMetersPerSecond = 10; //Only used in Drive and SetModuleStates
 
         public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
     }
@@ -114,7 +114,6 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 10; //Max speed of auton - 2.3 - 1.625
         public static final double kMaxAccelerationMetersPerSecondSquared = 1.5; //Max acceleration of auton
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI; //Max rotational speed of auton
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI; //Max rotational acceleration of auton

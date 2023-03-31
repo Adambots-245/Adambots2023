@@ -58,12 +58,12 @@ public class TraversePlatform extends CommandBase {
     if (state == 1) { //Drive at slower speed until platform tips
       double rot = thetaController.calculate(Math.toRadians(m_gyro.getYaw()));
       m_drivetrainSubsystem.drive(0.5, 0, -rot, true);
-      if (Math.abs(pitchAngleDegrees) < 5) {
+      if (Math.abs(pitchAngleDegrees) < 3) {
         inc2++;
       } else {
         inc2 = 0;
       }
-      if (inc2 > 15) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc2 > 25) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 2;
       }
     }

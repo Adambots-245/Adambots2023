@@ -129,7 +129,7 @@ public class AutonCommands {
                 armCommands.homeCommand(),
                 new WaitCommand(1),
                 new TraversePlatform(drivetrainSubsystem, RobotMap.GyroSensor),
-                pickupGamePiece("cube"),
+                // pickupGamePiece("cube"),
                 new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem),
                 new HockeyStopCommand(drivetrainSubsystem)
             )
@@ -153,7 +153,8 @@ public class AutonCommands {
             stopDriving(),
             // pickupGamePiece("cube"),
             new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 0.75),
-            new WaitCommand(0.3),
+            new WaitCommand(1),
+            armCommands.homeCommand(),
             // resetOdometryCommand(trajectory3),
             Commands.parallel(
                 driveTrajectory(drivetrainSubsystem, trajectory3), 

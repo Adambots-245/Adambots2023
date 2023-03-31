@@ -123,13 +123,15 @@ public class AutonCommands {
 
     public Command midCubeCharge() {
         return Commands.deadline(
-            new WaitCommand(14.6), 
+            new WaitCommand(14.7), 
             Commands.sequence(
                 autoInitAndScoreCone(),
                 armCommands.homeCommand(),
                 // new WaitCommand(1),
                 new TraversePlatform(drivetrainSubsystem, RobotMap.GyroSensor),
-                pickupGamePiece("cube"),
+                Commands.deadline(
+                    new WaitCommand(4),
+                    pickupGamePiece("cube")),
                 new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem),
                 new HockeyStopCommand(drivetrainSubsystem)
             )

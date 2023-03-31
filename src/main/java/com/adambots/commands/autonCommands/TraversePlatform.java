@@ -37,13 +37,13 @@ public class TraversePlatform extends CommandBase {
 
     thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    thetaController.setSetpoint(Math.PI);
+    thetaController.setSetpoint(Math.PI+Math.toRadians(25));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pitchAngleDegrees = m_gyro.getPitch();
+    double pitchAngleDegrees = m_gyro.getPitch() + m_gyro.getRoll();
 
     if (state == 0) { //Initial getting onto drivestation at higher speed
       m_drivetrainSubsystem.drive(1, 0, 0, true);
@@ -58,12 +58,12 @@ public class TraversePlatform extends CommandBase {
     if (state == 1) { //Drive at slower speed until platform tips
       double rot = thetaController.calculate(Math.toRadians(m_gyro.getYaw()));
       m_drivetrainSubsystem.drive(0.5, 0, -rot, true);
-      if (Math.abs(pitchAngleDegrees) < 3) {
+      if (Math.abs(pitchAngleDegrees) < 2) {
         inc2++;
       } else {
         inc2 = 0;
       }
-      if (inc2 > 20) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc2 > 15) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 2;
       }
     }
@@ -78,6 +78,6 @@ public class TraversePlatform extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return state == 2;
+    return state == 2 && Math.abs(m_gyro.getPitch()) < 2;
   }
 }

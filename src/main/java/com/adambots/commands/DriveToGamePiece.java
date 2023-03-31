@@ -34,7 +34,7 @@ public class DriveToGamePiece extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (lidar.getInches() < 50) {
+    if (lidar.getInches() < 95) {
       drivetrainSubsystem.drive((lidar.getInches()-4)*0.015, 0, 0, false);
     }
   }

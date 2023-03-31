@@ -30,7 +30,7 @@ public class LidarTurnToObjectCommand extends CommandBase {
   @Override
 
   public void execute() {
-    if (lidar.getInches() > 95) {
+    if (lidar.getInches() > 90) {
       drivetrainSubsystem.drive(0, 0, 0.15, false);
     } else {
       debounce++;
@@ -46,6 +46,6 @@ public class LidarTurnToObjectCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return debounce >= 3;
+    return debounce >= 3 || lidar.getInches() < 20;
   }
 }

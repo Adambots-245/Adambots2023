@@ -138,19 +138,19 @@ public class AutonCommands {
         ).andThen(new HockeyStopCommand(drivetrainSubsystem));
     }
 
-    private final String topCubePath1 = "Init.wpilib.json";
-    private final String topCubePath2 = "TopCubeCube1.wpilib.json"; 
-    private final String topCubeScorePath2 = "TopCubeCubeScore2.wpilib.json"; 
+    private final String topCubePath1 = "TopCubeCube1.wpilib.json";
+    private final String topCubePath2 = "TopCubeCubeScore2.wpilib.json"; 
+    // private final String topCubeScorePath2 = "TopCubeCubeScore2.wpilib.json"; 
 
     public Command scorePickupTop() {
         Trajectory trajectory1 = getTrajectory(topCubePath1);
         Trajectory trajectory2 = getTrajectory(topCubePath2);
-        Trajectory trajectory3 = getTrajectory(topCubeScorePath2);
+        // Trajectory trajectory3 = getTrajectory(topCubeScorePath2);
 
         return Commands.sequence(
-            autoInitAndScoreCone(trajectory1),
+            autoInitAndScoreCube(trajectory1),
             armCommands.homeCommand(),
-            new DriveTimeCommand(drivetrainSubsystem, 0.2, -0.1, 0, true, 1),
+            // new DriveTimeCommand(drivetrainSubsystem, 0.2, -0.1, 0, true, 1),
             Commands.parallel(driveTrajectory(drivetrainSubsystem, trajectory2), new WaitCommand(2).andThen(armCommands.groundCommand())),
             stopDriving(),
             // pickupGamePiece("cube"),
@@ -159,13 +159,8 @@ public class AutonCommands {
             armCommands.homeCommand(),
             // resetOdometryCommand(trajectory3),
             Commands.parallel(
-                driveTrajectory(drivetrainSubsystem, trajectory3), 
-                new WaitCommand(3.7).andThen(
-                    new ParallelCommandGroup(
-                    new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.highCubeState),
-                    new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.highCubeState),
-                    new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highCubeState))
-                )),
+                driveTrajectory(drivetrainSubsystem, trajectory2), 
+                new WaitCommand(3.7).andThen(armCommands.midCubeCommand())),
             new DriveTimeCommand(drivetrainSubsystem, 0.5, 0, 0, false, 0.35),
             stopDriving(),
             new UngrabCommand(grabSubsystem),

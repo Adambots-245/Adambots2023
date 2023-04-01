@@ -181,10 +181,10 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> drivetrainSubsystem.driveTeleop(
-                -Buttons.forwardSupplier.getAsDouble(),
-                -Buttons.sidewaysSupplier.getAsDouble(),
-                -Buttons.rotateSupplier.getAsDouble(),
+            () -> drivetrainSubsystem.drive(
+                -Buttons.forwardSupplier.getAsDouble()*1.65,
+                -Buttons.sidewaysSupplier.getAsDouble()*1.65,
+                -Buttons.rotateSupplier.getAsDouble()*1.43,
                 true),
             drivetrainSubsystem));
   }

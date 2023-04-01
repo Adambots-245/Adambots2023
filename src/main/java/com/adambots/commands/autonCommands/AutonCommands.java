@@ -114,7 +114,7 @@ public class AutonCommands {
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highConeState)),
             new WaitCommand(1.2),
             new UngrabCommand(grabSubsystem),
-            new WaitCommand(0.2)
+            new WaitCommand(0.45)
         );
     }
 

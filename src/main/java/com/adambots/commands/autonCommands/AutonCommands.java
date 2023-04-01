@@ -137,7 +137,7 @@ public class AutonCommands {
         return Commands.deadline(
             new WaitCommand(14.7), 
             Commands.sequence(
-                autoInitAndScoreCone(),
+                autoInitAndScoreCube(),
                 armCommands.homeCommand(),
                 // new WaitCommand(1),
                 new TraversePlatform(drivetrainSubsystem, RobotMap.GyroSensor),

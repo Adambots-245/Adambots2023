@@ -38,7 +38,7 @@ public class AutoBalanceCommand extends CommandBase {
     firstInc = 0;
     balInc = 0;
 
-    pid = new PIDController(0.009, 0, 0.00183);
+    pid = new PIDController(0.01025, 0, 0.00184);
     pid.setSetpoint(0);
   }
 
@@ -55,7 +55,7 @@ public class AutoBalanceCommand extends CommandBase {
         }
         firstInc++;
       }
-      if (firstInc > 40) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (firstInc > 50) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }

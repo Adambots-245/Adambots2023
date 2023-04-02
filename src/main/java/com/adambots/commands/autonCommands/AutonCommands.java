@@ -15,6 +15,7 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -111,7 +112,7 @@ public class AutonCommands {
     }
 
     public Command scorePickupTop() {
-        Pose2d waypoint1 = getPose(3.705, -0.397, 180-20);
+        Pose2d waypoint1 = getPose(3.705, -0.397, 160);
         Pose2d waypoint2 = getPose(0, -0.591, 0);
 
         return Commands.sequence(
@@ -130,7 +131,7 @@ public class AutonCommands {
     }
 
     public Command scorePickupBottom() {
-        Pose2d waypoint1 = getPose(3.705, 0.408, 180+20);
+        Pose2d waypoint1 = getPose(3.705, 0.408, -160);
         Pose2d waypoint2 = getPose(0, 0.558, 0);
 
         return Commands.sequence(
@@ -149,6 +150,14 @@ public class AutonCommands {
     }
 
     public Pose2d getPose(double x, double y, double rotDegrees) {
+        String allianceColor = DriverStation.getAlliance().name();
+        if (allianceColor.toLowerCase() == "red") {
+            y *= -1;
+            rotDegrees *= -1;
+        } else if (allianceColor.toLowerCase() != "blue") {
+            System.err.println("Alliance Color not selected (AutonCommands.getPose)");
+        }
+
         return new Pose2d(new Translation2d(x, y), new Rotation2d(Math.toRadians(rotDegrees)));
     }
 

@@ -7,6 +7,7 @@ package com.adambots.commands.autonCommands;
 import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TurnToGamePieceCommand extends CommandBase {
@@ -20,7 +21,14 @@ public class TurnToGamePieceCommand extends CommandBase {
     this.lidar = lidar;
     if (dir == "right") {this.dir = 1;}
     else if (dir == "left") {this.dir = -1;}
-    else { System.err.println("TurnToObject dir not 'left' or 'right'");}
+    else { System.err.println("dir not 'left' or 'right' (TurnToGamePieceCommand)");}
+
+    String allianceColor = DriverStation.getAlliance().name();
+    if (allianceColor.toLowerCase() == "red") {
+        this.dir *= -1;
+    } else if (allianceColor.toLowerCase() != "blue") {
+        System.err.println("Alliance Color not selected (TurnToGamePieceCommand)");
+    }
 
     addRequirements(drivetrainSubsystem);
   }

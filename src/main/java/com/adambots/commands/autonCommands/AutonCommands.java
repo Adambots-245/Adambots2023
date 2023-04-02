@@ -12,6 +12,7 @@ import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -159,6 +160,24 @@ public class AutonCommands {
         }
 
         return new Pose2d(new Translation2d(x, y), new Rotation2d(Math.toRadians(rotDegrees)));
+    }
+
+    public static class Waypoint{
+        private Pose2d pose;
+        private double switchAtTimeSec;
+
+        public Waypoint(Pose2d pose, double switchAtTimeSec){
+            this.pose = pose;
+            this.switchAtTimeSec = switchAtTimeSec;
+        }
+
+        public Pose2d pose(){
+            return pose;
+        }
+
+        public double switchAtTime(){
+            return switchAtTimeSec;
+        }
     }
 
     public Command resetOdometryCommand(Pose2d pose) {

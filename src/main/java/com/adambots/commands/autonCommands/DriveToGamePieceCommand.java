@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package com.adambots.commands;
+package com.adambots.commands.autonCommands;
 
 import com.adambots.Constants;
 import com.adambots.sensors.Lidar;
@@ -11,13 +11,13 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveToGamePiece extends CommandBase {
+public class DriveToGamePieceCommand extends CommandBase {
   private DrivetrainSubsystem drivetrainSubsystem;
   private GrabbyLifterSubsystem grabbyLifterSubsystem;
   private Lidar lidar;
 
   /** Creates a new DriveToDistanceCommand. */
-  public DriveToGamePiece(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, GrabbyLifterSubsystem grabbyLifterSubsystem) {
+  public DriveToGamePieceCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, GrabbyLifterSubsystem grabbyLifterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.grabbyLifterSubsystem = grabbyLifterSubsystem;
@@ -52,6 +52,6 @@ public class DriveToGamePiece extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return lidar.getInches() <= 7.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10;
+    return (lidar.getInches() <= 7.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10) || lidar.getInches() >= 95;
   }
 }

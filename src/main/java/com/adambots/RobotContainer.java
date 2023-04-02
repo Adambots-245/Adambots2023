@@ -11,7 +11,6 @@ package com.adambots;
 import com.adambots.Gamepad.Buttons;
 import com.adambots.Vision.VisionHelpers;
 import com.adambots.commands.ArmCommands;
-import com.adambots.commands.LidarTurnToObjectCommand;
 import com.adambots.commands.RotateDownGrabbyCommand;
 import com.adambots.commands.RotateUpGrabbyCommand;
 import com.adambots.commands.ShiftToTowerCommand;
@@ -19,6 +18,7 @@ import com.adambots.commands.autonCommands.AutoBalanceCommand;
 import com.adambots.commands.autonCommands.AutonCommands;
 import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.commands.autonCommands.HockeyStopCommand;
+import com.adambots.commands.autonCommands.TurnToGamePieceCommand;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
@@ -51,7 +51,7 @@ public class RobotContainer {
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
-  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, firstExtenderSubsystem, secondExtenderSubsystem, drivetrainSubsystem, armCommands);
+  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, drivetrainSubsystem, armCommands);
 
 
   // commands

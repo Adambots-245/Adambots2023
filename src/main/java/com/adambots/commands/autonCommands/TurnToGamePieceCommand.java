@@ -2,22 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package com.adambots.commands;
+package com.adambots.commands.autonCommands;
 
 import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class LidarTurnToObjectCommand extends CommandBase {
+public class TurnToGamePieceCommand extends CommandBase {
   DrivetrainSubsystem drivetrainSubsystem;
   Lidar lidar;
   int debounce;
+  int dir;
 
-  public LidarTurnToObjectCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar) {
+  public TurnToGamePieceCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, String dir) {
     this.drivetrainSubsystem = drivetrainSubsystem;
-    addRequirements(drivetrainSubsystem);
     this.lidar = lidar;
+    if (dir == "right") {this.dir = 1;}
+    else if (dir == "left") {this.dir = -1;}
+    else { System.err.println("TurnToObject dir not 'left' or 'right'");}
+
+    addRequirements(drivetrainSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -31,7 +36,7 @@ public class LidarTurnToObjectCommand extends CommandBase {
 
   public void execute() {
     if (lidar.getInches() > 90) {
-      drivetrainSubsystem.drive(0, 0, 0.15, false);
+      drivetrainSubsystem.drive(0, 0, 0.15 * dir, false);
     } else {
       debounce++;
     }
@@ -46,6 +51,6 @@ public class LidarTurnToObjectCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return debounce >= 3 || lidar.getInches() < 20;
+    return debounce >= 3 && lidar.getInches() > 20;
   }
 }

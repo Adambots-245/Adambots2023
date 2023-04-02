@@ -141,7 +141,7 @@ public class AutonCommands {
             new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0.5),
             pickupGamePiece("left"),
             Commands.parallel(
-                new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0.5),
+                new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
                 new WaitCommand(3).andThen(armCommands.highCubeCommand())),
             new DriveTimeCommand(drivetrainSubsystem, 0.5, 0, 0, false, 0.35),
             new UngrabCommand(grabSubsystem),

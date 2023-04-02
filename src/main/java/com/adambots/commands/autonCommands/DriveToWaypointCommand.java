@@ -59,11 +59,11 @@ public class DriveToWaypointCommand extends CommandBase {
 
     double x = xController.calculate(drivetrainSubsystem.getPose().getX());
     double y = xController.calculate(drivetrainSubsystem.getPose().getY());
-    double theta = thetaController.calculate(gyro.getAngle());
+    double theta = thetaController.calculate(Math.toRadians(gyro.getAngle()));
 
-    drivetrainSubsystem.drive(x, y, theta, true);
+    drivetrainSubsystem.drive(x, y, -theta, true);
 
-    if (getDist(drivetrainSubsystem.getPose(), waypoint) < 0.3) {
+    if (getDist(drivetrainSubsystem.getPose(), waypoint) < 0.3 && thetaController.getPositionError() < Math.toRadians(5)) {
       inc++;
     } else if (inc > 0) {
       inc--;

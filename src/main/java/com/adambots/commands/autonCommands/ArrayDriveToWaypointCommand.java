@@ -64,8 +64,8 @@ public class ArrayDriveToWaypointCommand extends CommandBase {
     }
 
     double x = xController.calculate(drivetrainSubsystem.getPose().getX());
-    double y = xController.calculate(drivetrainSubsystem.getPose().getY());
-    double theta = thetaController.calculate(gyro.getAngle());
+    double y = yController.calculate(drivetrainSubsystem.getPose().getY());
+    double theta = thetaController.calculate(Math.toRadians(gyro.getYaw()));
 
     drivetrainSubsystem.drive(x, y, theta, true);
   }

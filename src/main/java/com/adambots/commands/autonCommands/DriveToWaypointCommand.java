@@ -12,6 +12,8 @@ import com.adambots.utils.Dash;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveToWaypointCommand extends CommandBase {
@@ -74,9 +76,9 @@ public class DriveToWaypointCommand extends CommandBase {
       inc--;
     }
 
-    Dash.add("Waypoint Dist", () -> getDist(drivetrainSubsystem.getPose(), waypoint));
-    Dash.add("Rotation Error Deg", () -> Math.toDegrees(thetaController.getPositionError()));
-    Dash.add("% Along Path", () -> percentComplete);
+    SmartDashboard.putNumber("Waypoint Dist", getDist(drivetrainSubsystem.getPose(), waypoint));
+    SmartDashboard.putNumber("Rotation Error Deg", Math.toDegrees(thetaController.getPositionError()));
+    SmartDashboard.putNumber("% Along Path", percentComplete);
   }
 
   // Called once the command ends or is interrupted.

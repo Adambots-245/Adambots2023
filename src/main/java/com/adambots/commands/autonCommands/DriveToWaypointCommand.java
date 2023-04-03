@@ -7,7 +7,9 @@ package com.adambots.commands.autonCommands;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
+import com.adambots.utils.Dash;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -43,7 +45,7 @@ public class DriveToWaypointCommand extends CommandBase {
   public void initialize() {
     xController.setSetpoint(waypoint.getX());
     yController.setSetpoint(waypoint.getY());
-    thetaController.setSetpoint(Math.toRadians(gyro.getAngle()));
+    thetaController.setSetpoint(Math.toRadians(gyro.getYaw()));
 
     initDist = getDist(drivetrainSubsystem.getPose(), waypoint);
 
@@ -53,13 +55,16 @@ public class DriveToWaypointCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (1-(getDist(drivetrainSubsystem.getPose(), waypoint) / initDist) > turnAtPercentAlongPath) {
+    double percentComplete = 1-(getDist(drivetrainSubsystem.getPose(), waypoint) / initDist);
+    if (percentComplete >= turnAtPercentAlongPath) {
       thetaController.setSetpoint(waypoint.getRotation().getRadians());
     }
 
     double x = xController.calculate(drivetrainSubsystem.getPose().getX());
-    double y = xController.calculate(drivetrainSubsystem.getPose().getY());
-    double theta = thetaController.calculate(Math.toRadians(gyro.getAngle()));
+    double y = yController.calculate(drivetrainSubsystem.getPose().getY());
+    x = MathUtil.clamp(x, -AutoConstants.maxWaypointAutonSpeed, AutoConstants.maxWaypointAutonSpeed);
+    y = MathUtil.clamp(y, -AutoConstants.maxWaypointAutonSpeed, AutoConstants.maxWaypointAutonSpeed);
+    double theta = thetaController.calculate(Math.toRadians(gyro.getYaw()));
 
     drivetrainSubsystem.drive(x, y, -theta, true);
 
@@ -68,6 +73,10 @@ public class DriveToWaypointCommand extends CommandBase {
     } else if (inc > 0) {
       inc--;
     }
+
+    Dash.add("Waypoint Dist", () -> getDist(drivetrainSubsystem.getPose(), waypoint));
+    Dash.add("Rotation Error Deg", () -> Math.toDegrees(thetaController.getPositionError()));
+    Dash.add("% Along Path", () -> percentComplete);
   }
 
   // Called once the command ends or is interrupted.

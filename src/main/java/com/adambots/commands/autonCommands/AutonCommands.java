@@ -39,6 +39,16 @@ public class AutonCommands {
         this.armCommands = armCommands;
     }
 
+    public Command testWaypoint() {
+        Pose2d waypoint1 = getPose(3, 0, 0);
+
+        return Commands.sequence(
+            resetGyroCommand(),
+            resetOdometryCommand(getPose(0, 0, 0)),
+            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0.5)
+        );
+    }
+
     public Command humanStationConePickup() {
         return Commands.sequence(
             new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, true, 0.3),

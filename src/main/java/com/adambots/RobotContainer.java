@@ -118,7 +118,7 @@ public class RobotContainer {
     Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
     Buttons.JoystickButton6.onTrue(armCommands.humanStationConeCommand());
 
-    Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("right"));
+    Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("left"));
     // Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, "right"));
 
     Buttons.JoystickButton16.onTrue(autonCommands.testWaypoint());
@@ -150,6 +150,9 @@ public class RobotContainer {
     Dash.add("getY", Buttons.forwardSupplier);
     Dash.add("getX", Buttons.sidewaysSupplier);
     Dash.add("getZ", Buttons.rotateSupplier);
+
+    Dash.add("odom x", () -> drivetrainSubsystem.getPose().getX());
+    Dash.add("odom y", () -> drivetrainSubsystem.getPose().getY());
     // Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
     // Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
     // Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());

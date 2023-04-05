@@ -43,8 +43,8 @@ public class TurnToGamePieceCommand extends CommandBase {
   @Override
 
   public void execute() {
-    if (lidar.getInches() > 90) {
-      drivetrainSubsystem.drive(0, 0, 0.15 * dir, false);
+    if (lidar.getInches() > 40) {
+      drivetrainSubsystem.drive(0, 0, 0.2 * dir, false);
     } else {
       debounce++;
     }
@@ -59,6 +59,6 @@ public class TurnToGamePieceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return debounce >= 3 && lidar.getInches() > 20;
+    return debounce >= 13 && lidar.getInches() > 15;
   }
 }

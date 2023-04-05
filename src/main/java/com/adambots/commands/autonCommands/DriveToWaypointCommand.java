@@ -36,7 +36,7 @@ public class DriveToWaypointCommand extends CommandBase {
     xController = new PIDController(AutoConstants.kPXController, 0, AutoConstants.kDXController);
     yController = new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController);
 
-    thetaController = new PIDController(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController);
+    thetaController = new PIDController(1, 0, 0.0);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     addRequirements(drivetrainSubsystem);
@@ -64,13 +64,14 @@ public class DriveToWaypointCommand extends CommandBase {
 
     double x = xController.calculate(drivetrainSubsystem.getPose().getX());
     double y = yController.calculate(drivetrainSubsystem.getPose().getY());
-    // x = MathUtil.clamp(x, -AutoConstants.maxWaypointAutonSpeed, AutoConstants.maxWaypointAutonSpeed);
-    // y = MathUtil.clamp(y, -AutoConstants.maxWaypointAutonSpeed, AutoConstants.maxWaypointAutonSpeed);
+    x = MathUtil.clamp(x, -AutoConstants.maxWaypointAutonSpeed, AutoConstants.maxWaypointAutonSpeed);
+    y = MathUtil.clamp(y, -AutoConstants.maxWaypointAutonSpeed, AutoConstants.maxWaypointAutonSpeed);
     double theta = thetaController.calculate(Math.toRadians(gyro.getYaw()));
+    theta = MathUtil.clamp(theta, -0.65, 0.65);
 
-    drivetrainSubsystem.drive(-x, -y, -0, true);
+    drivetrainSubsystem.drive(-x, -y, -theta, true);
 
-    if (getDist(drivetrainSubsystem.getPose(), waypoint) < 0.3 && thetaController.getPositionError() < Math.toRadians(5)) {
+    if (getDist(drivetrainSubsystem.getPose(), waypoint) < 0.1 && Math.abs(thetaController.getPositionError()) < Math.toRadians(10)) {
       inc++;
     } else if (inc > 0) {
       inc--;
@@ -97,6 +98,6 @@ public class DriveToWaypointCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return inc > 20;
+    return inc > 10;
   }
 }

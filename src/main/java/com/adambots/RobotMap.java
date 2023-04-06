@@ -22,6 +22,7 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -81,7 +82,8 @@ public class RobotMap {
         public static final Gyro GyroSensor = Gyro.getInstance();
         public static final WPI_CANCoder armRotationEncoder = new WPI_CANCoder(armRotationEncoderPort);
         public static final PhotoEye firstExtenderPhotoEye = new PhotoEye(leftArmLimitPort);
-        public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
+        // public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
+        public static final DigitalInput secondExtenderPhotoEye = new DigitalInput(rightArmLimitPort);
         public static final Lidar lidar = new Lidar(kLidarDio);
 
         // Robot Swerve Modules

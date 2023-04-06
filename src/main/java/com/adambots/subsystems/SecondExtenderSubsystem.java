@@ -15,13 +15,14 @@ import com.ctre.phoenix.sensors.WPI_CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SecondExtenderSubsystem extends SubsystemBase {
   
   private final TalonFX secondExtender;
   private final PIDController pid;
-  private final PhotoEye photoEye;
+  private final DigitalInput photoEye;
   private final WPI_CANCoder armLifterEncoder;
 
 
@@ -32,7 +33,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
   private double maxTotal;
 
-  public SecondExtenderSubsystem(TalonFX secondExtender, PhotoEye photoEye, WPI_CANCoder armLifterEncoder) {
+  public SecondExtenderSubsystem(TalonFX secondExtender, DigitalInput photoEye, WPI_CANCoder armLifterEncoder) {
     this.secondExtender = secondExtender;
     secondExtender.setInverted(true);
     secondExtender.setNeutralMode(NeutralMode.Brake);
@@ -78,7 +79,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   public boolean isMaxRetracted () {
-    return photoEye.isDetecting();
+    return photoEye.get();
   }
 
   public void setOffset (double offset) {

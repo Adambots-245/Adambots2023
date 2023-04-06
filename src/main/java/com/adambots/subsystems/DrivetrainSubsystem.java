@@ -8,6 +8,7 @@ import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -91,7 +92,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         ModuleMap.orderedModulePositions(swerveModules)
     );
 
-    Constants.DriveConstants.field.setRobotPose(getPose());
+    Pose2d invPose = new Pose2d(new Translation2d(-getPose().getX(), -getPose().getY()), getPose().getRotation());
+    Constants.DriveConstants.field.setRobotPose(invPose);
   }
 
   @Override

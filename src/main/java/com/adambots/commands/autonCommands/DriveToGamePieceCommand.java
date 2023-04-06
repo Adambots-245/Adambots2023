@@ -34,7 +34,7 @@ public class DriveToGamePieceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (lidar.getInches() < 45) {
+    if (lidar.getInches() < 55) {
       drivetrainSubsystem.drive((lidar.getInches()-4)*0.015, 0, 0, false);
     }
   }
@@ -52,6 +52,6 @@ public class DriveToGamePieceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (lidar.getInches() <= 7.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10) || lidar.getInches() >= 45;
+    return (lidar.getInches() <= 7.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10) || lidar.getInches() >= 55;
   }
 }

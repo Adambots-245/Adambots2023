@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -31,6 +32,11 @@ public class AutonCommands {
     private DrivetrainSubsystem drivetrainSubsystem;
     private ArmCommands armCommands;
 
+    public static enum Direction{
+        LEFT,
+        RIGHT
+      }
+
     public AutonCommands(GrabSubsystem grabSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem,
             DrivetrainSubsystem drivetrainSubsystem, ArmCommands armCommands) {
         this.grabSubsystem = grabSubsystem;
@@ -40,12 +46,12 @@ public class AutonCommands {
     }
 
     public Command testWaypoint() {
-        Pose2d waypoint1 = getPose(0, 0, 90);
+        Pose2d waypoint1 = getPose(-2, -1, 90);
 
         return Commands.sequence(
             resetGyroCommand(),
             resetOdometryCommand(getPose(0.1, 0, 0)),
-            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, -0.1)
+            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0)
         );
     }
 
@@ -73,7 +79,7 @@ public class AutonCommands {
         );
     }
 
-    public Command pickupGamePiece(String turnDirection) {
+    public Command pickupGamePiece(Direction turnDirection) {
         return Commands.sequence(
             new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, turnDirection),
             armCommands.groundCommand(),
@@ -99,7 +105,7 @@ public class AutonCommands {
         return Commands.sequence(
             resetGyroCommand(),
             resetOdometryCommand(getPose(0, 0, 0)),
-            armCommands.highConeCommand(),
+            armCommands.autonHighConeCommand(),
             new WaitCommand(1.2),
             new UngrabCommand(grabSubsystem),
             new WaitCommand(0.3)
@@ -123,14 +129,15 @@ public class AutonCommands {
     }
 
     public Command scorePickupTop() {
-        Pose2d waypoint1 = getPose(-4.505, 0.5, 175);
-        Pose2d waypoint2 = getPose(-0.4, 0.85, -6);
+        Pose2d waypoint1 = getPose(-4.6, 0.5, 175);
+        Pose2d waypoint2 = getPose(-0.4, 0.85, -4.5);
+        Pose2d waypoint3 = getPose(-6, 1, -4.5);
 
         return Commands.sequence(
             autoInitAndScoreCone(),
             armCommands.homeCommand(),
             new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0.25),
-            pickupGamePiece("left"),
+            pickupGamePiece(Direction.RIGHT),
             Commands.parallel(
                 new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
                 new WaitCommand(2.5).andThen(armCommands.highCubeCommand())),
@@ -138,42 +145,44 @@ public class AutonCommands {
             new WaitCommand(1),
             new UngrabCommand(grabSubsystem),
             new WaitCommand(0.3),
-            armCommands.homeCommand()
+            armCommands.homeCommand(),
+            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint3, 0)
+            // new DriveTimeCommand(drivetrainSubsystem, -1, 0.125, 0, false, 2.5)
         );
     }
 
     public Command scorePickupBottom() {
         Pose2d waypoint1 = getPose(-4.75, -0.13, 170);
-        Pose2d waypoint2 = getPose(-0.22, -0.2, 0);
+        Pose2d waypoint2 = getPose(-0.15, -0.2, 6);
 
         return Commands.sequence(
             autoInitAndScoreCone(),
             armCommands.homeCommand(),
             new DriveTimeCommand(drivetrainSubsystem, 0.3, 0, 0, true, 0.15),
-            new DriveTimeCommand(drivetrainSubsystem, 0.8, 0, 0, true, 0.95),
-            new DriveTimeCommand(drivetrainSubsystem, 0.25, 0, 0, true, 2.3),
+            new DriveTimeCommand(drivetrainSubsystem, 0.8, 0.1, 0, true, 0.95),
+            new DriveTimeCommand(drivetrainSubsystem, 0.4, 0, 0, true, 1.5),
             new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0),
-            pickupGamePiece("left"),
+            pickupGamePiece(Direction.RIGHT),
             // new DriveTimeCommand(drivetrainSubsystem, -0.8, -0.1, 0, true, 1.25),
             // new DriveTimeCommand(drivetrainSubsystem, -0.25, 0, 0, true, 2.3),
             Commands.parallel(
                 new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
-                new WaitCommand(1).andThen(armCommands.midCubeCommand())
+                new WaitCommand(2.5).andThen(armCommands.highCubeCommand())
             ),
+            new DriveTimeCommand(drivetrainSubsystem, -0.5, 0, 0, true, 1),
+            new WaitCommand(0.7),
             // new DriveTimeCommand(drivetrainSubsystem, 0.5, 0, 0, false, 0.35),
-            new UngrabCommand(grabSubsystem)
-            // new WaitCommand(0.35),
-            // armCommands.homeCommand()
+            new UngrabCommand(grabSubsystem),
+            new WaitCommand(0.3),
+            armCommands.homeCommand()
         );
     }
 
     public Pose2d getPose(double x, double y, double rotDegrees) {
-        String allianceColor = DriverStation.getAlliance().name();
-        if (allianceColor.toLowerCase() == "red") {
+        Alliance allianceColor = DriverStation.getAlliance();
+        if (allianceColor == Alliance.Red) {
             y *= -1;
             rotDegrees *= -1;
-        } else if (allianceColor.toLowerCase() != "blue") {
-            System.err.println("Alliance Color not selected (AutonCommands.getPose)");
         }
 
         return new Pose2d(new Translation2d(x, y), new Rotation2d(Math.toRadians(rotDegrees)));

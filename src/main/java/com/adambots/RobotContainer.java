@@ -14,6 +14,7 @@ import com.adambots.commands.autonCommands.AutonCommands;
 import com.adambots.commands.autonCommands.DriveTimeCommand;
 import com.adambots.commands.autonCommands.DriveToWaypointCommand;
 import com.adambots.commands.autonCommands.TurnToGamePieceCommand;
+import com.adambots.commands.autonCommands.AutonCommands.Direction;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
@@ -118,8 +119,8 @@ public class RobotContainer {
     Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
     Buttons.JoystickButton6.onTrue(armCommands.humanStationConeCommand());
 
-    Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece("left"));
-    // Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, "right"));
+    Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece(Direction.LEFT));
+    // Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, TurnToGamePieceCommand.Direction.RIGHT));
 
     Buttons.JoystickButton16.onTrue(autonCommands.testWaypoint());
 

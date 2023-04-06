@@ -80,6 +80,13 @@ public CommandBase highConeCommand() {
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.highConeState));
 }
 
+public CommandBase autonHighConeCommand() {
+        return new ParallelCommandGroup(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.autonHighConeState),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.autonHighConeState),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.autonHighConeState));
+}
+
 public CommandBase midConeCommand() {
         return new ParallelCommandGroup(
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.midConeState),

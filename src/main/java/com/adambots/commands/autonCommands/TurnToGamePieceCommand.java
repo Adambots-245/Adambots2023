@@ -4,31 +4,26 @@
 
 package com.adambots.commands.autonCommands;
 
+import com.adambots.commands.autonCommands.AutonCommands.Direction;
 import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TurnToGamePieceCommand extends CommandBase {
   DrivetrainSubsystem drivetrainSubsystem;
   Lidar lidar;
   int debounce;
-  int dir;
+  Direction dir;
+  int dirInt;
 
-  public TurnToGamePieceCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, String dir) {
+ 
+  public TurnToGamePieceCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, Direction dir) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.lidar = lidar;
-    if (dir == "right") {this.dir = 1;}
-    else if (dir == "left") {this.dir = -1;}
-    else { System.err.println("dir not 'left' or 'right' (TurnToGamePieceCommand)");}
-
-    String allianceColor = DriverStation.getAlliance().name();
-    if (allianceColor.toLowerCase() == "red") {
-        this.dir *= -1;
-    } else if (allianceColor.toLowerCase() != "blue") {
-        System.err.println("Alliance Color not selected (TurnToGamePieceCommand)");
-    }
+    this.dir = dir;
 
     addRequirements(drivetrainSubsystem);
   }
@@ -36,6 +31,19 @@ public class TurnToGamePieceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (dir == Direction.RIGHT) {
+      dirInt = -1;
+    } else if (dir == Direction.LEFT) {
+      dirInt = 1;
+    } 
+    
+    Alliance allianceColor = DriverStation.getAlliance();
+    if (allianceColor == Alliance.Red) {
+      dirInt *= -1;
+    } else if (allianceColor != Alliance.Blue) {
+      System.err.println("Alliance Color not selected (TurnToGamePieceCommand)");
+    }
+
     debounce = 0;
   }
 
@@ -43,8 +51,8 @@ public class TurnToGamePieceCommand extends CommandBase {
   @Override
 
   public void execute() {
-    if (lidar.getInches() > 40) {
-      drivetrainSubsystem.drive(0, 0, 0.2 * dir, false);
+    if (lidar.getInches() > 50) {
+      drivetrainSubsystem.drive(0, 0, 0.2 * dirInt, false);
     } else {
       debounce++;
     }

@@ -37,12 +37,12 @@ public class TurnToGamePieceCommand extends CommandBase {
       dirInt = 1;
     } 
     
-    Alliance allianceColor = DriverStation.getAlliance();
-    if (allianceColor == Alliance.Red) {
-      dirInt *= -1;
-    } else if (allianceColor != Alliance.Blue) {
-      System.err.println("Alliance Color not selected (TurnToGamePieceCommand)");
-    }
+    // Alliance allianceColor = DriverStation.getAlliance();
+    // if (allianceColor == Alliance.Red) {
+    //   dirInt *= -1;
+    // } else if (allianceColor != Alliance.Blue) {
+    //   System.err.println("Alliance Color not selected (TurnToGamePieceCommand)");
+    // }
 
     debounce = 0;
   }

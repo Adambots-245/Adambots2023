@@ -136,8 +136,10 @@ public class RobotContainer {
     autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
     autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());
     // // Will automatically call blue or red
-    autoChooser.addOption("TopSimple", autonCommands.scorePickupTop());
-    autoChooser.addOption("BottomSimple", autonCommands.scorePickupBottom());
+    autoChooser.addOption("BLUE TopSimple", autonCommands.scorePickupTopBlue());
+    autoChooser.addOption("RED TopSimple", autonCommands.scorePickupTopRed());
+    autoChooser.addOption("BLUE BottomSimple", autonCommands.scorePickupBottomBlue());
+    autoChooser.addOption("RED BottomSimple", autonCommands.scorePickupBottomRed());
 
 
     SmartDashboard.putData("Auton Mode", autoChooser);

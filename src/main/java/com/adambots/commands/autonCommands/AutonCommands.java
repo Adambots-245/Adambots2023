@@ -50,8 +50,8 @@ public class AutonCommands {
 
         return Commands.sequence(
             resetGyroCommand(),
-            resetOdometryCommand(getPose(0.1, 0, 0)),
-            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0)
+            resetOdometryCommand(getPose(0.1, 0, 0))
+            // new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0)
         );
     }
 
@@ -128,8 +128,8 @@ public class AutonCommands {
         ).andThen(new HockeyStopCommand(drivetrainSubsystem));
     }
 
-    public Command scorePickupTop() {
-        Pose2d waypoint1 = getPose(-4.6, 0.5, 175);
+    public Command scorePickupTopBlue() {
+        Pose2d waypoint1 = getPose(-4.6, 0.5, 165);
         Pose2d waypoint2 = getPose(-0.4, 0.85, -4.5);
         Pose2d waypoint3 = getPose(-6, 1, -4.5);
 
@@ -151,7 +151,30 @@ public class AutonCommands {
         );
     }
 
-    public Command scorePickupBottom() {
+    public Command scorePickupTopRed() {
+        Pose2d waypoint1 = getPose(-4.6, -0.5, -165);
+        Pose2d waypoint2 = getPose(-0.4, -0.85, 4.5);
+        Pose2d waypoint3 = getPose(-6, -1, 4.5);
+
+        return Commands.sequence(
+            autoInitAndScoreCone(),
+            armCommands.homeCommand(),
+            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0.25),
+            pickupGamePiece(Direction.LEFT),
+            Commands.parallel(
+                new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
+                new WaitCommand(2.5).andThen(armCommands.highCubeCommand())),
+            new DriveTimeCommand(drivetrainSubsystem, 0.55, -0, 0, false, 0.3),
+            new WaitCommand(1),
+            new UngrabCommand(grabSubsystem),
+            new WaitCommand(0.3),
+            armCommands.homeCommand(),
+            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint3, 0)
+            // new DriveTimeCommand(drivetrainSubsystem, -1, 0.125, 0, false, 2.5)
+        );
+    }
+
+    public Command scorePickupBottomBlue() {
         Pose2d waypoint1 = getPose(-4.75, -0.13, 170);
         Pose2d waypoint2 = getPose(-0.15, -0.2, 6);
 
@@ -178,12 +201,39 @@ public class AutonCommands {
         );
     }
 
+    public Command scorePickupBottomRed() {
+        Pose2d waypoint1 = getPose(-4.75, 0.13, -170);
+        Pose2d waypoint2 = getPose(-0.15, 0.2, -6);
+
+        return Commands.sequence(
+            autoInitAndScoreCone(),
+            armCommands.homeCommand(),
+            new DriveTimeCommand(drivetrainSubsystem, 0.3, -0, 0, true, 0.15),
+            new DriveTimeCommand(drivetrainSubsystem, 0.8, -0.1, 0, true, 0.95),
+            new DriveTimeCommand(drivetrainSubsystem, 0.4, -0, 0, true, 1.5),
+            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0),
+            pickupGamePiece(Direction.LEFT),
+            // new DriveTimeCommand(drivetrainSubsystem, -0.8, -0.1, 0, true, 1.25),
+            // new DriveTimeCommand(drivetrainSubsystem, -0.25, 0, 0, true, 2.3),
+            Commands.parallel(
+                new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
+                new WaitCommand(2.5).andThen(armCommands.highCubeCommand())
+            ),
+            new DriveTimeCommand(drivetrainSubsystem, -0.5, -0, 0, true, 1),
+            new WaitCommand(0.7),
+            // new DriveTimeCommand(drivetrainSubsystem, 0.5, 0, 0, false, 0.35),
+            new UngrabCommand(grabSubsystem),
+            new WaitCommand(0.3),
+            armCommands.homeCommand()
+        );
+    }
+
     public Pose2d getPose(double x, double y, double rotDegrees) {
-        Alliance allianceColor = DriverStation.getAlliance();
-        if (allianceColor == Alliance.Red) {
-            y *= -1;
-            rotDegrees *= -1;
-        }
+        // Alliance allianceColor = DriverStation.getAlliance();
+        // if (allianceColor == Alliance.Red) {
+        //     y *= -1;
+        //     rotDegrees *= -1;
+        // }
 
         return new Pose2d(new Translation2d(x, y), new Rotation2d(Math.toRadians(rotDegrees)));
     }

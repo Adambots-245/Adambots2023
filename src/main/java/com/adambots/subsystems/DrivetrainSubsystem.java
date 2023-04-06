@@ -92,8 +92,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
         ModuleMap.orderedModulePositions(swerveModules)
     );
 
-    Pose2d invPose = new Pose2d(new Translation2d(-getPose().getX(), -getPose().getY()), getPose().getRotation());
-    Constants.DriveConstants.field.setRobotPose(invPose);
+    // Pose2d invPose = new Pose2d(new Translation2d(-getPose().getX(), -getPose().getY()), getPose().getRotation());
+    // Constants.DriveConstants.field.setRobotPose(invPose);
   }
 
   @Override

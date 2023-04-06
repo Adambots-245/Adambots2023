@@ -84,11 +84,15 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     
-    if(targetPosition > 0){
+    if(targetPosition > 0){ //Calculate arm extension speed if target is positive
       firstExtenderSpeed = pid.calculate(firstExtender.getSelectedSensorPosition(), targetPosition);
       firstExtenderSpeed = MathUtil.clamp(firstExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
-    }else if(!isMaxRetracted()){
-      firstExtenderSpeed = -Constants.GrabbyConstants.extenderSpeed;
+    }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye or we go massively negative
+      if (firstExtender.getSelectedSensorPosition() > -GrabbyConstants.firstExtenderMaxExtend) {
+        firstExtenderSpeed = -GrabbyConstants.extenderSpeed;
+      } else {
+        firstExtenderSpeed = 0;
+      }
     }
     
     failsafes();

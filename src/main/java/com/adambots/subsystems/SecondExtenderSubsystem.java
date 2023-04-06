@@ -100,8 +100,12 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     if(targetPosition > 0){ //Calculate arm extension speed if target is positive
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -maxSpeed, maxSpeed);
-    }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye
-      secondExtenderSpeed = -maxSpeed;
+    }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye or we go massively negative
+      if (secondExtender.getSelectedSensorPosition() > -GrabbyConstants.secondExtenderMaxExtend) {
+        secondExtenderSpeed = -maxSpeed;
+      } else {
+        secondExtenderSpeed = 0;
+      }
     }
 
     failsafes();

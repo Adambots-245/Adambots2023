@@ -152,7 +152,7 @@ public class Buttons {
         // static double[] sidewaysCurve = { 0, 0.0, 0.0, 0, 0.1, 0.2, 0.55, 0.6625, 0.775, 0.8875, 1 };
         static double[] sidewaysCurve = { 0, 0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.6, 0.8, 1 };
         // static double[] rotateCurve = { 0, 0.0, 0.1, 0.0, 0.0, , 0.2, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
-        static double[] rotateCurve = { 0, 0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
+        static double[] rotateCurve = { 0, 0, 0, 0.07, 0.15, 0.2, 0.3, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
 
         // Sigmoid Curve
         public static double smoothInput(double input) {

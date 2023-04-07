@@ -152,7 +152,7 @@ public class AutonCommands {
         );
     }
 
-    public Command scorePickupTopRed() {
+    public Command scorePickupTopRed() { //TODO: FLIP FOR BLUE ONCE ADJUSTED
         Pose2d waypoint1 = getPose(-5, -0.5, -165);
         Pose2d waypoint2 = getPose(-0.4, -0.55, 16);
         Pose2d waypoint3 = getPose(-6, -1, 4.5);

@@ -37,7 +37,7 @@ public class DriveToWaypointCommand extends CommandBase {
     yController = new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController);
 
     thetaController = new PIDController(1, 0, 0.0);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI); //TODO: SPECIFY A ROTATION DIRECTION
 
     addRequirements(drivetrainSubsystem);
   }
@@ -71,7 +71,7 @@ public class DriveToWaypointCommand extends CommandBase {
 
     drivetrainSubsystem.drive(-x, -y, -theta, true);
 
-    if (getDist(drivetrainSubsystem.getPose(), waypoint) < 0.1 && Math.abs(thetaController.getPositionError()) < Math.toRadians(10)) {
+    if (getDist(drivetrainSubsystem.getPose(), waypoint) < 0.1 && Math.abs(thetaController.getPositionError()) < Math.toRadians(5)) {
       inc++;
     } else if (inc > 0) {
       inc--;
@@ -98,6 +98,6 @@ public class DriveToWaypointCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return inc > 10;
+    return inc > 7;
   }
 }

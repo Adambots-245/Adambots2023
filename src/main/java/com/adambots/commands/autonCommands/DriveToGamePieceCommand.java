@@ -15,6 +15,7 @@ public class DriveToGamePieceCommand extends CommandBase {
   private DrivetrainSubsystem drivetrainSubsystem;
   private GrabbyLifterSubsystem grabbyLifterSubsystem;
   private Lidar lidar;
+  private int inc;
 
   /** Creates a new DriveToDistanceCommand. */
   public DriveToGamePieceCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, GrabbyLifterSubsystem grabbyLifterSubsystem) {
@@ -29,6 +30,7 @@ public class DriveToGamePieceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    inc = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,6 +38,10 @@ public class DriveToGamePieceCommand extends CommandBase {
   public void execute() {
     if (lidar.getInches() < 55) {
       drivetrainSubsystem.drive((lidar.getInches()-4)*0.015, 0, 0, false);
+    }
+
+    if (lidar.getInches() <= 7.2 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10) {
+      inc++;
     }
   }
 
@@ -52,6 +58,6 @@ public class DriveToGamePieceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (lidar.getInches() <= 7.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10) || lidar.getInches() >= 55;
+    return  inc > 10 || lidar.getInches() >= 55;
   }
 }

@@ -40,7 +40,7 @@ public class DriveToGamePieceCommand extends CommandBase {
       drivetrainSubsystem.drive((lidar.getInches()-4)*0.015, 0, 0, false);
     }
 
-    if (lidar.getInches() <= 8.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+10) {
+    if (lidar.getInches() <= 8.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+4) {
       inc++;
     }
   }

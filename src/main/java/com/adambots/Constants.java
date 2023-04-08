@@ -336,9 +336,9 @@ public final class Constants {
         public static final double midCubeFirstExtenderValue = 39 * armEncoderCPR;
         public static final double midCubeSecondExtenderValue = 0 * armEncoderCPR;
 
-        public static final double highCubeLifterValue = 168;
+        public static final double highCubeLifterValue = 167; //168
         public static final double highCubeFirstExtenderValue = 55.7 * armEncoderCPR;
-        public static final double highCubeSecondExtenderValue = 58.9 * armEncoderCPR;
+        public static final double highCubeSecondExtenderValue = 56 * armEncoderCPR; //58.9
         
         // cone
         public static final double midConeLifterValue = 170;

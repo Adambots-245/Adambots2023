@@ -6,6 +6,7 @@ package com.adambots.subsystems;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,7 +24,9 @@ import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.utils.ModuleMap;
 import com.ctre.phoenix.unmanaged.Unmanaged;
 
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,6 +48,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Field details that can be viewed in Glass
   private SimDouble m_simAngle;
   HashMap<ModulePosition, SwerveModule> swerveModules;
+  private Accelerometer accelerometer = new BuiltInAccelerometer();
+  private LinearFilter linearFilter = LinearFilter.movingAverage(10);
+  private boolean bumped = false;
 
   public DrivetrainSubsystem(HashMap<ModulePosition, SwerveModule> modules, Gyro gyro) {
 
@@ -91,7 +97,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(),
         ModuleMap.orderedModulePositions(swerveModules)
     );
-
+    double xAcceleration = linearFilter.calculate(accelerometer.getX());
+    SmartDashboard.putNumber("acceleration", xAcceleration);
+    bumped = xAcceleration > 10;
     // Pose2d invPose = new Pose2d(new Translation2d(-getPose().getX(), -getPose().getY()), getPose().getRotation());
     // Constants.DriveConstants.field.setRobotPose(invPose);
   }

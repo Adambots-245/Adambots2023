@@ -116,8 +116,8 @@ public class RobotContainer {
     Buttons.JoystickButton2.onTrue(autonCommands.humanStationCubePickup());
     // Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
 
-    Buttons.JoystickButton4.onTrue(autonCommands.resetGyroCommand());
-    Buttons.JoystickButton6.onTrue(armCommands.humanStationConeCommand());
+    Buttons.JoystickButton6.onTrue(autonCommands.resetGyroCommand());
+    Buttons.JoystickButton4.onTrue(armCommands.humanStationConeCommand());
 
     // Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece(Direction.LEFT));
     // Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, TurnToGamePieceCommand.Direction.RIGHT));

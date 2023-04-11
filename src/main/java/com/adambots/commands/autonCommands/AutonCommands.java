@@ -57,9 +57,9 @@ public class AutonCommands {
 
     public Command humanStationConePickup() {
         return Commands.sequence(
-            new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, true, 0.3),
+            new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, true, 0.5),
             armCommands.humanStationConeCommand(),
-            new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.325),
+            new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.28),
             new WaitCommand(0.5),
             armCommands.grabCommand(),
             new WaitCommand(0.4),

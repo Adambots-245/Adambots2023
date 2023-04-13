@@ -49,7 +49,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private SimDouble m_simAngle;
   HashMap<ModulePosition, SwerveModule> swerveModules;
   private Accelerometer accelerometer = new BuiltInAccelerometer();
-  private LinearFilter linearFilter = LinearFilter.movingAverage(10);
+  private LinearFilter xLinearFilter = LinearFilter.movingAverage(10);
+  private LinearFilter yLinearFilter = LinearFilter.movingAverage(10);
+
   private boolean bumped = false;
 
   public DrivetrainSubsystem(HashMap<ModulePosition, SwerveModule> modules, Gyro gyro) {
@@ -97,9 +99,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(),
         ModuleMap.orderedModulePositions(swerveModules)
     );
-    double xAcceleration = linearFilter.calculate(accelerometer.getX());
-    SmartDashboard.putNumber("acceleration", xAcceleration);
-    bumped = xAcceleration > 10;
+    double xAcceleration = xLinearFilter.calculate(accelerometer.getX());
+    double yAcceleration = yLinearFilter.calculate(accelerometer.getY());
+
+    SmartDashboard.putNumber("Xacceleration", xAcceleration);
+    SmartDashboard.putNumber("Yacceleration", yAcceleration);
+
+    bumped = Math.abs(yAcceleration) > 0.5;
     // Pose2d invPose = new Pose2d(new Translation2d(-getPose().getX(), -getPose().getY()), getPose().getRotation());
     // Constants.DriveConstants.field.setRobotPose(invPose);
   }
@@ -260,5 +266,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public void stop() {
     drive(0, 0, 0, false);
+  }
+
+  public boolean getBumped() {
+    return bumped;
   }
 }

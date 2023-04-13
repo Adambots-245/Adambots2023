@@ -74,7 +74,7 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   public boolean isMaxRetracted () {
-    return photoEye.isDetecting();
+    return !photoEye.isDetecting();
   }
 
   public double getEncoder () {

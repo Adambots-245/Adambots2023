@@ -383,7 +383,7 @@ public final class Constants {
         public static final State humanStationCubeState = new State(humanLifterCubeValue, humanFirstExtenderCubeValue, humanSecondExtenderCubeValue);
         public static final State sideStationState = new State(sideStationLifterValue, sideStationFirstExtenderValue, sideStationSecondExtenderValue);
         public static final State retractState = new State(retractLifterValue, retractFirstExtenderValue, retractSecondExtenderValue);
-        public static final State autonHighConeState = new State(highConeLifterValue-5, highConeFirstExtenderValue, highConeSecondExtenderValue-7.5*armEncoderCPR);
+        public static final State autonHighConeState = new State(highConeLifterValue-5, highConeFirstExtenderValue, highConeSecondExtenderValue-2.5*armEncoderCPR);
 
         //PID values
         public static final double lifterP = 0.015; //0.015

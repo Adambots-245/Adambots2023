@@ -37,7 +37,7 @@ public class DriveToWaypointCommand extends CommandBase {
     yController = new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController);
 
     thetaController = new PIDController(1, 0, 0.0);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI); //TODO: SPECIFY A ROTATION DIRECTION
+    // thetaController.enableContinuousInput(-Math.PI, Math.PI); //TODO: SPECIFY A ROTATION DIRECTION
 
     addRequirements(drivetrainSubsystem);
   }

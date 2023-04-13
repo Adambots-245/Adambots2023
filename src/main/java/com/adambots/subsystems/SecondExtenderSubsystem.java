@@ -79,7 +79,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   public boolean isMaxRetracted () {
-    return photoEye.get();
+    return !photoEye.get();
   }
 
   public void setOffset (double offset) {

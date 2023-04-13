@@ -4,25 +4,18 @@
 
 package com.adambots.commands.autonCommands;
 
-import com.adambots.Constants;
-import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
-import com.adambots.subsystems.GrabbyLifterSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveToGamePieceCommand extends CommandBase {
+public class DriveTillBumped extends CommandBase {
   private DrivetrainSubsystem drivetrainSubsystem;
-  private GrabbyLifterSubsystem grabbyLifterSubsystem;
-  private Lidar lidar;
   private int inc;
 
   /** Creates a new DriveToDistanceCommand. */
-  public DriveToGamePieceCommand(DrivetrainSubsystem drivetrainSubsystem, Lidar lidar, GrabbyLifterSubsystem grabbyLifterSubsystem) {
+  public DriveTillBumped(DrivetrainSubsystem drivetrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrainSubsystem = drivetrainSubsystem;
-    this.grabbyLifterSubsystem = grabbyLifterSubsystem;
-    this.lidar = lidar;
 
     addRequirements(drivetrainSubsystem);
   }
@@ -36,16 +29,10 @@ public class DriveToGamePieceCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (lidar.getInches() < 55) {
-      drivetrainSubsystem.drive((lidar.getInches()-4)*0.015, 0, 0, false);
-    }
-
-    if (lidar.getInches() <= 9.5 && grabbyLifterSubsystem.getEncoder() <= Constants.GrabbyConstants.groundLifterValue+4) {
-      inc++;
-    }
+    drivetrainSubsystem.drive(0.45, 0, 0, false);
   }
 
-  // Called once the command ends or is interrupted.
+  // Called once the command ends or isp interrupted.
   @Override
   public void end(boolean interrupted) {
     drivetrainSubsystem.stop();
@@ -58,6 +45,6 @@ public class DriveToGamePieceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return  inc > 5 || lidar.getInches() >= 55;
+    return drivetrainSubsystem.getBumped();
   }
 }

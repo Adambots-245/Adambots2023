@@ -28,7 +28,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -118,11 +120,11 @@ public class RobotContainer {
 
     Buttons.JoystickButton6.onTrue(autonCommands.resetGyroCommand());
     Buttons.JoystickButton4.onTrue(armCommands.humanStationConeCommand());
-
+    Buttons.JoystickButton11.onTrue(Commands.deadline(new WaitCommand(1.5), autonCommands.driveTillBumpedCommand()));
     // Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece(Direction.LEFT));
     // Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, TurnToGamePieceCommand.Direction.RIGHT));
 
-    // Buttons.JoystickButton16.onTrue(autonCommands.testWaypoint());
+    Buttons.JoystickButton16.onTrue(autonCommands.autoInitAndScoreCone());
 
 
     // Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());
@@ -156,6 +158,7 @@ public class RobotContainer {
 
     Dash.add("odom x", () -> drivetrainSubsystem.getPose().getX());
     Dash.add("odom y", () -> drivetrainSubsystem.getPose().getY());
+    Dash.add("Bumped", () -> drivetrainSubsystem.getBumped());
     // Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
     // Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
     // Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());

@@ -99,11 +99,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(),
         ModuleMap.orderedModulePositions(swerveModules)
     );
-    double xAcceleration = xLinearFilter.calculate(accelerometer.getX());
+    // double xAcceleration = xLinearFilter.calculate(accelerometer.getX());
     double yAcceleration = yLinearFilter.calculate(accelerometer.getY());
 
-    SmartDashboard.putNumber("Xacceleration", xAcceleration);
-    SmartDashboard.putNumber("Yacceleration", yAcceleration);
+    // SmartDashboard.putNumber("Xacceleration", xAcceleration);
+    // SmartDashboard.putNumber("Yacceleration", yAcceleration);
 
     bumped = Math.abs(yAcceleration) > 0.5;
     // Pose2d invPose = new Pose2d(new Translation2d(-getPose().getX(), -getPose().getY()), getPose().getRotation());

@@ -116,6 +116,7 @@ public class RobotContainer {
     Buttons.JoystickButton1.onTrue(armCommands.grabCommand());
     Buttons.JoystickButton3.onTrue(autonCommands.humanStationConePickup());
     Buttons.JoystickButton2.onTrue(autonCommands.humanStationCubePickup());
+    Buttons.JoystickButton7.onTrue(autonCommands.groundConePickup());
     // Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
 
     Buttons.JoystickButton6.onTrue(autonCommands.resetGyroCommand());

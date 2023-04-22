@@ -123,9 +123,9 @@ public class RobotContainer {
     Buttons.JoystickButton4.onTrue(armCommands.humanStationConeCommand());
     Buttons.JoystickButton11.onTrue(Commands.deadline(new WaitCommand(1.5), autonCommands.driveTillBumpedCommand()));
     // Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece(Direction.LEFT));
-    // Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, TurnToGamePieceCommand.Direction.RIGHT));
+    Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, Direction.RIGHT));
 
-    Buttons.JoystickButton16.onTrue(autonCommands.autoInitAndScoreCone());
+    // Buttons.JoystickButton16.onTrue(autonCommands.autoInitAndScoreCone());
 
 
     // Buttons.JoystickButton16.onTrue(autonCommands.humanStationPickup());

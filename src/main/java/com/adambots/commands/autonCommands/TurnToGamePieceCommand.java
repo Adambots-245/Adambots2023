@@ -67,6 +67,6 @@ public class TurnToGamePieceCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return debounce >= 13 && lidar.getInches() > 15;
+    return debounce >= 10;
   }
 }

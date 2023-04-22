@@ -115,7 +115,7 @@ public class AutonCommands {
             resetGyroCommand(),
             resetOdometryCommand(getPose(0, 0, 0)),
             armCommands.autonHighConeCommand(),
-            new WaitCommand(1.2),
+            new WaitCommand(0.9),
             new UngrabCommand(grabSubsystem),
             new WaitCommand(0.3)
         );
@@ -184,11 +184,13 @@ public class AutonCommands {
     }
 
     public Command scorePickupBottomBlue() {
-        Pose2d waypoint1 = getPose(-5.35, -0.5, 155);
-        Pose2d waypoint2 = getPose(-0.15, -0.15, 7);
+        Pose2d waypoint1 = getPose(-5, -0.5, 160); //155
+        Pose2d waypoint2 = getPose(-0.15, -0.15, 10);
 
-        return Commands.sequence(
-            autoInitAndScoreCone(),
+        return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
+            Commands.parallel(
+                new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, false, 0.5),
+                autoInitAndScoreCone()),
             armCommands.homeCommand(),
             new DriveTimeCommand(drivetrainSubsystem, 0.3, 0.1, 0, true, 0.2),
             new DriveTimeCommand(drivetrainSubsystem, 0.8, 0.15, 0, true, 0.95),
@@ -204,15 +206,17 @@ public class AutonCommands {
             new UngrabCommand(grabSubsystem),
             new WaitCommand(0.3),
             armCommands.homeCommand()
-        );
+        )).andThen(new UngrabCommand(grabSubsystem));
     }
 
     public Command scorePickupBottomRed() {
-        Pose2d waypoint1 = getPose(-5.35, 0.5, -155);
-        Pose2d waypoint2 = getPose(-0.15, 0.15, -7);
+        Pose2d waypoint1 = getPose(-5, 0.5, -160); //-155
+        Pose2d waypoint2 = getPose(-0.15, 0.15, -10);
 
-        return Commands.sequence(
-            autoInitAndScoreCone(),
+        return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
+            Commands.parallel(
+                new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, false, 0.5),
+                autoInitAndScoreCone()),
             armCommands.homeCommand(),
             new DriveTimeCommand(drivetrainSubsystem, 0.3, -0.1, 0, true, 0.2),
             new DriveTimeCommand(drivetrainSubsystem, 0.8, -0.15, 0, true, 0.95),
@@ -228,7 +232,7 @@ public class AutonCommands {
             new UngrabCommand(grabSubsystem),
             new WaitCommand(0.3),
             armCommands.homeCommand()
-        );
+        )).andThen(new UngrabCommand(grabSubsystem));
     }
 
     public Pose2d getPose(double x, double y, double rotDegrees) {

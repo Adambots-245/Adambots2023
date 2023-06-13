@@ -315,12 +315,12 @@ public final class Constants {
         public static final double balancingFirstExtenderValue = 0;
         public static final double balancingSecondExtenderValue = 0;
 
-        public static final double humanLifterConeValue = 171.5; //173.5
-        public static final double humanFirstExtenderConeValue = 56 * armEncoderCPR;
+        public static final double humanLifterConeValue = 197; //173.5
+        public static final double humanFirstExtenderConeValue = 23.25 * armEncoderCPR;
         public static final double humanSecondExtenderConeValue = 0 * armEncoderCPR;
 
-        public static final double humanLifterCubeValue = 167;
-        public static final double humanFirstExtenderCubeValue = 57 * armEncoderCPR;
+        public static final double humanLifterCubeValue = 198;
+        public static final double humanFirstExtenderCubeValue = 10 * armEncoderCPR;
         public static final double humanSecondExtenderCubeValue = 0 * armEncoderCPR;
 
         public static final double sideStationLifterValue = 167.9;

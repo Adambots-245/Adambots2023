@@ -65,26 +65,26 @@ public class AutonCommands {
 
     public Command humanStationConePickup() {
         return Commands.sequence(
-            new DriveTimeCommand(drivetrainSubsystem, 0.325, 0, 0, true, 0.65),
-            armCommands.humanStationConeCommand(),
-            new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.325),
-            new WaitCommand(0.5),
-            armCommands.grabCommand(),
-            new WaitCommand(0.4),
-            armCommands.homeCommand()
+            // new DriveTimeCommand(drivetrainSubsystem, 0.325, 0, 0, true, 0.65),
+            armCommands.humanStationConeCommand()
+            // new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.325),
+            // new WaitCommand(0.5),
+            // armCommands.grabCommand(),
+            // new WaitCommand(0.4),
+            // armCommands.homeCommand()
         );
     }
 
     public Command humanStationCubePickup() {
         return Commands.sequence(
             // new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, true, 0.3),
-            Commands.deadline(new WaitCommand(1.5), new DriveTillBumped(drivetrainSubsystem)),
-            armCommands.humanStationCubeCommand(),
-            new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.325),
-            new WaitCommand(0.5),
-            armCommands.grabCommand(),
-            new WaitCommand(0.7),
-            armCommands.homeCommand()
+            // Commands.deadline(new WaitCommand(1.5), new DriveTillBumped(drivetrainSubsystem)),
+            armCommands.humanStationCubeCommand()
+            // new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.325),
+            // new WaitCommand(0.5),
+            // armCommands.grabCommand(),
+            // new WaitCommand(0.7),
+            // armCommands.homeCommand()
         );
     }
 

@@ -160,9 +160,9 @@ public class RobotContainer {
     Dash.add("odom x", () -> drivetrainSubsystem.getPose().getX());
     Dash.add("odom y", () -> drivetrainSubsystem.getPose().getY());
     Dash.add("Bumped", () -> drivetrainSubsystem.getBumped());
-    // Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
-    // Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
-    // Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
+    Dash.add("yaw", () -> RobotMap.GyroSensor.getAngle());
+    Dash.add("pitch", () -> RobotMap.GyroSensor.getPitch());
+    Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
     // Dash.add("Arm Encoder w/ offset", () -> RobotMap.armRotationEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
 
     Dash.add("LIDAR Dist", () -> RobotMap.lidar.getInches());

@@ -51,7 +51,7 @@ public class TraversePlatform extends CommandBase {
       if (Math.abs(pitchAngleDegrees) > 5) {
         inc1++;
       }
-      if (inc1 > 60) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (inc1 > 20) { //Drive for 30 ticks after front wheels get up to get back wheels up
         state = 1;
       }
     }

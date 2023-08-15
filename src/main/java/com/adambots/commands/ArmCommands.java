@@ -30,6 +30,8 @@ public class ArmCommands {
 
     }
 
+    
+
 public LowerArmCommand lowerArmCommand() {
         return new LowerArmCommand(grabbyLifterSubsystem, secondExtenderSubsystem, 9999);
 }
@@ -37,6 +39,8 @@ public LowerArmCommand lowerArmCommand() {
 public LiftArmCommand liftArmCommand() {
         return new LiftArmCommand(grabbyLifterSubsystem, 9999);
 }
+
+
 
 private CommandBase chargeCommand() {
         return new ParallelCommandGroup(
@@ -57,6 +61,14 @@ public CommandBase humanStationConeCommand(){
                 new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationConeState),
                 new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationConeState),
                 new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationConeState));
+}
+
+
+public CommandBase humanStationClamp(){
+        return new ParallelCommandGroup(
+                new ArmLifterChangeStateCommand(grabbyLifterSubsystem, GrabbyConstants.humanStationGrab),
+                new FirstExtenderChangeStateCommand(firstExtenderSubsystem, GrabbyConstants.humanStationGrab),
+                new SecondExtenderChangeStateCommand(secondExtenderSubsystem, GrabbyConstants.humanStationGrab));
 }
 
 public CommandBase humanStationCubeCommand(){

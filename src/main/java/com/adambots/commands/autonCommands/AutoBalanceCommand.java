@@ -40,7 +40,7 @@ public class AutoBalanceCommand extends CommandBase {
 
     //Old P 0.01025
     //Old D 0.00184
-    pid = new PIDController(0.0081, 0, 0.002);
+    pid = new PIDController(0.009, 0, 0.002);
     pid.setSetpoint(0);
   }
 

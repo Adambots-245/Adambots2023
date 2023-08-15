@@ -5,10 +5,13 @@
 package com.adambots.commands.autonCommands;
 
 import com.adambots.RobotMap;
+import com.adambots.Constants.GrabbyConstants;
 import com.adambots.commands.ArmCommands;
+import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.GrabCommand;
 import com.adambots.commands.UngrabCommand;
 import com.adambots.subsystems.DrivetrainSubsystem;
+import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 
@@ -28,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
  */
 public class AutonCommands {
     private GrabSubsystem grabSubsystem;
+    private FirstExtenderSubsystem firstExtenderSubsystem;
+
     private GrabbyLifterSubsystem grabbyLifterSubsystem;
     private DrivetrainSubsystem drivetrainSubsystem;
     private ArmCommands armCommands;
@@ -38,7 +43,8 @@ public class AutonCommands {
       }
 
     public AutonCommands(GrabSubsystem grabSubsystem, GrabbyLifterSubsystem grabbyLifterSubsystem,
-            DrivetrainSubsystem drivetrainSubsystem, ArmCommands armCommands) {
+            DrivetrainSubsystem drivetrainSubsystem, ArmCommands armCommands, FirstExtenderSubsystem firstExtenderSubsystem) {
+        this.firstExtenderSubsystem = firstExtenderSubsystem;
         this.grabSubsystem = grabSubsystem;
         this.grabbyLifterSubsystem = grabbyLifterSubsystem;
         this.drivetrainSubsystem = drivetrainSubsystem;
@@ -63,6 +69,14 @@ public class AutonCommands {
         );
     }
 
+    public Command humanPlayerClamp() {
+        return Commands.sequence(
+            armCommands.grabCommand(),
+            new WaitCommand(0.4),
+            armCommands.humanStationClamp()
+        );
+    }
+
     public Command humanStationConePickup() {
         return Commands.sequence(
             // new DriveTimeCommand(drivetrainSubsystem, 0.325, 0, 0, true, 0.65),
@@ -72,6 +86,18 @@ public class AutonCommands {
             // armCommands.grabCommand(),
             // new WaitCommand(0.4),
             // armCommands.homeCommand()
+        );
+    }
+
+    public Command humanStationBackConePickup() {
+        return Commands.sequence(
+            new DriveTimeCommand(drivetrainSubsystem, 0.325, 0, 0, true, 0.65),
+            armCommands.humanStationConeCommand(),
+            new DriveTimeCommand(drivetrainSubsystem, -0.6, 0, 0, true, 0.325),
+            new WaitCommand(0.5),
+            armCommands.grabCommand(),
+            new WaitCommand(0.4),
+            armCommands.homeCommand()
         );
     }
 

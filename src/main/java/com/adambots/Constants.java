@@ -307,6 +307,10 @@ public final class Constants {
         public static final double initialFirstExtenderValue = 0;
         public static final double initialSecondExtenderValue = 0;
 
+        public static final double humanStationLifterValue = 171.5;
+        public static final double humanStationFirstExtenderValue = 56 * armEncoderCPR;
+        public static final double humanStationSecondExtenderValue = 0;
+
         public static final double groundLifterValue = 94.5;
         public static final double groundFirstExtenderValue = 0;
         public static final double groundSecondExtenderValue = 0;
@@ -315,8 +319,8 @@ public final class Constants {
         public static final double balancingFirstExtenderValue = 0;
         public static final double balancingSecondExtenderValue = 0;
 
-        public static final double humanLifterConeValue = 197; //173.5
-        public static final double humanFirstExtenderConeValue = 23.25 * armEncoderCPR;
+        public static final double humanLifterConeValue = 171.5; //173.5
+        public static final double humanFirstExtenderConeValue = 56 * armEncoderCPR;
         public static final double humanSecondExtenderConeValue = 0 * armEncoderCPR;
 
         public static final double humanLifterCubeValue = 198;
@@ -341,13 +345,17 @@ public final class Constants {
         public static final double highCubeSecondExtenderValue = 56 * armEncoderCPR; //58.9
         
         // cone
-        public static final double midConeLifterValue = 170;
+        public static final double midConeLifterValue = 175;
         public static final double midConeFirstExtenderValue = 54.5 * armEncoderCPR;
         public static final double midConeSecondExtenderValue = 0 * armEncoderCPR;
 
         public static final double highConeLifterValue = 178;
         public static final double highConeFirstExtenderValue = 60 * armEncoderCPR;
         public static final double highConeSecondExtenderValue = 64.5 * armEncoderCPR;
+
+        public static final double autonHighConeLifterValue = 174;
+        public static final double autonHighConeFirstExtenderValue = 60 * armEncoderCPR;
+        public static final double autonHighConeSecondExtenderValue = 63 * armEncoderCPR;
 
         public static class State{
             double armLiftTarget;
@@ -373,6 +381,7 @@ public final class Constants {
         }
 
         public static final State initState = new State(initiaLifterValue, initialFirstExtenderValue, initialSecondExtenderValue);
+        public static final State humanStationGrab = new State(humanStationLifterValue, humanStationFirstExtenderValue, humanStationSecondExtenderValue);
         public static final State groundState = new State(groundLifterValue, groundFirstExtenderValue, groundSecondExtenderValue);
         public static final State midCubeState = new State(midCubeLifterValue, midCubeFirstExtenderValue, midCubeSecondExtenderValue);
         public static final State midConeState = new State(midConeLifterValue, midConeFirstExtenderValue, midConeSecondExtenderValue);
@@ -380,10 +389,11 @@ public final class Constants {
         public static final State highConeState = new State(highConeLifterValue, highConeFirstExtenderValue, highConeSecondExtenderValue);
         public static final State balancingState = new State(balancingLifterValue, balancingFirstExtenderValue, balancingSecondExtenderValue);
         public static final State humanStationConeState = new State(humanLifterConeValue, humanFirstExtenderConeValue, humanSecondExtenderConeValue);
+
         public static final State humanStationCubeState = new State(humanLifterCubeValue, humanFirstExtenderCubeValue, humanSecondExtenderCubeValue);
         public static final State sideStationState = new State(sideStationLifterValue, sideStationFirstExtenderValue, sideStationSecondExtenderValue);
         public static final State retractState = new State(retractLifterValue, retractFirstExtenderValue, retractSecondExtenderValue);
-        public static final State autonHighConeState = new State(highConeLifterValue-10, highConeFirstExtenderValue, highConeSecondExtenderValue-2.5*armEncoderCPR);
+        public static final State autonHighConeState = new State(autonHighConeLifterValue , autonHighConeFirstExtenderValue, autonHighConeSecondExtenderValue);
 
         //PID values
         public static final double lifterP = 0.015; //0.015

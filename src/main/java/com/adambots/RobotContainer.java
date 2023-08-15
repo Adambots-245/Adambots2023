@@ -49,7 +49,7 @@ public class RobotContainer {
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
-  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, drivetrainSubsystem, armCommands);
+  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, drivetrainSubsystem, armCommands, firstExtenderSubsystem);
 
 
   // commands
@@ -114,13 +114,15 @@ public class RobotContainer {
     //Joystick Keybinds
     // Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
     Buttons.JoystickButton1.onTrue(armCommands.grabCommand());
+     Buttons.JoystickButton4.onTrue(autonCommands.humanPlayerClamp());
+
     Buttons.JoystickButton3.onTrue(autonCommands.humanStationConePickup());
-    Buttons.JoystickButton2.onTrue(autonCommands.humanStationCubePickup());
+    Buttons.JoystickButton2.onTrue(autonCommands.humanStationBackConePickup());
     Buttons.JoystickButton7.onTrue(autonCommands.groundConePickup());
-    // Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
+      Buttons.JoystickButton5.onTrue(autonCommands.autoInitAndScoreCone());
 
     Buttons.JoystickButton6.onTrue(autonCommands.resetGyroCommand());
-    Buttons.JoystickButton4.onTrue(armCommands.humanStationConeCommand());
+    // Buttons.JoystickButton4.onTrue(armCommands.humanStationConeCommand());
     Buttons.JoystickButton11.onTrue(Commands.deadline(new WaitCommand(1.5), autonCommands.driveTillBumpedCommand()));
     // Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece(Direction.LEFT));
     Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, Direction.RIGHT));

@@ -203,6 +203,7 @@ public class Buttons {
         public static DoubleSupplier rotateSupplier = () -> isJoystickConnected.getAsBoolean()
                         ? applyCurve(ex3dPro.getZ(), rotateCurve)
                         : deaden(primaryJoystick.getRightX(), GamepadConstants.kDeadZone);
+        public static DoubleSupplier rotateSupplier2 = () -> ex3dPro.getZ();
 
         /** Rumble the XBox Controller 
          * @param controller pass the primary or secondary controller to rumble

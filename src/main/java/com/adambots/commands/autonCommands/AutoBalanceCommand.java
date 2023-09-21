@@ -69,7 +69,7 @@ public class AutoBalanceCommand extends CommandBase {
       if (Math.abs(pitchAngleDegrees) < 3) {
         balInc++;
       }
-      if (balInc > 50) { //Drive for 30 ticks after front wheels get up to get back wheels up
+      if (balInc > 50) { //If platform is balanced (pitch is less than 3 degrees) for 50 ticks then end the command
         state = 2;
       }
     }

@@ -35,6 +35,9 @@
   "NetworkTables": {
     "transitory": {
       "Shuffleboard": {
+        "debug": {
+          "open": true
+        },
         "open": true
       },
       "SmartDashboard": {

@@ -140,46 +140,23 @@ public class Buttons {
         }
 
         //Applies a custom curve to an input and returns the result
-        public static double applyCurve (double rawInput, double[] curve) {
-                double scaled = Math.abs(rawInput)*10;
-                int index = (int)Math.floor(scaled);
-                return MathUtil.interpolate(curve[index], curve[Math.min(index+1, curve.length-1)], scaled-index)*Math.signum(rawInput);
+        public static double applyCurve (double rawInput, double[][] curve) {
+                double absInput = Math.abs(rawInput);
+                if (rawInput == 0) {return 0;} //Avoids any index out of bounds/divide by 0 edge cases
+                int i = 1;
+                while (forwardCurve[i][0] < absInput) {i++;}
+                return MathUtil.interpolate(forwardCurve[i-1][1], forwardCurve[i][1], //Upper and lower bounds of interpolation
+                (absInput-forwardCurve[i-1][0])/(forwardCurve[i][0]-forwardCurve[i-1][0]))*Math.signum(rawInput); //[0, 1] value to interpolate between bounds
 	}
 
-        // An example curve that would be default input {0, 0.1, 0.2, 0.3, 0.4, 0.5,
-        // 0.6, 0.7, 0.8, 0.9, 1};
-        static double[] forwardCurve = { 0, 0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.6, 0.8, 1 }; //Scaled back linear curve
-        // static double[] sidewaysCurve = { 0, 0.0, 0.0, 0, 0.1, 0.2, 0.55, 0.6625, 0.775, 0.8875, 1 };
-        static double[] sidewaysCurve = { 0, 0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.6, 0.8, 1 };
-        // static double[] rotateCurve = { 0, 0.0, 0.1, 0.0, 0.0, , 0.2, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
-        static double[] rotateCurve = { 0, 0, 0, 0.07, 0.15, 0.2, 0.3, 0.4, 0.6, 0.8, 1 }; //first 4 left empty for deadzone
+        // DONT NEED TO ADJUST THESE MANUALLY!!!
+        // Go to Adambots-245/Utils/Curve_Creator and you can import these curves into the program to adjust them, or make new ones
+        // The 2D arrays function like points on a graph (x, y)
+        // an example curve that would be default linear input from (0,0) to (1,1) is {{0.0, 0.0},{1.0, 1.0}}
+        static double[][] forwardCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
+        static double[][] sidewaysCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
+        static double[][] rotateCurve = {{0.0, 0.0},{0.2, 0.0},{0.3, 0.07},{0.5, 0.2},{0.7, 0.4},{1.0, 1.0}};
 
-        // Sigmoid Curve
-        public static double smoothInput(double input) {
-                // Adjust the parameter 'a' to control the steepness of the curve
-                double a = 4.0;
-
-                // Apply a sigmoid function to the input value
-                double sigmoid = 1.0 / (1.0 + Math.exp(-a * input));
-
-                // Apply a hyperbolic tangent function to the input value
-                // double tanh = Math.tanh(a * input);
-
-                // Map the output range from (0,1) to (minOutput, maxOutput)
-                double minOutput = -1; // minimum output value
-                double maxOutput = 1; // maximum output value
-                double output = sigmoid * (maxOutput - minOutput) + minOutput;
-                // double output = tanh * (maxOutput - minOutput) + minOutput;
-
-                return output;
-        }
-
-        public static double cubic(double input) {
-                double tuneA = 0; // try different values. However, tuneA and tuneB should add up to 1
-                double tuneB = 1;
-
-                return (tuneA * input) + (tuneB * Math.pow(input, 3));
-        }
 
         // If Flight Joystick is connected, then return Joystick Y value - else return
         // Joystick value from XBoxController

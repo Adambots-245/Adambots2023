@@ -120,7 +120,7 @@ public class AutonCommands {
             armCommands.groundCommand(),
             new DriveToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, grabbyLifterSubsystem),
             new GrabCommand(grabSubsystem),
-            new WaitCommand(0.2),
+            new WaitCommand(0.5),
             armCommands.homeCommand()
         );
     }
@@ -168,7 +168,7 @@ public class AutonCommands {
         Pose2d waypoint2 = getPose(-0.1, 0.9, -11);
         Pose2d waypoint3 = getPose(-6, 1, -4.5);
 
-        return Commands.sequence(
+        return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
             autoInitAndScoreCone(),
             armCommands.homeCommand(),
             new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0.25),
@@ -178,12 +178,11 @@ public class AutonCommands {
                 new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
                 new WaitCommand(2.25).andThen(armCommands.highCubeCommand())),
             new DriveTimeCommand(drivetrainSubsystem, -0.3, 0, 0, true, 0.6),
-            new WaitCommand(1),
+            //new WaitCommand(1),
             new UngrabCommand(grabSubsystem),
             new WaitCommand(0.3),
             armCommands.homeCommand()
-            // new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint3, 0)
-        );
+        )).andThen(new UngrabCommand(grabSubsystem));
     }
 
     public Command scorePickupTopRed() {
@@ -191,7 +190,7 @@ public class AutonCommands {
         Pose2d waypoint2 = getPose(-0.1, -0.9, 11);
         Pose2d waypoint3 = getPose(-6, -1, 4.5);
 
-        return Commands.sequence(
+        return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
             autoInitAndScoreCone(),
             armCommands.homeCommand(),
             new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0.25),
@@ -201,12 +200,11 @@ public class AutonCommands {
                 new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
                 new WaitCommand(2.25).andThen(armCommands.highCubeCommand())),
             new DriveTimeCommand(drivetrainSubsystem, -0.3, -0, 0, true, 0.6),
-            new WaitCommand(1),
+            //new WaitCommand(1),
             new UngrabCommand(grabSubsystem),
             new WaitCommand(0.3),
             armCommands.homeCommand()
-            // new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint3, 0)
-        );
+        )).andThen(new UngrabCommand(grabSubsystem));
     }
 
     public Command scorePickupBottomBlue() {
@@ -214,9 +212,9 @@ public class AutonCommands {
         Pose2d waypoint2 = getPose(-0.15, -0.15, 10);
 
         return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
-            Commands.parallel(
-                new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, false, 0.5),
-                autoInitAndScoreCone()),
+            // Commands.parallel(
+            //     new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, false, 0.5),
+            autoInitAndScoreCone(),
             armCommands.homeCommand(),
             new DriveTimeCommand(drivetrainSubsystem, 0.3, 0.1, 0, true, 0.2),
             new DriveTimeCommand(drivetrainSubsystem, 0.8, 0.15, 0, true, 0.95),
@@ -240,9 +238,9 @@ public class AutonCommands {
         Pose2d waypoint2 = getPose(-0.15, 0.15, -10);
 
         return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
-            Commands.parallel(
-                new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, false, 0.5),
-                autoInitAndScoreCone()),
+            // Commands.parallel(
+            //     new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, false, 0.5),
+            autoInitAndScoreCone(),
             armCommands.homeCommand(),
             new DriveTimeCommand(drivetrainSubsystem, 0.3, -0.1, 0, true, 0.2),
             new DriveTimeCommand(drivetrainSubsystem, 0.8, -0.15, 0, true, 0.95),

@@ -140,22 +140,20 @@ public class Buttons {
         }
 
         //Applies a custom curve to an input and returns the result
-        public static double applyCurve (double rawInput, double[][] curve) {
-                double absInput = Math.abs(rawInput);
-                if (rawInput == 0) {return 0;} //Avoids any index out of bounds/divide by 0 edge cases
-                int i = 1;
-                while (forwardCurve[i][0] < absInput) {i++;}
-                return MathUtil.interpolate(forwardCurve[i-1][1], forwardCurve[i][1], //Upper and lower bounds of interpolation
-                (absInput-forwardCurve[i-1][0])/(forwardCurve[i][0]-forwardCurve[i-1][0]))*Math.signum(rawInput); //[0, 1] value to interpolate between bounds
+        public static double applyCurve (double rawInput, double[] curve) {
+                return curve[(int)Math.floor(Math.abs(rawInput)*100)]*Math.signum(rawInput);          
 	}
 
-        // DONT NEED TO ADJUST THESE MANUALLY!!!
+        // DO NOT ADJUST THESE MANUALLY!!!
         // Go to Adambots-245/Utils/Curve_Creator and you can import these curves into the program to adjust them, or make new ones
         // The 2D arrays function like points on a graph (x, y)
         // an example curve that would be default linear input from (0,0) to (1,1) is {{0.0, 0.0},{1.0, 1.0}}
-        static double[][] forwardCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
-        static double[][] sidewaysCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
-        static double[][] rotateCurve = {{0.0, 0.0},{0.2, 0.0},{0.3, 0.07},{0.5, 0.2},{0.7, 0.4},{1.0, 1.0}};
+        static double[] forwardCurve = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.06,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.105,0.11,0.115,0.12,0.125,0.13,0.135,0.14,0.145,0.15,0.155,0.16,0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0};
+        static double[] sidewaysCurve = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.06,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.105,0.11,0.115,0.12,0.125,0.13,0.135,0.14,0.145,0.15,0.155,0.16,0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0};
+        static double[] rotateCurve = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.007,0.014,0.021,0.028,0.035,0.042,0.049,0.056,0.063,0.07,0.0765,0.083,0.0895,0.096,0.1025,0.109,0.1155,0.122,0.1285,0.135,0.1415,0.148,0.1545,0.161,0.1675,0.174,0.1805,0.187,0.1935,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0};
+        // static double[][] forwardCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
+        // static double[][] sidewaysCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
+        // static double[][] rotateCurve = {{0.0, 0.0},{0.2, 0.0},{0.3, 0.07},{0.5, 0.2},{0.7, 0.4},{1.0, 1.0}};
 
 
         // If Flight Joystick is connected, then return Joystick Y value - else return

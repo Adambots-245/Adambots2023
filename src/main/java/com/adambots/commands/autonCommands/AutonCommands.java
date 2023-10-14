@@ -5,26 +5,50 @@
 package com.adambots.commands.autonCommands;
 
 import com.adambots.RobotMap;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.adambots.Constants.AutoConstants;
+import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.commands.ArmCommands;
 import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.GrabCommand;
 import com.adambots.commands.UngrabCommand;
+import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
+import com.adambots.utils.Dash;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 /** Main class for all Auton Commands.
  * Uses new WPILib approach to chain commands.
@@ -36,6 +60,7 @@ public class AutonCommands {
     private GrabbyLifterSubsystem grabbyLifterSubsystem;
     private DrivetrainSubsystem drivetrainSubsystem;
     private ArmCommands armCommands;
+    private SwerveAutoBuilder autoBuilder;
 
     public static enum Direction{
         LEFT,
@@ -49,7 +74,22 @@ public class AutonCommands {
         this.grabbyLifterSubsystem = grabbyLifterSubsystem;
         this.drivetrainSubsystem = drivetrainSubsystem;
         this.armCommands = armCommands;
+
+        Map<String, Command> eventMap = new HashMap<>();
+
+        autoBuilder = new SwerveAutoBuilder(
+            drivetrainSubsystem::getPose, 
+            drivetrainSubsystem::resetOdometry, 
+            DriveConstants.kDriveKinematics, 
+            new PIDConstants(AutoConstants.kPXController, 0, AutoConstants.kDXController), 
+            new PIDConstants(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController), 
+            drivetrainSubsystem::setModuleStates,
+            eventMap, 
+            true,
+            drivetrainSubsystem);
     }
+
+    
 
     public Command testWaypoint() {
         Pose2d waypoint1 = getPose(-2, -1, 90);
@@ -209,30 +249,29 @@ public class AutonCommands {
         );
     }
 
-    public Command scorePickupBottomBlue() {
-        Pose2d waypoint1 = getPose(-5, -0.5, 160); //155
-        Pose2d waypoint2 = getPose(-0.15, -0.15, 10);
+    // private final String bottomCubePath1 = "Test2.wpilib.json";
 
-        return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
-            Commands.parallel(
-                new DriveTimeCommand(drivetrainSubsystem, 0.2, 0, 0, false, 0.5),
-                autoInitAndScoreCone()),
-            armCommands.homeCommand(),
-            new DriveTimeCommand(drivetrainSubsystem, 0.3, 0.1, 0, true, 0.2),
-            new DriveTimeCommand(drivetrainSubsystem, 0.8, 0.15, 0, true, 0.95),
-            new DriveTimeCommand(drivetrainSubsystem, 0.45, 0, 0, true, 1.4),
-            new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint1, 0),
-            pickupGamePiece(Direction.RIGHT),
-            Commands.parallel(
-                new DriveToWaypointCommand(drivetrainSubsystem, RobotMap.GyroSensor, waypoint2, 0),
-                new WaitCommand(2.5).andThen(armCommands.highCubeCommand())
-            ),
-            new DriveTimeCommand(drivetrainSubsystem, -0.4, 0, 0, true, 0.8),
-            new WaitCommand(0.2),
-            new UngrabCommand(grabSubsystem),
-            new WaitCommand(0.3),
-            armCommands.homeCommand()
-        )).andThen(new UngrabCommand(grabSubsystem));
+    public Command scorePickupBottomBlue() {
+
+        ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Test2",
+            new PathConstraints(1, 3));
+
+        return Commands.sequence(
+            resetGyroCommand(),
+            resetOdometryCommand(pathGroup.get(0).getInitialPose()),
+            autoBuilder.fullAuto(pathGroup)
+            // autoInitAndScoreCube(trajectory1),
+            // armCommands.homeCommand(),
+            // new WaitCommand(1.5),
+            // driveTrajectory(drivetrainSubsystem, trajectory1),
+            // stopDriving()
+            // armCommands.groundCommand(),
+            // new WaitCommand(1.5),
+            // new AutonPickupCommand(drivetrainSubsystem, grabSubsystem, 2.2),
+            // new WaitCommand(0.75),
+            // armCommands.homeCommand(),
+            // driveTrajectory(drivetrainSubsystem, trajectory2)
+        );
     }
 
     public Command scorePickupBottomRed() {
@@ -259,6 +298,54 @@ public class AutonCommands {
             new WaitCommand(0.3),
             armCommands.homeCommand()
         )).andThen(new UngrabCommand(grabSubsystem));
+    }
+
+    public Trajectory getTrajectory(String trajectoryName) {
+        Trajectory trajectory = new Trajectory();
+        String allianceColor = DriverStation.getAlliance().name();
+
+        // // If the trajectoryname already has Blue or Red in it, don't mess with it //Previously were getting errors maybe relating to this, commenting it out for now
+        // if (!(trajectoryName.startsWith("Blue") || trajectoryName.startsWith("Red"))) {
+
+        // trajectoryName = allianceColor + trajectoryName;
+        // }
+
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryName);
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + trajectoryName, ex.getStackTrace());
+        }
+
+        return trajectory;
+    }
+
+    public SwerveControllerCommand driveTrajectory(DrivetrainSubsystem drivetrainSubsystem, Trajectory trajectory) {
+        var thetaController = new ProfiledPIDController(
+            AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController,
+            AutoConstants.kThetaControllerConstraints);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+            trajectory,
+            drivetrainSubsystem::getPose, // Functional interface to feed supplier
+            DriveConstants.kDriveKinematics,
+
+            // Position controllers
+            new PIDController(AutoConstants.kPXController, 0, AutoConstants.kDXController),
+            new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController),
+            thetaController,
+            // () -> new Rotation2d(Math.toRadians(0)),
+            drivetrainSubsystem::setModuleStates,
+            drivetrainSubsystem
+        );
+
+        // Run the "Glass" program and then choose NetworkTables -> SmartDashboard ->
+        // Field2d to view the Field.
+        // The field image for 2023 is in utils folder
+        DriveConstants.field.getObject("traj").setTrajectory(trajectory);
+
+        return swerveControllerCommand;
     }
 
     public Pose2d getPose(double x, double y, double rotDegrees) {

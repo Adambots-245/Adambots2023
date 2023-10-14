@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -192,8 +193,8 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> drivetrainSubsystem.drive(
-                -Buttons.forwardSupplier.getAsDouble()*1.65,
-                -Buttons.sidewaysSupplier.getAsDouble()*1.65,
+                Buttons.forwardSupplier.getAsDouble()*1.65,
+                Buttons.sidewaysSupplier.getAsDouble()*1.65,
                 -Buttons.rotateSupplier.getAsDouble()*1.43,
                 true),
             drivetrainSubsystem));

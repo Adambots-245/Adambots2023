@@ -146,7 +146,7 @@ public class Buttons {
                 public Curve(String data){
                         //Parses data string into lookupTable on initialization
                         ArrayList<Double> vals = new ArrayList<Double>();
-                        String[] input = data.trim().split("!-!")[0].split(","); //Get values in first half of data string (Split at !)
+                        String[] input = data.trim().split("!-!")[0].split(","); //Get values in first half of data string (Split at !-!)
                         for (String string : input) {
                                 vals.add(Double.valueOf(string)); //Add each data value to vals
                         }
@@ -165,7 +165,7 @@ public class Buttons {
 	}
 
         /* 
-        DO NOT ADJUST THESE MANUALLY!!!
+        DO NOT ADJUST CURVES MANUALLY!!!
         Go to Adambots-245/Utils/Curve_Creator and you can import these curves into the program to adjust them, or make new ones
 
         Basic data structure (GENREALLY DO NOT NEED TO WORRY ABOUT):

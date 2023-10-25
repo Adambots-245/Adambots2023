@@ -120,12 +120,14 @@ public final class Constants {
 
         public static final double maxWaypointAutonSpeed = 1;
 
-        public static final double kPXController = 3.00; // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kPXController = 3.0; // P 0 0 values for auton X, Y, and Theta controllers
+        public static final double kDXController = 0; //0.093 // P 0 0 values for auton X, Y, and Theta controllers
+
         public static final double kPYController = 3.00; //3.05
-        public static final double kDXController = 0.083; //0.093 // P 0 0 values for auton X, Y, and Theta controllers
-        public static final double kDYController = 0.083;
-        public static final double kPThetaController = 0.78;
-        public static final double kDThetaController = 0.05;
+        public static final double kDYController = 0;
+
+        public static final double kPThetaController = 2.8; //2.25
+        public static final double kDThetaController = 0;
 
         // Constraint for the motion profiled robot angle controller
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

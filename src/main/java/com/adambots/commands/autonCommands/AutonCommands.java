@@ -254,7 +254,7 @@ public class AutonCommands {
     public Command scorePickupBottomBlue() {
 
         ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Test2",
-            new PathConstraints(1, 3));
+            new PathConstraints(1, 1));
 
         return Commands.sequence(
             resetGyroCommand(),
@@ -333,7 +333,7 @@ public class AutonCommands {
 
             // Position controllers
             new PIDController(AutoConstants.kPXController, 0, AutoConstants.kDXController),
-            new PIDController(AutoConstants.kPYController, 0, AutoConstants.kDYController),
+            new PIDController(AutoConstants.kPXController, 0, AutoConstants.kDXController),
             thetaController,
             // () -> new Rotation2d(Math.toRadians(0)),
             drivetrainSubsystem::setModuleStates,

@@ -7,6 +7,7 @@
 
 package com.adambots.Gamepad;
 
+import java.util.ArrayList;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -130,7 +131,7 @@ public class Buttons {
         public static final Trigger JoystickThumbRight = ex3dPro.povRight();
         public static final Trigger JoystickThumbCenter = ex3dPro.povCenter();
 
-        // deadzoning
+        // deadzoning - DO NOT USE ON TOP OF applyCurve, ADJUST THE CURVE ITSELF TO HAVE DESIRED DEADZONE
         public static double deaden(double input, double deadenThreshold) {
                 if (Math.abs(input) < deadenThreshold) {
                         return 0;
@@ -139,22 +140,43 @@ public class Buttons {
                 }
         }
 
+        public static class Curve{
+                Double[] lookupTable;
+
+                public Curve(String data){
+                        //Parses data string into lookupTable on initialization
+                        ArrayList<Double> vals = new ArrayList<Double>();
+                        String[] input = data.trim().split("!-!")[0].split(","); //Get values in first half of data string (Split at !-!)
+                        for (String string : input) {
+                                vals.add(Double.valueOf(string)); //Add each data value to vals
+                        }
+                        //Convert vals (ArrayList) to lookupTable (Double[]) for faster lookup time and ease of use
+                        this.lookupTable = vals.toArray(new Double[vals.size()]);
+                }
+
+                public double lookup(int index){
+                        return lookupTable[index];
+                }
+        }
+
         //Applies a custom curve to an input and returns the result
-        public static double applyCurve (double rawInput, double[] curve) {
-                return curve[(int)Math.floor(Math.abs(rawInput)*100)]*Math.signum(rawInput);          
+        public static double applyCurve (double rawInput, Curve curve) {
+                return curve.lookup((int)Math.floor(Math.abs(rawInput)*100))*Math.signum(rawInput);          
 	}
 
-        // DO NOT ADJUST THESE MANUALLY!!!
-        // Go to Adambots-245/Utils/Curve_Creator and you can import these curves into the program to adjust them, or make new ones
-        // The 2D arrays function like points on a graph (x, y)
-        // an example curve that would be default linear input from (0,0) to (1,1) is {{0.0, 0.0},{1.0, 1.0}}
-        static double[] forwardCurve = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.06,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.105,0.11,0.115,0.12,0.125,0.13,0.135,0.14,0.145,0.15,0.155,0.16,0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0};
-        static double[] sidewaysCurve = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.06,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.105,0.11,0.115,0.12,0.125,0.13,0.135,0.14,0.145,0.15,0.155,0.16,0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0};
-        static double[] rotateCurve = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.007,0.014,0.021,0.028,0.035,0.042,0.049,0.056,0.063,0.07,0.0765,0.083,0.0895,0.096,0.1025,0.109,0.1155,0.122,0.1285,0.135,0.1415,0.148,0.1545,0.161,0.1675,0.174,0.1805,0.187,0.1935,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0};
-        // static double[][] forwardCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
-        // static double[][] sidewaysCurve = {{0.0, 0.0},{0.1, 0.0},{0.2, 0.05},{0.5, 0.2},{0.7, 0.4},{0.8, 0.6},{1.0, 1.0}};
-        // static double[][] rotateCurve = {{0.0, 0.0},{0.2, 0.0},{0.3, 0.07},{0.5, 0.2},{0.7, 0.4},{1.0, 1.0}};
+        /* 
+        DO NOT ADJUST CURVES MANUALLY!!!
+        Go to Adambots-245/Utils/Curve_Creator and you can import these curves into the program to adjust them, or make new ones
 
+        Basic data structure (GENREALLY DO NOT NEED TO WORRY ABOUT):
+        0.0, 0.01, 0.02, ... 1.0 !-! 0.0, 1.0
+        first half of data string is a precalculated lookup table for the value at each point on the curve (0.01 x-axis increment)
+        second half of data string (seperated by !-!) is the points nessecary to recreate the orignal curve for its adjustment in CurveCreator
+        note - using a precalculated lookup table allows for much faster execution times, since no math is required to interpolate between points
+        */
+        static Curve forwardCurve = new Curve("0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.06,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.105,0.11,0.115,0.12,0.125,0.13,0.135,0.14,0.145,0.15,0.155,0.16,0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0!-!0.0,0.0,0.1,0.0,0.2,0.05,0.5,0.2,0.7,0.4,0.8,0.6,1.0,1.0");
+        static Curve sidewaysCurve = new Curve("0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05,0.055,0.06,0.065,0.07,0.075,0.08,0.085,0.09,0.095,0.1,0.105,0.11,0.115,0.12,0.125,0.13,0.135,0.14,0.145,0.15,0.155,0.16,0.165,0.17,0.175,0.18,0.185,0.19,0.195,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0!-!0.0,0.0,0.1,0.0,0.2,0.05,0.5,0.2,0.7,0.4,0.8,0.6,1.0,1.0");
+        static Curve rotateCurve = new Curve("0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.007,0.014,0.021,0.028,0.035,0.042,0.049,0.056,0.063,0.07,0.0765,0.083,0.0895,0.096,0.1025,0.109,0.1155,0.122,0.1285,0.135,0.1415,0.148,0.1545,0.161,0.1675,0.174,0.1805,0.187,0.1935,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0!-!0.0,0.0,0.2,0.0,0.3,0.07,0.5,0.2,0.7,0.4,1.0,1.0");
 
         // If Flight Joystick is connected, then return Joystick Y value - else return
         // Joystick value from XBoxController
@@ -188,7 +210,6 @@ public class Buttons {
          * Example: Buttons.rumble(Buttons.primaryJoystick, 2000, 1)
         */
         public static void rumble(CommandXboxController controller, int timeInMillis, int intensity0to1){
-
                 var joy = controller.getHID();
                 final int time = MathUtil.clamp(timeInMillis, 0, 5000);
 

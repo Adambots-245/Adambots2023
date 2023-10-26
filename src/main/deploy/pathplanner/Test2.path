@@ -2,15 +2,65 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.0,
-        "y": 4.9972951301109445
+        "x": 3.0,
+        "y": 5.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.674788923556532,
-        "y": 4.9972951301109445
+        "x": 4.0,
+        "y": 5.0
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": -180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.0,
+        "y": 5.0
+      },
+      "prevControl": {
+        "x": 4.0,
+        "y": 5.0
+      },
+      "nextControl": {
+        "x": 6.0,
+        "y": 5.0
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 5.5,
+        "y": 5.0
+      },
+      "prevControl": {
+        "x": 5.982989031598607,
+        "y": 5.012787892908168
+      },
+      "nextControl": {
+        "x": 5.017010968401395,
+        "y": 4.987212107091832
+      },
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -28,11 +78,11 @@
         "y": 5.0
       },
       "prevControl": {
-        "x": 2.0851320640589712,
+        "x": 5.3523156753801615,
         "y": 5.0
       },
       "nextControl": null,
-      "holonomicAngle": -180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -47,13 +97,6 @@
   ],
   "maxVelocity": 1.0,
   "maxAcceleration": 1.0,
-  "isReversed": true,
-  "markers": [
-    {
-      "position": 0.39636363636356253,
-      "names": [
-        "event"
-      ]
-    }
-  ]
+  "isReversed": null,
+  "markers": []
 }

@@ -24,8 +24,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
 
   private Thread visionThread;
@@ -39,6 +37,8 @@ public class Robot extends TimedRobot {
 
     Log.instance();
     Log.setFilter(Level.OFF);
+
+    RobotMap.GyroSensor.calibrationCheck(); // may take up to two seconds to complete
 
     if (Robot.isReal()) {
 
@@ -101,20 +101,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    CommandScheduler.getInstance().cancelAll(); //cancel all teleop or lingering commands
 
-    CommandScheduler.getInstance().cancelAll();
-
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    Command m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     SmartDashboard.putString("auton selected", m_autonomousCommand.toString());
 
     System.out.println("Init Auton.........");
     RobotMap.GyroSensor.reset();
-    RobotMap.GyroSensor.calibrationCheck(); // may take up to two seconds to complete
     System.out.println("Gyro Yaw at Startup: " + RobotMap.GyroSensor.getYaw());
-    CommandScheduler.getInstance().cancelAll(); // cancel all teleop commands
 
     // schedule the autonomous command
     if (m_autonomousCommand != null) {
@@ -136,9 +130,6 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
     CommandScheduler.getInstance().cancelAll();
   }
 
@@ -154,18 +145,13 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     // CommandScheduler.getInstance().cancelAll();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    Command m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       System.out.println("Scheduling test command");
       m_autonomousCommand.schedule();
     }
-    
-    // RobotMap.FrontLeftMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.BackLeftMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.FrontRightMotor.setNeutralMode(NeutralMode.Brake);
-    // RobotMap.BackRightMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   /**
@@ -173,6 +159,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    CommandScheduler.getInstance().run();
+
   }
 }

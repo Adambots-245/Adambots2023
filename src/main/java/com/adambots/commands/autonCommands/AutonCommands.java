@@ -165,7 +165,7 @@ public class AutonCommands {
 
     public Command scorePickupTopBlue() {
         Pose2d waypoint1 = getPose(-4.75, 0.5, 165);
-        Pose2d waypoint2 = getPose(-0.1, 0.9, -11);
+        Pose2d waypoint2 = getPose(-0.45, 0.9, -11);
         Pose2d waypoint3 = getPose(-6, 1, -4.5);
 
         return Commands.sequence(
@@ -188,7 +188,7 @@ public class AutonCommands {
 
     public Command scorePickupTopRed() {
         Pose2d waypoint1 = getPose(-4.75, -0.5, -165);
-        Pose2d waypoint2 = getPose(-0.1, -0.9, 11);
+        Pose2d waypoint2 = getPose(-0.45, -0.9, 11);
         Pose2d waypoint3 = getPose(-6, -1, 4.5);
 
         return Commands.sequence(
@@ -211,7 +211,7 @@ public class AutonCommands {
 
     public Command scorePickupBottomBlue() {
         Pose2d waypoint1 = getPose(-5, -0.5, 160); //155
-        Pose2d waypoint2 = getPose(-0.15, -0.15, 10);
+        Pose2d waypoint2 = getPose(-0.45, -0.15, 10); //x = -0.15
 
         return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
             Commands.parallel(
@@ -237,7 +237,7 @@ public class AutonCommands {
 
     public Command scorePickupBottomRed() {
         Pose2d waypoint1 = getPose(-5, 0.5, -160); //-155
-        Pose2d waypoint2 = getPose(-0.15, 0.15, -10);
+        Pose2d waypoint2 = getPose(-0.45, 0.15, -10);
 
         return Commands.deadline(new WaitCommand(14.8), Commands.sequence(
             Commands.parallel(

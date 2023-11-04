@@ -9,7 +9,6 @@ package com.adambots.sensors;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI.Port;
 

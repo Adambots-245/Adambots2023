@@ -40,20 +40,16 @@ public class Robot extends TimedRobot {
 
     RobotMap.GyroSensor.calibrationCheck(); // may take up to two seconds to complete
 
-    if (Robot.isReal()) {
-
-      // Starts vision thread only if not running in simulation mode
-      // Vision System calculates the angle to the target and posts it to the NetworkTable
-      
-      // Uncomment to start Vision Processing
-      // visionThread = vision.getVisionThread();
-      // visionThread.setDaemon(true);
+    // Vision System calculates the angle to the target and posts it to the NetworkTable
+    
+    // Uncomment to start Vision Processing
+    // visionThread = vision.getVisionThread();
+    // visionThread.setDaemon(true);
+    // visionThread.start();
+    
+    // Camera Feed Only - No Image Processing
+      // visionThread = new VisionProcessingSubsystem(new ConePipeline(), new CubePipeline()).getVisionThread();
       // visionThread.start();
-     
-      // Camera Feed Only - No Image Processing
-        // visionThread = new VisionProcessingSubsystem(new ConePipeline(), new CubePipeline()).getVisionThread();
-        // visionThread.start();
-    }
 
     // RobotMap.YellowLight.set(true);
 

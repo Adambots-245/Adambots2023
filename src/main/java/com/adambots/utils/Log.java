@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class Log {
     private Logger logger;
     private static String sfilterByClassName;
-    private String name;
+    // private String name;
 
     private static class InstanceHolder {
         private volatile static Log _instance = new Log();

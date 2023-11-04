@@ -4,8 +4,6 @@
 
 package com.adambots.commands.autonCommands;
 
-import com.adambots.RobotMap;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -14,19 +12,20 @@ import java.util.Map;
 
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
-import com.adambots.Constants.GrabbyConstants;
+import com.adambots.RobotMap;
 import com.adambots.commands.ArmCommands;
-import com.adambots.commands.FirstExtenderChangeStateCommand;
 import com.adambots.commands.GrabCommand;
 import com.adambots.commands.UngrabCommand;
-import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
-import com.adambots.utils.Dash;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,20 +34,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 /** Main class for all Auton Commands.
  * Uses new WPILib approach to chain commands.

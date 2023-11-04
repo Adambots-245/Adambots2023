@@ -4,17 +4,6 @@
 
 package com.adambots.subsystems;
 
-import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,23 +11,19 @@ import com.adambots.Constants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.utils.ModuleMap;
-import com.ctre.phoenix.unmanaged.Unmanaged;
 
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DrivetrainSubsystem extends SubsystemBase {
-  // Robot swerve modules
-  // private final SwerveModule m_frontLeft;
-  // private final SwerveModule m_rearLeft;
-  // private final SwerveModule m_frontRight;
-  // private final SwerveModule m_rearRight;
-
   // The gyro sensor
   private final Gyro m_gyro;
 
@@ -46,50 +31,17 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private SwerveDriveOdometry m_odometry;
 
   // Field details that can be viewed in Glass
-  private SimDouble m_simAngle;
   HashMap<ModulePosition, SwerveModule> swerveModules;
   private Accelerometer accelerometer = new BuiltInAccelerometer();
-  private LinearFilter xLinearFilter = LinearFilter.movingAverage(10);
   private LinearFilter yLinearFilter = LinearFilter.movingAverage(10);
 
   private boolean bumped = false;
 
   public DrivetrainSubsystem(HashMap<ModulePosition, SwerveModule> modules, Gyro gyro) {
-
-    // m_frontLeft = modules.get(DriveConstants.ModulePosition.FRONT_LEFT);
-    // m_frontRight = modules.get(DriveConstants.ModulePosition.FRONT_RIGHT);
-    // m_rearLeft = modules.get(DriveConstants.ModulePosition.REAR_LEFT);
-    // m_rearRight = modules.get(DriveConstants.ModulePosition.REAR_RIGHT);
-
     this.swerveModules = modules;
     m_gyro = gyro;
 
-    m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(),
-        ModuleMap.orderedModulePositions(swerveModules)
-    // new SwerveModulePosition[] {
-    // m_frontLeft.getPosition(),
-    // m_frontRight.getPosition(),
-    // m_rearLeft.getPosition(),
-    // m_rearRight.getPosition()
-    // }
-    );
-
-    // When the robot starts, the Gyro may not be ready to reset - wait 1 second and
-    // then reset
-    new Thread(() -> {
-      try {
-        Thread.sleep(1000);
-        zeroHeading();
-      } catch (Exception e) {
-      }
-    }).start();
-
-    if (RobotBase.isSimulation()) {
-
-      var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
-
-      m_simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
-    }
+    m_odometry = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(), ModuleMap.orderedModulePositions(swerveModules));
   }
 
   @Override
@@ -99,55 +51,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_gyro.getRotation2d(),
         ModuleMap.orderedModulePositions(swerveModules)
     );
-    // double xAcceleration = xLinearFilter.calculate(accelerometer.getX());
-    double yAcceleration = yLinearFilter.calculate(accelerometer.getY());
-
-    // SmartDashboard.putNumber("Xacceleration", xAcceleration);
-    // SmartDashboard.putNumber("Yacceleration", yAcceleration);
-
-    bumped = Math.abs(yAcceleration) > 0.5;
-    // Pose2d invPose = new Pose2d(new Translation2d(-getPose().getX(), -getPose().getY()), getPose().getRotation());
-    // Constants.DriveConstants.field.setRobotPose(invPose);
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    ChassisSpeeds chassisSpeedSim = DriveConstants.kDriveKinematics.toChassisSpeeds(
-        ModuleMap.orderedValues(getModuleStates(), new SwerveModuleState[0]));
-    // want to simulate navX gyro changing as robot turns
-    // information available is radians per second and this happens every 20ms
-    // radians/2pi = 360 degrees so 1 degree per second is radians / 2pi
-    // increment is made every 20 ms so radian adder would be (rads/sec) *(20/1000)
-    // degree adder would be radian adder * 360/2pi
-    // so degree increment multiplier is 360/100pi = 1.1459
-
-    double temp = chassisSpeedSim.omegaRadiansPerSecond * 1.1459155;
-
-    temp += m_simAngle.get();
-
-    m_simAngle.set(temp);
-
-    for (SwerveModule module : ModuleMap.orderedValuesList(swerveModules)) {
-      module.simulationPeriodic();
-    }
-
-    m_odometry.update(
-        new Rotation2d(m_simAngle.get()),
-        ModuleMap.orderedModulePositions(swerveModules)
-
-    // new SwerveModulePosition[] {
-    // m_frontLeft.getPosition(),
-    // m_frontRight.getPosition(),
-    // m_rearLeft.getPosition(),
-    // m_rearRight.getPosition()
-    // }
-    );
-
-    // System.out.println("Pose: " + getPose().toString());
 
     Constants.DriveConstants.field.setRobotPose(getPose());
 
-    Unmanaged.feedEnable(20);
+    double yAcceleration = yLinearFilter.calculate(accelerometer.getY());
+    // SmartDashboard.putNumber("Yacceleration", yAcceleration);
+    bumped = Math.abs(yAcceleration) > 0.5;
   }
 
   public Map<ModulePosition, SwerveModuleState> getModuleStates() {
@@ -170,8 +79,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   /**
    * Resets the odometry to the specified pose.
    *
-   * @param pose
-   *          The pose to which to set the odometry.
+   * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(m_gyro.getRotation2d(), ModuleMap.orderedModulePositions(swerveModules), pose);
@@ -191,7 +99,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
    *          field.
    */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d())
@@ -204,32 +111,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
   /**
    * Sets the swerve ModuleStates.
    *
-   * @param desiredStates
-   *          The desired SwerveModule states.
+   * @param desiredStates The desired SwerveModule states.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
 
     ModuleMap.setDesiredState(swerveModules, desiredStates);
-
-    // m_frontLeft.setDesiredState(desiredStates[0]);
-    // m_frontRight.setDesiredState(desiredStates[1]);
-    // m_rearLeft.setDesiredState(desiredStates[2]);
-    // m_rearRight.setDesiredState(desiredStates[3]);
   }
-
-  /** Resets the drive encoders to currently read a position of 0. */
-  // public void resetEncoders() {
-  //   swerveModules.get(ModulePosition.FRONT_LEFT).resetEncoders();
-  //   swerveModules.get(ModulePosition.FRONT_RIGHT).resetEncoders();
-  //   swerveModules.get(ModulePosition.REAR_LEFT).resetEncoders();
-  //   swerveModules.get(ModulePosition.REAR_RIGHT).resetEncoders();
-  //   // m_frontLeft.resetEncoders();
-  //   // m_frontRight.resetEncoders();
-  //   // m_rearLeft.resetEncoders();
-  //   // m_rearRight.resetEncoders();
-  // }
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
@@ -254,7 +142,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getRate();
   }
 
   public void setPIDValues(double kP, double kI, double kD) {
@@ -271,6 +159,4 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public boolean getBumped() {
     return bumped;
   }
-
-  
 }

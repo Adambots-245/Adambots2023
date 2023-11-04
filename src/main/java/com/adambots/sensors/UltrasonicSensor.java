@@ -6,9 +6,7 @@ package com.adambots.sensors;
 
 import com.adambots.utils.Dash;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.RobotController;
 
 /** Add your docs here. */
 public class UltrasonicSensor {

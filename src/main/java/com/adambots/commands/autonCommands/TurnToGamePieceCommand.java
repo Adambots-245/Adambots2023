@@ -8,8 +8,6 @@ import com.adambots.commands.autonCommands.AutonCommands.Direction;
 import com.adambots.sensors.Lidar;
 import com.adambots.subsystems.DrivetrainSubsystem;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TurnToGamePieceCommand extends CommandBase {

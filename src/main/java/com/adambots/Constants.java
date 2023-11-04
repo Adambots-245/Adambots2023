@@ -74,20 +74,7 @@ public final class Constants {
                 new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-        public static final boolean kGyroReversed = true;
-
-        // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-        // These characterization values MUST be determined either experimentally or
-        // theoretically
-        // for *your* robot's drive.
-        // The SysId tool provides a convenient method for obtaining these values for
-        // your robot.
-        public static final double ksVolts = 1;
-        public static final double kvVoltSecondsPerMeter = 0.8;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.15;
-
-        public static final double kMaxSpeedMetersPerSecond = 99; //Only used in Drive and SetModuleStates
-
+        public static final double kMaxSpeedMetersPerSecond = 99; //Used to desaturate module speeds - TODO: tune properly
         public static final double kSpeedThreshold = 0.001; //Minimum Speed for Swerve Modules
     }
 
@@ -100,7 +87,7 @@ public final class Constants {
         public static final double kDriveEncoderDistancePerPulse =
                 // Assumes the encoders are directly mounted on the wheel shafts
                 (kWheelDiameterMeters * Math.PI) / (double) kEncoderCPR;
-        public static final double kDriveEncoderScale = 0.0470915; //0.0470915
+        public static final double kDriveEncoderScale = 0.0470915;
  
         public static final double kTurningEncoderDistancePerPulse =
                 // Assumes the encoders are on a 1:1 reduction with the module shaft.

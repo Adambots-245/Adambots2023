@@ -35,20 +35,17 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
 
+  // The robot's subsystems and commands are defined here...
   private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.armRotationEncoder, RobotMap.lidar);
+  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby);
   private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
   private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
   private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, drivetrainSubsystem, armCommands, firstExtenderSubsystem);
 
-
-  // commands
-  // private SequentialCommandGroup autonDriveForwardGyroDistanceCommand;
-
+  //Creates a SmartDashboard element to allow drivers to select differnt autons
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /**
@@ -77,6 +74,7 @@ public class RobotContainer {
    */
   
   private void configureButtonBindings() {
+    //XBox Controller Keybinds
     Buttons.primaryBackButton.onTrue(armCommands.groundCommand());
     Buttons.primaryBackButton.onFalse(armCommands.homeCommand());
 
@@ -88,11 +86,12 @@ public class RobotContainer {
     Buttons.primaryLeftStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
     Buttons.primaryRightStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
 
+    Buttons.primaryDPadNE.whileTrue(armCommands.liftArmCommand()); //Allows for slightly imprecise input on DPad
     Buttons.primaryDPadN.whileTrue(armCommands.liftArmCommand());
-    Buttons.primaryDPadS.whileTrue(armCommands.lowerArmCommand());
-    Buttons.primaryDPadNE.whileTrue(armCommands.liftArmCommand());
-    Buttons.primaryDPadSE.whileTrue(armCommands.lowerArmCommand());
     Buttons.primaryDPadNW.whileTrue(armCommands.liftArmCommand());
+
+    Buttons.primaryDPadSE.whileTrue(armCommands.lowerArmCommand());
+    Buttons.primaryDPadS.whileTrue(armCommands.lowerArmCommand());
     Buttons.primaryDPadSW.whileTrue(armCommands.lowerArmCommand());
 
     Buttons.primaryAButton.onTrue(armCommands.midCubeCommand());
@@ -123,7 +122,7 @@ public class RobotContainer {
   }
 
   private void setupDashboard() {    
-    Command defaultCommand = autonCommands.autoInitAndScoreCone();
+    Command defaultCommand = autonCommands.autoInitAndScoreCone(); //Have a default setup so even if drivers forget to select an auton, preloaded objects are still scored
 
     autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
     autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());
@@ -132,14 +131,14 @@ public class RobotContainer {
     autoChooser.addOption("BLUE BottomSimple", autonCommands.scorePickupBottomBlue());
     autoChooser.addOption("RED BottomSimple", autonCommands.scorePickupBottomRed());
 
-
+    //Adds various data to the dashboard that is useful for driving and debugging
     SmartDashboard.putData("Auton Mode", autoChooser);
     SmartDashboard.putData("Field", Constants.DriveConstants.field);
 
-    Dash.add("Port 0 Current", () -> RobotMap.PDM.getCurrent(0));
-    Dash.add("Port 1 Current", () -> RobotMap.PDM.getCurrent(1));
-    Dash.add("Port 11 Current", () -> RobotMap.PDM.getCurrent(11));
-    Dash.add("Port 14 Current", () -> RobotMap.PDM.getCurrent(14));
+    // Dash.add("Port 0 Current", () -> RobotMap.PDM.getCurrent(0));
+    // Dash.add("Port 1 Current", () -> RobotMap.PDM.getCurrent(1));
+    // Dash.add("Port 11 Current", () -> RobotMap.PDM.getCurrent(11));
+    // Dash.add("Port 14 Current", () -> RobotMap.PDM.getCurrent(14));
 
     Dash.add("getY", Buttons.forwardSupplier);
     Dash.add("getX", Buttons.sidewaysSupplier);

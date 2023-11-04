@@ -7,12 +7,10 @@ package com.adambots.commands.autonCommands;
 import com.adambots.Constants.AutoConstants;
 import com.adambots.sensors.Gyro;
 import com.adambots.subsystems.DrivetrainSubsystem;
-import com.adambots.utils.Dash;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

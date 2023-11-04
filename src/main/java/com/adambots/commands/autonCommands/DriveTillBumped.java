@@ -10,9 +10,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveTillBumped extends CommandBase {
   private DrivetrainSubsystem drivetrainSubsystem;
-  private int inc;
 
-  /** Creates a new DriveToDistanceCommand. */
+  /** Creates a new DriveTillBumpedCommand. */
   public DriveTillBumped(DrivetrainSubsystem drivetrainSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrainSubsystem = drivetrainSubsystem;
@@ -23,7 +22,6 @@ public class DriveTillBumped extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    inc = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,13 +30,10 @@ public class DriveTillBumped extends CommandBase {
     drivetrainSubsystem.drive(0.45, 0, 0, false);
   }
 
-  // Called once the command ends or isp interrupted.
+  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     drivetrainSubsystem.stop();
-    if (interrupted) {
-      System.out.println("DriveToDistanceCommand Interrupted");
-    }
   }
 
 

@@ -18,16 +18,12 @@
         }
       ],
       "axisCount": 3,
-      "buttonCount": 8,
+      "buttonCount": 4,
       "buttonKeys": [
         90,
         88,
         67,
-        86,
-        66,
-        78,
-        77,
-        46
+        86
       ],
       "povConfig": [
         {
@@ -57,9 +53,9 @@
       "axisCount": 2,
       "buttonCount": 4,
       "buttonKeys": [
-        -1,
+        77,
         44,
-        -1,
+        46,
         47
       ],
       "povCount": 0
@@ -98,6 +94,5 @@
       "guid": "78696e70757401000000000000000000",
       "useGamepad": true
     }
-  ],
-  "zeroDisconnectedJoysticks": false
+  ]
 }

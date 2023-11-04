@@ -9,7 +9,6 @@ package com.adambots.sensors;
 
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Class that implements a Lidar sensor

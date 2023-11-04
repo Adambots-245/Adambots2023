@@ -12,24 +12,19 @@ import java.util.Map;
 
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
-import com.adambots.actuators.StepperMotor;
 import com.adambots.sensors.Gyro;
 import com.adambots.sensors.Lidar;
 import com.adambots.sensors.PhotoEye;
 import com.adambots.subsystems.SwerveModule;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 /**
  * Define all the devices here

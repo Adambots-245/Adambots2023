@@ -15,7 +15,6 @@ import com.adambots.Constants.GamepadConstants;
 import com.adambots.RobotMap;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -153,7 +152,11 @@ public class Buttons {
 
                         String[] input = data.trim().split(","); //Split string by comma to get each value
                         for (String str : input) {
-                                vals.add(Double.valueOf(str.replaceAll("*", ""))); //For each value remove the marker if there is one and append the number to vals
+                                if (str.contains("*")) {
+                                        vals.add(Double.valueOf(str.substring(0, str.length()-1))); //For each value remove the marker if there is one and append the number to vals
+                                } else {
+                                        vals.add(Double.valueOf(str));
+                                }
                         }
 
                         this.lookupTable = vals.toArray(new Double[vals.size()]); //Convert vals (ArrayList) to lookupTable (Double[]) for faster lookup time and ease of use

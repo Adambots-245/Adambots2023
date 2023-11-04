@@ -6,7 +6,6 @@ package com.adambots.subsystems;
 
 import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants;
-import com.adambots.sensors.PhotoEye;
 import com.adambots.utils.Dash;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -101,7 +100,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     if(targetPosition > 0){ //Calculate arm extension speed if target is positive
       secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -maxSpeed, maxSpeed);
-    }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye or we go massively negative
+    }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye or we go massively negative (stops constant belt slipping from maxRetraction sensor failure)
       if (secondExtender.getSelectedSensorPosition() > -GrabbyConstants.secondExtenderMaxExtend) {
         secondExtenderSpeed = -maxSpeed;
       } else {
@@ -111,29 +110,27 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
     failsafes();
     secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
-    // secondExtender.set(ControlMode.PercentOutput, 0);
   }
 
   private void failsafes() {
-    //Preventing the arm from going too far out or in
-
-    // if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.horizontalMaxEncoderValue && armLifterEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset < 5){
-    //   secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
-    // }
-
-    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue-GrabbyConstants.armEncoderCPR*3 && armLifterEncoder.getAbsolutePosition() > 200){ //limits vertical max entension
+    //limits max vertical entension
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue-GrabbyConstants.armEncoderCPR*3 && armLifterEncoder.getAbsolutePosition() > 200){
       if (secondExtenderSpeed > 0) {
         secondExtenderSpeed = 0;
       }
     }
-    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){ //also limits vertical max entension
+
+    //drives arm back in if it exceeds max vertical extension
+    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){ 
       secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     }
 
+    //limits max extenion
     if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;
     }
 
+    //Reset secondExtender encoder when max retraction is detected - May have negative impact if max retraction switch fails (use rising edge detection to mitigate)
     if(isMaxRetracted()){
       secondExtender.setSelectedSensorPosition(0);
       if(secondExtenderSpeed < 0){

@@ -18,6 +18,7 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 import com.adambots.subsystems.SecondExtenderSubsystem;
 import com.adambots.utils.Dash;
 import com.adambots.utils.Log;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -46,7 +47,7 @@ public class RobotContainer {
   private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, drivetrainSubsystem, armCommands, firstExtenderSubsystem);
 
   //Creates a SmartDashboard element to allow drivers to select differnt autons
-  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -130,6 +131,8 @@ public class RobotContainer {
     autoChooser.addOption("RED TopSimple", autonCommands.scorePickupTopRed());
     autoChooser.addOption("BLUE BottomSimple", autonCommands.scorePickupBottomBlue());
     autoChooser.addOption("RED BottomSimple", autonCommands.scorePickupBottomRed());
+
+    // autoChooser = AutoBuilder.buildAutoChooser();
 
     //Adds various data to the dashboard that is useful for driving and debugging
     SmartDashboard.putData("Auton Mode", autoChooser);

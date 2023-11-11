@@ -20,11 +20,14 @@ import com.adambots.subsystems.DrivetrainSubsystem;
 import com.adambots.subsystems.FirstExtenderSubsystem;
 import com.adambots.subsystems.GrabSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.auto.*;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+// import com.pathplanner.lib.PathPlanner;
+// import com.pathplanner.lib.PathPlannerTrajectory;
+// import com.pathplanner.lib.auto.PIDConstants;
+// import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -51,7 +54,6 @@ public class AutonCommands {
     private GrabbyLifterSubsystem grabbyLifterSubsystem;
     private DrivetrainSubsystem drivetrainSubsystem;
     private ArmCommands armCommands;
-    private SwerveAutoBuilder autoBuilder;
 
     public static enum Direction{
         LEFT,
@@ -68,16 +70,20 @@ public class AutonCommands {
 
         Map<String, Command> eventMap = new HashMap<>();
 
-        autoBuilder = new SwerveAutoBuilder(
-            drivetrainSubsystem::getPose, 
-            drivetrainSubsystem::resetOdometry, 
-            DriveConstants.kDriveKinematics, 
-            new PIDConstants(AutoConstants.kPXController, 0, AutoConstants.kDXController), 
-            new PIDConstants(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController), 
-            drivetrainSubsystem::setModuleStates,
-            eventMap, 
-            true,
-            drivetrainSubsystem);
+        AutoBuilder.configureHolonomic(
+            drivetrainSubsystem::getPose, // Robot pose supplier
+            drivetrainSubsystem::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            drivetrainSubsystem::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            drivetrainSubsystem::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            new HolonomicPathFollowerConfig(
+                new PIDConstants(AutoConstants.kPXController, 0, AutoConstants.kDXController), 
+                new PIDConstants(AutoConstants.kPThetaController, 0, AutoConstants.kDThetaController),
+                4.5, // Max module speed, in m/s
+                0.43, // Drive base radius in meters. Distance from robot center to furthest module.
+                new ReplanningConfig() // Default path replanning config. See the API for the options here
+            ),
+        drivetrainSubsystem // Reference to this subsystem to set requirements
+        );
     }
 
     
@@ -244,13 +250,13 @@ public class AutonCommands {
 
     public Command scorePickupBottomBlue() {
 
-        ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Test2",
-            new PathConstraints(1, 1));
+        // ArrayList<PathPlannerTrajectory> pathGroup = (ArrayList<PathPlannerTrajectory>) PathPlanner.loadPathGroup("Test3",
+        //     new PathConstraints(1, 1));
 
         return Commands.sequence(
-            resetGyroCommand(),
-            resetOdometryCommand(pathGroup.get(0).getInitialPose()),
-            autoBuilder.fullAuto(pathGroup)
+            resetGyroCommand()
+            // resetOdometryCommand(pathGroup.get(0).getInitialPose()),
+            // autoBuilder.fullAuto(pathGroup)
             // autoInitAndScoreCube(trajectory1),
             // armCommands.homeCommand(),
             // new WaitCommand(1.5),

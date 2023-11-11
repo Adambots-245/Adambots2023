@@ -8,9 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.adambots.Constants;
+import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.utils.ModuleMap;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -67,6 +72,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return map;
   }
 
+  public SwerveModuleState[] getModuleStatesArray() {
+    SwerveModuleState[] arr = new SwerveModuleState[4];
+    int j = 0;
+    for (ModulePosition i : swerveModules.keySet()) {
+      arr[j++] = swerveModules.get(i).getState();
+    }
+    return arr;
+  }
+
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -106,6 +120,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
 
     ModuleMap.setDesiredState(swerveModules, swerveModuleStates);
+
+    // swerveModuleStates[0].
+  }
+
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
+    ModuleMap.setDesiredState(swerveModules, swerveModuleStates);
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStatesArray());
   }
 
   /**

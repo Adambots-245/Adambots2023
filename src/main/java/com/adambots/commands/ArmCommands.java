@@ -142,4 +142,7 @@ public Command ungrabWithRetractCommand() {
 public Command grabCommand() {
         return new GrabCommand(grabSubsystem);
 }
-}
+
+public Command ungrabCommand() {
+        return new UngrabCommand(grabSubsystem);
+}}

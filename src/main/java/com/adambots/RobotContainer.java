@@ -18,7 +18,6 @@ import com.adambots.subsystems.GrabbyLifterSubsystem;
 import com.adambots.subsystems.SecondExtenderSubsystem;
 import com.adambots.utils.Dash;
 import com.adambots.utils.Log;
-import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;

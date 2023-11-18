@@ -123,7 +123,16 @@ public class RobotContainer {
   }
 
   private void setupDashboard() {    
-    autoChooser = AutoBuilder.buildAutoChooser();
+    Command defaultCommand = autonCommands.autoInitAndScoreCone(); //Have a default setup so even if drivers forget to select an auton, preloaded objects are still scored
+
+    autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
+    autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());
+    autoChooser.addOption("BLUE TopSimple", autonCommands.scorePickupTopBlue());
+    autoChooser.addOption("RED TopSimple", autonCommands.scorePickupTopRed());
+    autoChooser.addOption("BLUE BottomSimple", autonCommands.scorePickupBottomBlue());
+    autoChooser.addOption("RED BottomSimple", autonCommands.scorePickupBottomRed());
+
+    // autoChooser = AutoBuilder.buildAutoChooser();
 
     //Adds various data to the dashboard that is useful for driving and debugging
     SmartDashboard.putData("Auton Mode", autoChooser);

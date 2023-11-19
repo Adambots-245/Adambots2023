@@ -6,9 +6,6 @@ package com.adambots.commands.autonCommands;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.adambots.Constants.AutoConstants;
 import com.adambots.Constants.DriveConstants;
@@ -22,10 +19,6 @@ import com.adambots.subsystems.GrabSubsystem;
 import com.adambots.subsystems.GrabbyLifterSubsystem;
 import com.pathplanner.lib.auto.*;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-// import com.pathplanner.lib.PathPlanner;
-// import com.pathplanner.lib.PathPlannerTrajectory;
-// import com.pathplanner.lib.auto.PIDConstants;
-// import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
@@ -68,8 +61,6 @@ public class AutonCommands {
         this.drivetrainSubsystem = drivetrainSubsystem;
         this.armCommands = armCommands;
 
-        Map<String, Command> eventMap = new HashMap<>();
-
         AutoBuilder.configureHolonomic(
             drivetrainSubsystem::getPose, // Robot pose supplier
             drivetrainSubsystem::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
@@ -89,7 +80,7 @@ public class AutonCommands {
     
 
     public Command testWaypoint() {
-        Pose2d waypoint1 = getPose(-2, -1, 90);
+        // Pose2d waypoint1 = getPose(-2, -1, 90);
 
         return Commands.sequence(
             // resetGyroCommand(),

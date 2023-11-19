@@ -19,12 +19,14 @@ import com.adambots.subsystems.SecondExtenderSubsystem;
 import com.adambots.utils.Dash;
 import com.adambots.utils.Log;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 
@@ -58,6 +60,8 @@ public class RobotContainer {
     // Don't enable this for the competition
     // Log.saveToFile("/home/lvuser/robot.txt");
     Log.info("Starting Robot Container ...");
+
+    registerNamedCommands();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -120,6 +124,10 @@ public class RobotContainer {
 
     // Buttons.JoystickButton16.onTrue(new TestAutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem).andThen(new HockeyStopCommand(drivetrainSubsystem)));
     // Buttons.JoystickButton16.onTrue(new AutoBalanceCommand(drivetrainSubsystem, RobotMap.GyroSensor, grabbyLifterSubsystem));
+  }
+
+  private void registerNamedCommands() {
+    NamedCommands.registerCommand("Test1", new PrintCommand("Test1!"));
   }
 
   private void setupDashboard() {    

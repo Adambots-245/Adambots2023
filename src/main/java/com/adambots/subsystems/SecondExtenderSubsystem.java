@@ -7,10 +7,11 @@ package com.adambots.subsystems;
 import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.utils.Dash;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -22,7 +23,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   private final TalonFX secondExtender;
   private final PIDController pid;
   private final DigitalInput photoEye;
-  private final WPI_CANCoder armLifterEncoder;
+  private final CANcoder armLifterEncoder;
 
 
   private double secondExtenderSpeed = 0;
@@ -32,16 +33,21 @@ public class SecondExtenderSubsystem extends SubsystemBase {
 
   private double maxTotal;
 
-  public SecondExtenderSubsystem(TalonFX secondExtender, DigitalInput photoEye, WPI_CANCoder armLifterEncoder) {
+  public SecondExtenderSubsystem(TalonFX secondExtender, DigitalInput photoEye, CANcoder armLifterEncoder) {
     this.secondExtender = secondExtender;
-    secondExtender.setInverted(true);
-    secondExtender.setNeutralMode(NeutralMode.Brake);
+
+    var talonFXConfigurator = secondExtender.getConfigurator();
+    var motorConfigs = new MotorOutputConfigs();
+
+    motorConfigs.NeutralMode = NeutralModeValue.Brake;
+    motorConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    talonFXConfigurator.apply(motorConfigs);
 
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.secondExtenderP, Constants.GrabbyConstants.secondExtenderI, Constants.GrabbyConstants.secondExtenderD);
     this.armLifterEncoder = armLifterEncoder;
 
-    Dash.add("Second Extender Encoder", () -> secondExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
+    Dash.add("Second Extender Encoder", () -> secondExtender.getPosition().getValueAsDouble()/GrabbyConstants.armEncoderCPR);
     Dash.add("Second Extender Speed", () -> secondExtenderSpeed);
     Dash.add("Second PhotoEye", () -> isMaxRetracted());
   }
@@ -74,7 +80,7 @@ public class SecondExtenderSubsystem extends SubsystemBase {
   }
 
   public void stopExtending(){
-    targetPosition = secondExtender.getSelectedSensorPosition();
+    targetPosition = getEncoder();
   }
 
   public boolean isMaxRetracted () {
@@ -90,18 +96,23 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     offset = MathUtil.clamp(offset, -5, 5);
   }
 
+  public double getEncoder () {
+    // secondExtender.getPosition().refresh();
+    return secondExtender.getPosition().getValueAsDouble();
+  }
+
   @Override
   public void periodic() {
-    maxTotal = (28.646 + 152.727)/Math.cos(Math.toRadians(armLifterEncoder.getAbsolutePosition() + GrabbyConstants.limitOffset + offset)); //limits horizontal max extension
+    maxTotal = (28.646 + 152.727)/Math.cos(Math.toRadians(getEncoder() + GrabbyConstants.limitOffset + offset)); //limits horizontal max extension
     if(maxTotal <= 62 + (targetPosition/GrabbyConstants.armEncoderCPR) + 89.09){
       targetPosition = (maxTotal - (62 + 89.09 - 6))*GrabbyConstants.armEncoderCPR;
     }
 
     if(targetPosition > 0){ //Calculate arm extension speed if target is positive
-      secondExtenderSpeed = pid.calculate(secondExtender.getSelectedSensorPosition(), targetPosition);
+      secondExtenderSpeed = pid.calculate(getEncoder(), targetPosition);
       secondExtenderSpeed = MathUtil.clamp(secondExtenderSpeed, -maxSpeed, maxSpeed);
     }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye or we go massively negative (stops constant belt slipping from maxRetraction sensor failure)
-      if (secondExtender.getSelectedSensorPosition() > -GrabbyConstants.secondExtenderMaxExtend) {
+      if (getEncoder() > -GrabbyConstants.secondExtenderMaxExtend) {
         secondExtenderSpeed = -maxSpeed;
       } else {
         secondExtenderSpeed = 0;
@@ -109,37 +120,37 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     }
 
     failsafes();
-    secondExtender.set(ControlMode.PercentOutput, secondExtenderSpeed);
+    secondExtender.set(secondExtenderSpeed);
   }
 
   private void failsafes() {
     //limits max vertical entension
-    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue-GrabbyConstants.armEncoderCPR*3 && armLifterEncoder.getAbsolutePosition() > 200){
+    if(getEncoder() > GrabbyConstants.veritcalMaxEncoderValue-GrabbyConstants.armEncoderCPR*3 && armLifterEncoder.getAbsolutePosition().getValueAsDouble() > 200){
       if (secondExtenderSpeed > 0) {
         secondExtenderSpeed = 0;
       }
     }
 
     //drives arm back in if it exceeds max vertical extension
-    if(secondExtender.getSelectedSensorPosition() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition() > 200){ 
+    if(getEncoder() > GrabbyConstants.veritcalMaxEncoderValue && armLifterEncoder.getAbsolutePosition().getValueAsDouble() > 200){ 
       secondExtenderSpeed = -GrabbyConstants.extenderSpeed;
     }
 
     //limits max extenion
-    if(secondExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
+    if(getEncoder() >= Constants.GrabbyConstants.secondExtenderMaxExtend && secondExtenderSpeed > 0){
       secondExtenderSpeed = 0;
     }
 
     //Reset secondExtender encoder when max retraction is detected - May have negative impact if max retraction switch fails (use rising edge detection to mitigate)
     if(isMaxRetracted()){
-      secondExtender.setSelectedSensorPosition(0);
+      secondExtender.setPosition(0);
       if(secondExtenderSpeed < 0){
         secondExtenderSpeed = 0;
       }
     }
 
     //Preventing the arm from extending into the ground
-    if (armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundLifterValue + 10) {
+    if (armLifterEncoder.getAbsolutePosition().getValueAsDouble() <= Constants.GrabbyConstants.groundLifterValue + 10) {
         targetPosition = 0;
     } 
   }

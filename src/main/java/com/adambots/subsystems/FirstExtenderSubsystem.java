@@ -8,10 +8,11 @@ import com.adambots.Constants;
 import com.adambots.Constants.GrabbyConstants;
 import com.adambots.sensors.PhotoEye;
 import com.adambots.utils.Dash;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -22,22 +23,28 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   private final TalonFX firstExtender;
   private final PIDController pid;
   private final PhotoEye photoEye;
-  private final WPI_CANCoder armLifterEncoder;
+  private final CANcoder armLifterEncoder;
 
 
   private double firstExtenderSpeed = 0;
   private double targetPosition = Constants.GrabbyConstants.initState.getFirstExtendTarget();
 
-  public FirstExtenderSubsystem(TalonFX firstExtender, PhotoEye photoEye, WPI_CANCoder armLifterEncoder) {
+  public FirstExtenderSubsystem(TalonFX firstExtender, PhotoEye photoEye, CANcoder armLifterEncoder) {
     this.firstExtender = firstExtender;
-    firstExtender.setInverted(true);
-    firstExtender.setNeutralMode(NeutralMode.Brake);
+
+    var talonFXConfigurator = firstExtender.getConfigurator();
+    var motorConfigs = new MotorOutputConfigs();
+
+    motorConfigs.NeutralMode = NeutralModeValue.Brake;
+    motorConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    talonFXConfigurator.apply(motorConfigs);
+    
     // firstExtender.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 20, 25, 0.1));
     this.photoEye = photoEye;
     pid = new PIDController(Constants.GrabbyConstants.firstExtenderP, Constants.GrabbyConstants.firstExtenderI, Constants.GrabbyConstants.firstExtenderD);
     this.armLifterEncoder = armLifterEncoder;
     
-    Dash.add("First Extender Encoder", () -> firstExtender.getSelectedSensorPosition()/GrabbyConstants.armEncoderCPR);
+    Dash.add("First Extender Encoder", () -> firstExtender.getPosition().getValueAsDouble()/GrabbyConstants.armEncoderCPR);
     Dash.add("First Extender Speed", () -> firstExtenderSpeed);
     Dash.add("first PhotoEye", () -> isMaxRetracted());
   }
@@ -66,11 +73,11 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   public void stopExtending(){
-    targetPosition = firstExtender.getSelectedSensorPosition();
+    targetPosition = getEncoder();
   }
 
   public boolean isMaxExtended () {
-    return firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100;
+    return getEncoder() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100;
   }
 
   public boolean isMaxRetracted () {
@@ -78,17 +85,18 @@ public class FirstExtenderSubsystem extends SubsystemBase {
   }
 
   public double getEncoder () {
-    return firstExtender.getSelectedSensorPosition();
+    // firstExtender.getPosition().refresh();
+    return firstExtender.getPosition().getValueAsDouble();
   }
 
   @Override
   public void periodic() {
     
     if(targetPosition > 0){ //Calculate arm extension speed if target is positive
-      firstExtenderSpeed = pid.calculate(firstExtender.getSelectedSensorPosition(), targetPosition);
+      firstExtenderSpeed = pid.calculate(getEncoder(), targetPosition);
       firstExtenderSpeed = MathUtil.clamp(firstExtenderSpeed, -Constants.GrabbyConstants.extenderSpeed, Constants.GrabbyConstants.extenderSpeed);
     }else if(!isMaxRetracted()){ //Otherwise just retract until we see photoeye or we go massively negative
-      if (firstExtender.getSelectedSensorPosition() > -GrabbyConstants.firstExtenderMaxExtend) {
+      if (getEncoder() > -GrabbyConstants.firstExtenderMaxExtend) {
         firstExtenderSpeed = -GrabbyConstants.extenderSpeed;
       } else {
         firstExtenderSpeed = 0;
@@ -96,23 +104,22 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     }
     
     failsafes();
-    firstExtender.set(ControlMode.PercentOutput, firstExtenderSpeed);
-    // firstExtender.set(ControlMode.PercentOutput, 0);
+    firstExtender.set(firstExtenderSpeed);
   }
 
   private void failsafes() {
-    if(firstExtender.getSelectedSensorPosition() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100 && firstExtenderSpeed > 0){
+    if(getEncoder() >= Constants.GrabbyConstants.firstExtenderMaxExtend-100 && firstExtenderSpeed > 0){
       firstExtenderSpeed = 0;
     }
 
     if(isMaxRetracted()){
-      firstExtender.setSelectedSensorPosition(0);
+      firstExtender.setPosition(0);
       if(firstExtenderSpeed < 0){
         firstExtenderSpeed = 0;
       }
     }
 
-    if (armLifterEncoder.getAbsolutePosition() <= Constants.GrabbyConstants.groundLifterValue + 10) {
+    if (armLifterEncoder.getAbsolutePosition().getValueAsDouble() <= Constants.GrabbyConstants.groundLifterValue + 10) {
       targetPosition = 0;
     } 
   }

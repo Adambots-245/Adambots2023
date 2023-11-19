@@ -7,7 +7,7 @@ package com.adambots.subsystems;
 import com.adambots.Constants.DriveConstants;
 import com.adambots.Constants.DriveConstants.ModulePosition;
 import com.adambots.Constants.ModuleConstants;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -25,7 +25,7 @@ public class SwerveModule {
   private final CANSparkMax m_driveMotor;
   private final CANSparkMax m_turningMotor;
 
-  private final WPI_CANCoder m_absoluteEncoder;
+  private final CANcoder m_absoluteEncoder;
   private final RelativeEncoder m_driveEncoder;
   // private final CANCoderConfiguration m_canCoderConfig = new CANCoderConfiguration();
 
@@ -81,7 +81,7 @@ public class SwerveModule {
     m_turningMotor.enableVoltageCompensation(12.6);
     // m_turningMotor.setOpenLoopRampRate(0.1);
 
-    m_absoluteEncoder = new WPI_CANCoder(turningEncoderChannel);
+    m_absoluteEncoder = new CANcoder(turningEncoderChannel);
     m_driveEncoder = m_driveMotor.getEncoder();
 
     //TODO: Utilize driveEncoder and turningEncoder Reversed flags - instead of negating Joystick values in RobotContainer
@@ -103,7 +103,7 @@ public class SwerveModule {
    */
   public SwerveModuleState getState() {
     double speedMetersPerSecond = m_driveEncoder.getVelocity() / 60.0; //TODO: Fix this complete lack of sensible units
-    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());
+    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition().getValueAsDouble());
     return new SwerveModuleState(speedMetersPerSecond, new Rotation2d(turningRadians));
   }
 
@@ -118,7 +118,7 @@ public class SwerveModule {
     }
 
     double speedMetersPerSecond = ModuleConstants.kDriveEncoderDistancePerPulse * m_driveEncoder.getVelocity(); //TODO: Fix this complete lack of sensible units
-    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());
+    double turningRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition().getValueAsDouble());
 
     // System.out.printf("Speed: %f, Turn: %f\n", speedMetersPerSecond, turningRadians);
     // System.out.printf("Absolute Encoder: %f\n", m_absoluteEncoder.getAbsolutePosition());
@@ -157,7 +157,7 @@ public class SwerveModule {
    */
   public SwerveModulePosition getPosition() {
     double distance = m_driveEncoder.getPosition() * ModuleConstants.kDriveEncoderScale;
-    double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition());
+    double turningDistance = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition().getValueAsDouble());
     
     // System.out.printf("Distance: %f | Turn: %f \n", m_driveEncoder.getPosition(), turningDistance);
     // SmartDashboard.putNumber("Turningdistance " + m_position.name(), m_turningEncoder.getPosition());
@@ -172,7 +172,7 @@ public class SwerveModule {
    */
   public void turn(double angle, double turningSpeed) { //TODO: Test and get this function working
 
-    double currentModuleAngleInRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition()); 
+    double currentModuleAngleInRadians = Units.degreesToRadians(m_absoluteEncoder.getAbsolutePosition().getValueAsDouble()); 
     var radAngle = Units.degreesToRadians(angle);
     double turnAngleError = Math.abs(radAngle - currentModuleAngleInRadians);
     

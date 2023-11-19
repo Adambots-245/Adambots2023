@@ -16,8 +16,8 @@ import com.adambots.sensors.Gyro;
 import com.adambots.sensors.Lidar;
 import com.adambots.sensors.PhotoEye;
 import com.adambots.subsystems.SwerveModule;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -62,9 +62,9 @@ public class RobotMap {
 
         // Arm and Grabby Actuators
         public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
-        public static final WPI_TalonFX firstArmExtender = new WPI_TalonFX(firstArmExtenderPort);
-        public static final WPI_TalonFX secondArmExtender = new WPI_TalonFX(secondArmExtenderPort);
-        public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
+        public static final TalonFX firstArmExtender = new TalonFX(firstArmExtenderPort);
+        public static final TalonFX secondArmExtender = new TalonFX(secondArmExtenderPort);
+        public static final TalonFX armLifter = new TalonFX(armLiftPort);
         // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
         // public static final StepperMotor grabbyTiltMotor = new StepperMotor(new CANSparkMax(grabbyMotorPort, MotorType.kBrushless), 270, false);
 
@@ -75,7 +75,7 @@ public class RobotMap {
 
         // Robot Devices and Sensors
         public static final Gyro GyroSensor = Gyro.getInstance();
-        public static final WPI_CANCoder armRotationEncoder = new WPI_CANCoder(armRotationEncoderPort);
+        public static final CANcoder armRotationEncoder = new CANcoder(armRotationEncoderPort);
         public static final PhotoEye firstExtenderPhotoEye = new PhotoEye(leftArmLimitPort);
         // public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
         public static final DigitalInput secondExtenderPhotoEye = new DigitalInput(rightArmLimitPort);

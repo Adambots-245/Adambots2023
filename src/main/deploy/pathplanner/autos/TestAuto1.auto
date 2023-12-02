@@ -8,7 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "TestPath1"
           }
         },
         {
@@ -20,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Test1"
+            "name": "TestCommand1"
           }
         }
       ]

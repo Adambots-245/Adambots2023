@@ -400,7 +400,7 @@ public final class Constants {
         //general
         public static final double firstExtenderMaxExtend = 60 * armEncoderCPR; //60.25
         public static final double secondExtenderMaxExtend = 70 * armEncoderCPR;
-        public static final double lifterSpeed = 1; //0.65
+        public static final double lifterSpeed = 0.1;//1; //0.65
         public static final double manualLifterSpeed = 0.18;
         public static final double extenderSpeed = 0.8; //0.8
         public static final double linearExtenderSpeed = 0.24;

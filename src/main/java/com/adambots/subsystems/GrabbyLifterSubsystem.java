@@ -88,8 +88,8 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     armLifterSpeed = pid.calculate(armLifterEncoder.getAbsolutePosition().getValueAsDouble(), targetPosition);
     armLifterSpeed = MathUtil.clamp(armLifterSpeed, -maxSpeed, maxSpeed);
     failsafes();
-    // armLifter.set(armLifterSpeed);
-    armLifter.set(0);
+    armLifter.set(armLifterSpeed);
+    // armLifter.set(0);
   }
 
   private void failsafes() {

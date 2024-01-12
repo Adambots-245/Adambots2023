@@ -39,17 +39,6 @@ public class RobotMap {
 
         // PORTS Definition - This should be the only place to define all ports
         public final static I2C.Port I2C_PORT = I2C.Port.kOnboard;
-        public static final int kLidarDio = 4;
-        
-        public static final int armLiftPort = 22;
-        public static final int firstArmExtenderPort = 21;
-        public static final int secondArmExtenderPort = 10;
-        public static final int grabbyPort = 0;
-        public static final int ungrabbyPort = 1;
-        public static final int leftArmLimitPort = 1;
-        public static final int rightArmLimitPort = 0;
-        public static final int armRotationEncoderPort = 6;
-        public static final int grabbyMotorPort = 19;
 
         // CAN bus ports
         public static final int kRearLeftEncoderPort = 2;
@@ -65,14 +54,6 @@ public class RobotMap {
         public static final int kFrontLeftTurningMotorPort = 15;
         public static final int kFrontLeftDriveMotorPort = 17;        
 
-        // Arm and Grabby Actuators
-        public static final DoubleSolenoid grabby = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, grabbyPort, ungrabbyPort);
-        public static final WPI_TalonFX firstArmExtender = new WPI_TalonFX(firstArmExtenderPort);
-        public static final WPI_TalonFX secondArmExtender = new WPI_TalonFX(secondArmExtenderPort);
-        public static final WPI_TalonFX armLifter = new WPI_TalonFX(armLiftPort);
-        // public static final CANSparkMax grabbyMotor = new CANSparkMax(kGrabbyMotorPort, MotorType.kBrushless);
-        // public static final StepperMotor grabbyTiltMotor = new StepperMotor(new CANSparkMax(grabbyMotorPort, MotorType.kBrushless), 270, false);
-
         // Operator Interface (Joystick and XBoxControllers)
         public static final int kJoystickControllerPort = 0;
         public static final int kPrimaryControllerPort = 1; // XBOX Controller
@@ -80,11 +61,6 @@ public class RobotMap {
 
         // Robot Devices and Sensors
         public static final Gyro GyroSensor = Gyro.getInstance();
-        public static final WPI_CANCoder armRotationEncoder = new WPI_CANCoder(armRotationEncoderPort);
-        public static final PhotoEye firstExtenderPhotoEye = new PhotoEye(leftArmLimitPort);
-        // public static final PhotoEye secondExtenderPhotoEye = new PhotoEye(rightArmLimitPort);
-        public static final DigitalInput secondExtenderPhotoEye = new DigitalInput(rightArmLimitPort);
-        public static final Lidar lidar = new Lidar(kLidarDio);
 
         // Robot Swerve Modules
         public static final HashMap<ModulePosition, SwerveModule> swerveModules = new HashMap<>(

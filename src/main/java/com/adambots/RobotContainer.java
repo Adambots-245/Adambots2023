@@ -9,17 +9,8 @@
 package com.adambots;
 
 import com.adambots.Gamepad.Buttons;
-import com.adambots.commands.ArmCommands;
-import com.adambots.commands.autonCommands.AutonCommands;
 import com.adambots.commands.autonCommands.DriveTimeCommand;
-import com.adambots.commands.autonCommands.DriveToWaypointCommand;
-import com.adambots.commands.autonCommands.TurnToGamePieceCommand;
-import com.adambots.commands.autonCommands.AutonCommands.Direction;
 import com.adambots.subsystems.DrivetrainSubsystem;
-import com.adambots.subsystems.FirstExtenderSubsystem;
-import com.adambots.subsystems.GrabSubsystem;
-import com.adambots.subsystems.GrabbyLifterSubsystem;
-import com.adambots.subsystems.SecondExtenderSubsystem;
 import com.adambots.utils.Dash;
 import com.adambots.utils.Log;
 
@@ -42,14 +33,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
+  // private final GrabbyLifterSubsystem grabbyLifterSubsystem = new GrabbyLifterSubsystem(RobotMap.armLifter, RobotMap.armRotationEncoder);
   // private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.grabbyTiltMotor, RobotMap.armRotationEncoder, RobotMap.lidar);
-  private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.armRotationEncoder, RobotMap.lidar);
-  private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
-  private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
+  // private final GrabSubsystem grabSubsystem = new GrabSubsystem(RobotMap.grabby, RobotMap.armRotationEncoder, RobotMap.lidar);
+  // private final FirstExtenderSubsystem firstExtenderSubsystem = new FirstExtenderSubsystem(RobotMap.firstArmExtender, RobotMap.firstExtenderPhotoEye, RobotMap.armRotationEncoder);
+  // private final SecondExtenderSubsystem secondExtenderSubsystem = new SecondExtenderSubsystem(RobotMap.secondArmExtender, RobotMap.secondExtenderPhotoEye, RobotMap.armRotationEncoder);
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem(RobotMap.swerveModules, RobotMap.GyroSensor);
-  private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
-  private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, drivetrainSubsystem, armCommands);
+  // private final ArmCommands armCommands = new ArmCommands(firstExtenderSubsystem, secondExtenderSubsystem, grabbyLifterSubsystem, grabSubsystem);
+  // private final AutonCommands autonCommands  = new AutonCommands(grabSubsystem, grabbyLifterSubsystem, drivetrainSubsystem, armCommands);
 
 
   // commands
@@ -84,46 +75,46 @@ public class RobotContainer {
   
   private void configureButtonBindings() {
     //Enable for XBox controller code
-    Buttons.primaryBackButton.onTrue(armCommands.groundCommand());
-    Buttons.primaryBackButton.onFalse(armCommands.homeCommand());
+    // Buttons.primaryBackButton.onTrue(armCommands.groundCommand());
+    // Buttons.primaryBackButton.onFalse(armCommands.homeCommand());
 
-    Buttons.primaryStartButton.onTrue(armCommands.homeCommand());
+    // Buttons.primaryStartButton.onTrue(armCommands.homeCommand());
 
-    Buttons.primaryRB.whileTrue(armCommands.smartExtendArmCommand());
-    Buttons.primaryLB.whileTrue(armCommands.smartRetractArmCommand());
+    // Buttons.primaryRB.whileTrue(armCommands.smartExtendArmCommand());
+    // Buttons.primaryLB.whileTrue(armCommands.smartRetractArmCommand());
 
-    Buttons.primaryLeftStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
-    Buttons.primaryRightStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
+    // Buttons.primaryLeftStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
+    // Buttons.primaryRightStickButton.whileTrue(armCommands.ungrabWithRetractCommand());
 
-    Buttons.primaryDPadN.whileTrue(armCommands.liftArmCommand());
-    Buttons.primaryDPadS.whileTrue(armCommands.lowerArmCommand());
-    Buttons.primaryDPadNE.whileTrue(armCommands.liftArmCommand());
-    Buttons.primaryDPadSE.whileTrue(armCommands.lowerArmCommand());
-    Buttons.primaryDPadNW.whileTrue(armCommands.liftArmCommand());
-    Buttons.primaryDPadSW.whileTrue(armCommands.lowerArmCommand());
+    // Buttons.primaryDPadN.whileTrue(armCommands.liftArmCommand());
+    // Buttons.primaryDPadS.whileTrue(armCommands.lowerArmCommand());
+    // Buttons.primaryDPadNE.whileTrue(armCommands.liftArmCommand());
+    // Buttons.primaryDPadSE.whileTrue(armCommands.lowerArmCommand());
+    // Buttons.primaryDPadNW.whileTrue(armCommands.liftArmCommand());
+    // Buttons.primaryDPadSW.whileTrue(armCommands.lowerArmCommand());
 
-    // Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));    
-    // Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));
+    // // Buttons.rightTrigger.whileTrue(new RotateUpGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));    
+    // // Buttons.leftTrigger.whileTrue(new RotateDownGrabbyCommand(grabSubsystem, RobotMap.grabbyTiltMotor));
 
-    Buttons.primaryAButton.onTrue(armCommands.midCubeCommand());
-    Buttons.primaryXButton.onTrue(armCommands.highCubeCommand());
+    // Buttons.primaryAButton.onTrue(armCommands.midCubeCommand());
+    // Buttons.primaryXButton.onTrue(armCommands.highCubeCommand());
 
-    Buttons.primaryBButton.onTrue(armCommands.midConeCommand());
-    Buttons.primaryYButton.onTrue(armCommands.highConeCommand());
+    // Buttons.primaryBButton.onTrue(armCommands.midConeCommand());
+    // Buttons.primaryYButton.onTrue(armCommands.highConeCommand());
     
-    //Joystick Keybinds
-    // Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
-    Buttons.JoystickButton1.onTrue(armCommands.grabCommand());
-    Buttons.JoystickButton3.onTrue(autonCommands.humanStationConePickup());
-    Buttons.JoystickButton2.onTrue(autonCommands.humanStationCubePickup());
-    Buttons.JoystickButton7.onTrue(autonCommands.groundConePickup());
-    // Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
+    // //Joystick Keybinds
+    // // Buttons.JoystickButton6.onTrue(new HockeyStopCommand(drivetrainSubsystem));
+    // Buttons.JoystickButton1.onTrue(armCommands.grabCommand());
+    // Buttons.JoystickButton3.onTrue(autonCommands.humanStationConePickup());
+    // Buttons.JoystickButton2.onTrue(autonCommands.humanStationCubePickup());
+    // Buttons.JoystickButton7.onTrue(autonCommands.groundConePickup());
+    // // Buttons.JoystickButton7.onTrue(armCommands.sideStationCommand());
 
-    Buttons.JoystickButton6.onTrue(autonCommands.resetGyroCommand());
-    Buttons.JoystickButton4.onTrue(armCommands.humanStationConeCommand());
-    Buttons.JoystickButton11.onTrue(Commands.deadline(new WaitCommand(1.5), autonCommands.driveTillBumpedCommand()));
-    // Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece(Direction.LEFT));
-    Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, Direction.RIGHT));
+    // Buttons.JoystickButton6.onTrue(autonCommands.resetGyroCommand());
+    // Buttons.JoystickButton4.onTrue(armCommands.humanStationConeCommand());
+    // Buttons.JoystickButton11.onTrue(Commands.deadline(new WaitCommand(1.5), autonCommands.driveTillBumpedCommand()));
+    // // Buttons.JoystickButton10.onTrue(autonCommands.pickupGamePiece(Direction.LEFT));
+    // Buttons.JoystickButton16.onTrue(new TurnToGamePieceCommand(drivetrainSubsystem, RobotMap.lidar, Direction.RIGHT));
 
     // Buttons.JoystickButton16.onTrue(autonCommands.autoInitAndScoreCone());
 
@@ -134,15 +125,15 @@ public class RobotContainer {
   }
 
   private void setupDashboard() {    
-    Command defaultCommand = autonCommands.autoInitAndScoreCone();
+    // Command defaultCommand = autonCommands.autoInitAndScoreCone();
 
-    autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
-    autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());
-    // // Will automatically call blue or red
-    autoChooser.addOption("BLUE TopSimple", autonCommands.scorePickupTopBlue());
-    autoChooser.addOption("RED TopSimple", autonCommands.scorePickupTopRed());
-    autoChooser.addOption("BLUE BottomSimple", autonCommands.scorePickupBottomBlue());
-    autoChooser.addOption("RED BottomSimple", autonCommands.scorePickupBottomRed());
+    // autoChooser.setDefaultOption("CHOOSE AN AUTON", defaultCommand);
+    // autoChooser.addOption("MidChargeStation", autonCommands.midCubeCharge());
+    // // // Will automatically call blue or red
+    // autoChooser.addOption("BLUE TopSimple", autonCommands.scorePickupTopBlue());
+    // autoChooser.addOption("RED TopSimple", autonCommands.scorePickupTopRed());
+    // autoChooser.addOption("BLUE BottomSimple", autonCommands.scorePickupBottomBlue());
+    // autoChooser.addOption("RED BottomSimple", autonCommands.scorePickupBottomRed());
 
 
     SmartDashboard.putData("Auton Mode", autoChooser);
@@ -165,7 +156,7 @@ public class RobotContainer {
     // Dash.add("roll", () -> RobotMap.GyroSensor.getRoll());
     // Dash.add("Arm Encoder w/ offset", () -> RobotMap.armRotationEncoder.getAbsolutePosition()+GrabbyConstants.limitOffset);
 
-    Dash.add("LIDAR Dist", () -> RobotMap.lidar.getInches());
+    // Dash.add("LIDAR Dist", () -> RobotMap.lidar.getInches());
 
     // // Dash.add("Vision X:" , () -> VisionHelpers.getAprilTagPose2d().getX());
     // // Dash.add("Vision Y:" , () -> VisionHelpers.getAprilTagPose2d().getY());

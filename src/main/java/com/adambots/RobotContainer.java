@@ -127,7 +127,7 @@ public class RobotContainer {
   }
 
   private void registerNamedCommands() {
-    NamedCommands.registerCommand("Test1", new PrintCommand("Test1!"));
+    NamedCommands.registerCommand("TestCommand1", new PrintCommand("Test1!"));
   }
 
   private void setupDashboard() {    

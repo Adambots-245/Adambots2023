@@ -104,7 +104,8 @@ public class FirstExtenderSubsystem extends SubsystemBase {
     }
     
     failsafes();
-    firstExtender.set(firstExtenderSpeed);
+    // firstExtender.set(firstExtenderSpeed);
+    firstExtender.set(0);
   }
 
   private void failsafes() {

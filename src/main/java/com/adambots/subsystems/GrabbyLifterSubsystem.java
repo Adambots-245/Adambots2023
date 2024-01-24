@@ -89,6 +89,7 @@ public class GrabbyLifterSubsystem extends SubsystemBase {
     armLifterSpeed = MathUtil.clamp(armLifterSpeed, -maxSpeed, maxSpeed);
     failsafes();
     armLifter.set(armLifterSpeed);
+    // armLifter.set(0);
   }
 
   private void failsafes() {

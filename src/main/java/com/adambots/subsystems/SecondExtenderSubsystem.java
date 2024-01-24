@@ -120,7 +120,8 @@ public class SecondExtenderSubsystem extends SubsystemBase {
     }
 
     failsafes();
-    secondExtender.set(secondExtenderSpeed);
+    // secondExtender.set(secondExtenderSpeed);
+    secondExtender.set(0);
   }
 
   private void failsafes() {
